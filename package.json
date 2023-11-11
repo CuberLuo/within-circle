@@ -26,6 +26,7 @@
     "eslint-plugin-vue": "^9.17.0",
     "postcss-px-to-viewport-8-plugin": "^1.2.3",
     "prettier": "^3.0.3",
+    "unplugin-auto-import": "^0.16.7",
     "unplugin-vue-components": "^0.25.2",
     "vite": "^4.4.11"
   }

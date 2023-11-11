@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { getItem, setItem } from '@/utils/storage'
 
 export const useUserTokenStore = defineStore('userToken', {
   state: () => ({

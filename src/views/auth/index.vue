@@ -48,8 +48,6 @@
 
 <script setup>
 import isMobilePhone from 'validator/lib/isMobilePhone'
-import { showSuccessToast } from 'vant'
-import { ref, watch } from 'vue'
 const phoneNum = ref('')
 const sms = ref('')
 const submitLoading = ref(false)

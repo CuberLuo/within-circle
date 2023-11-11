@@ -1,6 +1,4 @@
-<script setup>
-import { showSuccessToast } from 'vant'
-</script>
+<script setup></script>
 
 <template>
   <main>

@@ -1,9 +1,9 @@
 import { fileURLToPath, URL } from 'node:url'
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import Components from 'unplugin-vue-components/vite'
 import { VantResolver } from '@vant/auto-import-resolver'
+import AutoImport from 'unplugin-auto-import/vite'
 import postcsspxtoviewport from 'postcss-px-to-viewport-8-plugin'
 
 // https://vitejs.dev/config/
@@ -12,6 +12,23 @@ export default defineConfig({
     vue(),
     Components({
       resolvers: [VantResolver()]
+    }),
+    AutoImport({
+      include: [
+        /\.js$/, //.js
+        /\.vue$/ //.vue
+      ],
+      imports: [
+        'vue',
+        'vue-router',
+        {
+          '@/utils/storage': ['setItem', 'getItem', 'removeItem', 'removeAllItem'],
+          vant: ['showSuccessToast', 'showFailToast ']
+        }
+      ],
+      eslintrc: {
+        enabled: true
+      }
     })
   ],
   resolve: {
