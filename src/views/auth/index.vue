@@ -1,52 +1,59 @@
 <template>
-  <van-form @submit="onSubmit">
-    <van-cell-group inset>
-      <van-field
-        v-model="phoneNum"
-        name="phone"
-        label="手机号(+86)"
-        placeholder="请输入手机号"
-        :rules="[
-          { required: true, message: '手机号不能为空' },
-          { validator: phoneNumValidator, message: '手机号格式有误' }
-        ]"
-        maxlength="11"
-      />
-      <van-field
-        v-model="sms"
-        clearable
-        label="短信验证码"
-        placeholder="请输入短信验证码"
-        :rules="[{ required: true, message: '验证码不能为空' }]"
-        maxlength="5"
-      >
-        <template #button>
-          <van-button
-            size="small"
-            type="primary"
-            :text="smsBtnText"
-            :disabled="smsBtnDisabled"
-            @click="sendSms"
-          />
-        </template>
-      </van-field>
-    </van-cell-group>
-    <div style="margin: 16px">
-      <van-button
-        round
-        block
-        :loading="submitLoading"
-        type="primary"
-        native-type="submit"
-        class="submit-button"
-      >
-        登录
-      </van-button>
-    </div>
-  </van-form>
+  <div class="authDiv">
+    <header class="authHeader">
+      <NavBar />
+    </header>
+
+    <van-form class="authForm" @submit="onSubmit">
+      <van-cell-group inset>
+        <van-field
+          v-model="phoneNum"
+          name="phone"
+          label="手机号(+86)"
+          placeholder="请输入手机号"
+          :rules="[
+            { required: true, message: '手机号不能为空' },
+            { validator: phoneNumValidator, message: '手机号格式有误' }
+          ]"
+          maxlength="11"
+        />
+        <van-field
+          v-model="sms"
+          clearable
+          label="短信验证码"
+          placeholder="请输入短信验证码"
+          :rules="[{ required: true, message: '验证码不能为空' }]"
+          maxlength="5"
+        >
+          <template #button>
+            <van-button
+              size="small"
+              type="primary"
+              :text="smsBtnText"
+              :disabled="smsBtnDisabled"
+              @click="sendSms"
+            />
+          </template>
+        </van-field>
+      </van-cell-group>
+      <div style="margin: 16px">
+        <van-button
+          round
+          block
+          :loading="submitLoading"
+          type="primary"
+          native-type="submit"
+          class="submit-button"
+        >
+          登录
+        </van-button>
+      </div>
+    </van-form>
+  </div>
 </template>
 
 <script setup>
+import NavBar from '@/layout/components/NavBar.vue'
 import isMobilePhone from 'validator/lib/isMobilePhone'
 const phoneNum = ref('')
 const sms = ref('')
@@ -84,4 +91,16 @@ watch(phoneNum, (newVal) => {
 const onSubmit = () => {}
 </script>
 
-<style scoped></style>
+<style scoped>
+.authDiv {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+}
+
+.authHeader {
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+</style>
