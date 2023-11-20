@@ -23,7 +23,8 @@ export default defineConfig({
         'vue-router',
         {
           '@/utils/storage': ['setItem', 'getItem', 'removeItem', 'removeAllItem'],
-          vant: ['showSuccessToast', 'showFailToast ']
+          vant: ['showSuccessToast', 'showFailToast', 'showConfirmDialog'],
+          '@/router': [['default', 'router']]
         }
       ],
       eslintrc: {
@@ -44,6 +45,15 @@ export default defineConfig({
           viewportWidth: 375 // 设计稿的视口宽度
         })
       ]
+    }
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:1029',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
     }
   }
 })

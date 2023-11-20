@@ -73,6 +73,9 @@
     "removeItem": true,
     "setItem": true,
     "showFailToast ": true,
-    "showSuccessToast": true
+    "showSuccessToast": true,
+    "router": true,
+    "showFailToast": true,
+    "showConfirmDialog": true
   }
 }

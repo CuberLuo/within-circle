@@ -18,7 +18,8 @@
           maxlength="11"
         />
         <van-field
-          v-model="sms"
+          v-model="smsCode"
+          name="sms"
           clearable
           label="短信验证码"
           placeholder="请输入短信验证码"
@@ -55,18 +56,22 @@
 <script setup>
 import NavBar from '@/layout/components/NavBar.vue'
 import isMobilePhone from 'validator/lib/isMobilePhone'
+import { sendSmsCode, checkSmsCode } from '@/api/user'
+import { useUserTokenStore } from '@/stores/userToken.js'
+
 const phoneNum = ref('')
-const sms = ref('')
+const smsCode = ref('')
 const submitLoading = ref(false)
 const smsBtnDisabled = ref(true)
 const smsBtnText = ref('发送验证码')
 const smsLeftTime = ref(0)
-const resendTime = 5
+const resendTime = 60 //重新发送验证码的时间
 let smsTimerId = null
 
 const phoneNumValidator = (phoneNum) => isMobilePhone(phoneNum, 'zh-CN')
 const sendSms = () => {
   smsBtnDisabled.value = true
+  sendSmsCode(phoneNum.value)
   showSuccessToast('验证码已发送')
   updateSmsBtnText(resendTime)
   smsTimerId = setInterval(() => {
@@ -88,7 +93,18 @@ watch(phoneNum, (newVal) => {
   if (smsLeftTime.value == 0) smsBtnDisabled.value = !isMobilePhone(newVal, 'zh-CN')
 })
 
-const onSubmit = () => {}
+const onSubmit = (val) => {
+  submitLoading.value = true
+  console.log(val)
+  checkSmsCode(val).then((res) => {
+    submitLoading.value = false
+    if (res.code == 10000) {
+      showSuccessToast(res.msg)
+      useUserTokenStore().setToken(res.data.access_token)
+      router.push('/')
+    } else showFailToast(res.msg)
+  })
+}
 </script>
 
 <style scoped>
