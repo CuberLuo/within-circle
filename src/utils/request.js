@@ -26,7 +26,13 @@ service.interceptors.response.use(
     return response.data
   },
   (error) => {
-    showFailToast(error.message) // 提示错误信息
+    console.log(error.response)
+    const { code, msg } = error.response.data
+    if (code == 10002) {
+      useUserTokenStore().removeToken() //清除Pinia和localStorage中无效的token
+      router.push('/auth')
+      showFailToast(msg)
+    } else showFailToast(error.message) // 提示错误信息
     return Promise.reject(error)
   }
 )

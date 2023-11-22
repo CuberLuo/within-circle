@@ -9,7 +9,15 @@ export const sendSmsCode = (phone) => {
 
 export const checkSmsCode = (data) => {
   return request({
-    url: `/checkSmsCode`,
+    url: '/checkSmsCode',
+    method: 'POST',
+    data
+  })
+}
+
+export const pwdLogin = (data) => {
+  return request({
+    url: '/login',
     method: 'POST',
     data
   })

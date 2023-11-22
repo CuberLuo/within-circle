@@ -1,12 +1,29 @@
 <template>
   <div>
-    <div>me</div>
+    <div>用户名:{{ username }}</div>
+    <div>注册日期:{{ registerDate }}</div>
     <van-button plain type="primary" @click="exitLogin()">退出登录</van-button>
   </div>
 </template>
 
 <script setup>
 import { useUserTokenStore } from '@/stores/userToken.js'
+import { getUserInfo } from '@/api/userinfo'
+const username = ref('')
+const registerDate = ref('')
+
+onMounted(async () => {
+  //组件挂载到DOM后立即执行
+  try {
+    const res = await getUserInfo()
+    const { data } = res
+    username.value = data.username
+    registerDate.value = data.registerDate
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 const exitLogin = () => {
   showConfirmDialog({
     title: '温馨提示',
