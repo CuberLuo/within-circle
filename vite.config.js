@@ -5,11 +5,15 @@ import Components from 'unplugin-vue-components/vite'
 import { VantResolver } from '@vant/auto-import-resolver'
 import AutoImport from 'unplugin-auto-import/vite'
 import postcsspxtoviewport from 'postcss-px-to-viewport-8-plugin'
+// import basicSsl from '@vitejs/plugin-basic-ssl'
+import mkcert from 'vite-plugin-mkcert'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
+    // basicSsl(),
+    mkcert(),
     Components({
       resolvers: [VantResolver()]
     }),
@@ -48,6 +52,7 @@ export default defineConfig({
     }
   },
   server: {
+    https: true,
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:1029',

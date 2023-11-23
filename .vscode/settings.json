@@ -1,0 +1,6 @@
+{
+  "cSpell.words": ["Pinia", "rushstack", "userinfo"],
+  "path-intellisense.mappings": {
+    "@": "${workspaceRoot}/src"
+  }
+}
