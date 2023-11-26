@@ -27,7 +27,14 @@ export default defineConfig({
         'vue-router',
         {
           '@/utils/storage': ['setItem', 'getItem', 'removeItem', 'removeAllItem'],
-          vant: ['showSuccessToast', 'showFailToast', 'showConfirmDialog'],
+          vant: [
+            'showSuccessToast',
+            'showFailToast',
+            'showLoadingToast',
+            'closeToast',
+            'showConfirmDialog',
+            'showDialog'
+          ],
           '@/router': [['default', 'router']]
         }
       ],

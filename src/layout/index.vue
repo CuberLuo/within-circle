@@ -16,4 +16,8 @@ import Tabbar from './components/Tabbar.vue'
 import NavBar from './components/NavBar.vue'
 </script>
 
-<style scoped></style>
+<style scoped>
+footer {
+  height: var(--van-tabbar-height);
+}
+</style>

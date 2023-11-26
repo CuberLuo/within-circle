@@ -17,8 +17,8 @@
           <van-uploader accept="*" v-model="picList" multiple :max-count="3" />
         </template>
       </van-cell>
-      <AddLocation />
-      <VisibleCircle />
+      <AddLocation @updateLocation="updateLocation" />
+      <VisibleCircle @updateVisibleCircle="updateVisibleCircle" />
 
       <van-cell>
         <van-button
@@ -40,6 +40,16 @@ import VisibleCircle from './VisibleCircle.vue'
 const message = ref('')
 const picList = ref([])
 //TODO: 支持视频上传
+const location = ref([])
+const visibleCircle = ref(0)
+const updateLocation = (val) => {
+  location.value = val
+  console.log('location.value = val', val)
+}
+const updateVisibleCircle = (val) => {
+  visibleCircle.value = val
+  console.log('visibleCircle.value = val', val)
+}
 </script>
 
 <style scoped>

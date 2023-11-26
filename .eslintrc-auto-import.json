@@ -76,6 +76,9 @@
     "showSuccessToast": true,
     "router": true,
     "showFailToast": true,
-    "showConfirmDialog": true
+    "showConfirmDialog": true,
+    "showDialog": true,
+    "showLoadingToast": true,
+    "closeToast": true
   }
 }
