@@ -22,3 +22,11 @@ export const pwdLogin = (data) => {
     data
   })
 }
+
+export const pwdRegister = (data) => {
+  return request({
+    url: '/register',
+    method: 'POST',
+    data
+  })
+}

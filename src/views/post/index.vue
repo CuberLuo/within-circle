@@ -28,6 +28,7 @@
           color="linear-gradient(to right, #4facfe 0%, #00f2fe 100%)"
           icon="share-o"
           id="postBtn"
+          @click="postAll"
         />
       </van-cell>
     </van-cell-group>
@@ -41,14 +42,21 @@ const message = ref('')
 const picList = ref([])
 //TODO: 支持视频上传
 const location = ref([])
-const visibleCircle = ref(0)
+const visibleCircle = ref(-1)
 const updateLocation = (val) => {
   location.value = val
-  console.log('location.value = val', val)
 }
 const updateVisibleCircle = (val) => {
   visibleCircle.value = val
-  console.log('visibleCircle.value = val', val)
+}
+const postAll = () => {
+  if (message.value.trim() == '') showFailToast('文本内容不能为空')
+  if (location.value.length == 0) showFailToast('地点不能为空')
+  if (visibleCircle.value) showFailToast('可见范围不能为空')
+  console.log(message.value)
+  console.log(picList.value)
+  console.log(location.value)
+  console.log(visibleCircle.value)
 }
 </script>
 

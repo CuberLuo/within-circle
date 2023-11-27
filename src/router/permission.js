@@ -10,7 +10,7 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     // 无token
-    if (to.path !== '/auth') {
+    if (to.path !== '/auth' && to.path !== '/register') {
       showFailToast('对不起,您尚未登录')
       next('/auth') // 未登录时只能跳转到登录页
     } else {
