@@ -14,7 +14,7 @@
       </van-cell>
       <van-cell>
         <template #title>
-          <van-uploader accept="*" v-model="picList" multiple :max-count="3" />
+          <van-uploader v-model="picList" multiple :max-count="3" />
         </template>
       </van-cell>
       <AddLocation @updateLocation="updateLocation" />
@@ -38,6 +38,7 @@
 <script setup>
 import AddLocation from './AddLocation.vue'
 import VisibleCircle from './VisibleCircle.vue'
+import { uploadPost } from '@/api/post.js'
 const message = ref('')
 const picList = ref([])
 //TODO: 支持视频上传
@@ -49,14 +50,40 @@ const updateLocation = (val) => {
 const updateVisibleCircle = (val) => {
   visibleCircle.value = val
 }
-const postAll = () => {
-  if (message.value.trim() == '') showFailToast('文本内容不能为空')
-  if (location.value.length == 0) showFailToast('地点不能为空')
-  if (visibleCircle.value) showFailToast('可见范围不能为空')
-  console.log(message.value)
-  console.log(picList.value)
-  console.log(location.value)
-  console.log(visibleCircle.value)
+const postAll = async () => {
+  if (message.value.trim() == '') {
+    showFailToast('文本内容不能为空')
+    return
+  }
+  if (location.value.length == 0) {
+    showFailToast('地点不能为空')
+    return
+  }
+  if (visibleCircle.value == -1) {
+    showFailToast('可见范围不能为空')
+    return
+  }
+  showLoadingToast({
+    message: '发布中',
+    forbidClick: true,
+    duration: 0
+  })
+  let formData = new FormData()
+  for (let i = 0; i < picList.value.length; i++) {
+    formData.append('picList', picList.value[i].file)
+  }
+  formData.append('message', message.value)
+  formData.append('location', location.value)
+  formData.append('visibleCircle', visibleCircle.value)
+  try {
+    const res = await uploadPost(formData)
+    if (res.code == 10000) {
+      showSuccessToast(res.msg)
+    } else showFailToast(res.msg)
+  } catch (err) {
+    console.log(err)
+    showFailToast('发布出错')
+  }
 }
 </script>
 

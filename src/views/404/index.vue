@@ -1,5 +1,5 @@
 <template>
-  <h1>404</h1>
+  <van-empty image="error" description="页面不存在" />
 </template>
 
 <script setup></script>

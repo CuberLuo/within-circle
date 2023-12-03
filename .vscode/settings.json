@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["amap", "jsapi", "Pinia", "pois", "rushstack", "userinfo", "VITE"],
+  "cSpell.words": ["amap", "iconfont", "jsapi", "Pinia", "pois", "rushstack", "userinfo", "VITE"],
   "path-intellisense.mappings": {
     "@": "${workspaceRoot}/src"
   }

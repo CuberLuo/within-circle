@@ -9,7 +9,8 @@ let map = null
 onMounted(() => {
   showLoadingToast({
     message: '地图加载中',
-    forbidClick: true
+    forbidClick: true,
+    duration: 0
   })
   AMapLoader.load({
     key: amap.key,

@@ -32,14 +32,13 @@ const show = ref(false)
 const cellValue = ref('')
 const searchValue = ref('')
 const poiList = ref([])
-const poiLon = ref('') //经度
-const poiLat = ref('') //纬度
 
 const onSearch = (val) => {
   showLoadingToast({
     message: '搜索中...',
     forbidClick: true,
-    loadingType: 'spinner'
+    loadingType: 'spinner',
+    duration: 0
   })
   AMapLoader.load({
     key: amap.key,
@@ -53,9 +52,9 @@ const onSearch = (val) => {
       if (status == 'complete') {
         console.log(result)
         const { pois } = result.poiList
+        closeToast()
         if (pois.length == 0) showFailToast('请更换关键词检索')
         poiList.value = pois
-        closeToast()
       } else {
         showFailToast('无法进行检索')
       }

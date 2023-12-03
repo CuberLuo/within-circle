@@ -2,11 +2,13 @@
   <div>
     <div>用户名:{{ username }}</div>
     <div>注册日期:{{ registerDate }}</div>
-    <van-button plain type="primary" @click="exitLogin()">退出登录</van-button>
+    <ThemeMode />
+    <van-button plain block @click="exitLogin()" id="exitBtn">退出登录</van-button>
   </div>
 </template>
 
 <script setup>
+import ThemeMode from './ThemeMode.vue'
 import { useUserTokenStore } from '@/stores/userToken.js'
 import { getUserInfo } from '@/api/userinfo'
 const username = ref('')
@@ -37,4 +39,8 @@ const exitLogin = () => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+#exitBtn {
+  margin-top: 6px;
+}
+</style>
