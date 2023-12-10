@@ -28,6 +28,7 @@ export default defineConfig({
         {
           '@/utils/storage': ['setItem', 'getItem', 'removeItem', 'removeAllItem'],
           vant: [
+            'showToast',
             'showSuccessToast',
             'showFailToast',
             'showLoadingToast',

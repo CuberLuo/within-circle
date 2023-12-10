@@ -79,6 +79,7 @@
     "showConfirmDialog": true,
     "showDialog": true,
     "showLoadingToast": true,
-    "closeToast": true
+    "closeToast": true,
+    "showToast": true
   }
 }

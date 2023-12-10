@@ -7,3 +7,10 @@ export const uploadPost = (data) => {
     data
   })
 }
+
+export const getAllPosts = () => {
+  return request({
+    url: '/getAllPosts',
+    method: 'GET'
+  })
+}

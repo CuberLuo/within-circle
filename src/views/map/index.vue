@@ -24,7 +24,7 @@ onMounted(() => {
     })
     const geolocation = new AMap.Geolocation({
       useNative: true,
-      timeout: 10000,
+      timeout: 10 * 1000,
       maximumAge: 100, //定位结果缓存100毫秒
       showCircle: false, //定位精度范围不显示
       enableHighAccuracy: true //使用高精度定位

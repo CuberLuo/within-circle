@@ -18,9 +18,10 @@ watch(route, (newRoute) => {
 <style scoped>
 .van-tabbar-item#post-icon {
   --van-tabbar-item-icon-size: 40px !important;
-  color: #1989fa !important;
+  color: var(--van-tabbar-item-text-color);
 }
 :deep().van-tabbar-item--active .van-icon {
+  color: #1989fa;
   filter: drop-shadow(2px 2px 16px #409eff);
 }
 </style>

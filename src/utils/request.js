@@ -3,7 +3,7 @@ import { useUserTokenStore } from '@/stores/userToken.js'
 // axios封装
 const service = axios.create({
   baseURL: '/api',
-  timeout: 60 * 1000 //网络请求最多60s
+  timeout: 30 * 1000 //网络请求最多30s
 })
 // 请求拦截器
 service.interceptors.request.use(

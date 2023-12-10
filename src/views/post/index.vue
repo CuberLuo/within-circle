@@ -14,7 +14,7 @@
       </van-cell>
       <van-cell>
         <template #title>
-          <van-uploader v-model="picList" multiple :max-count="3" />
+          <van-uploader v-model="picList" multiple :max-count="3" :before-read="beforeRead" />
         </template>
       </van-cell>
       <AddLocation @updateLocation="updateLocation" />
@@ -39,6 +39,47 @@
 import AddLocation from './AddLocation.vue'
 import VisibleCircle from './VisibleCircle.vue'
 import { uploadPost } from '@/api/post.js'
+import * as imageConversion from 'image-conversion'
+
+const beforeRead = async (file) => {
+  console.log(file)
+  const maxSize = 500 * 1024
+  if (Array.isArray(file)) {
+    let compressedFileArray = []
+    //同时上传多张图片时,file为文件数组
+    for (const item of file) {
+      if (item.size > maxSize) {
+        const compressedFile = await compressFile(item)
+        compressedFileArray.push(compressedFile)
+      } else {
+        compressedFileArray.push(item)
+      }
+    }
+    console.log(compressedFileArray)
+    return new Promise((resolve, reject) => resolve(compressedFileArray))
+  } else if (file.size > maxSize) {
+    const compressedFile = await compressFile(file)
+    console.log(compressedFile)
+    return new Promise((resolve, reject) => resolve(compressedFile))
+  } else {
+    return new Promise((resolve, reject) => resolve(file))
+  }
+}
+
+const compressFile = async (file) => {
+  showLoadingToast({
+    message: '图片压缩中',
+    forbidClick: true,
+    loadingType: 'spinner',
+    duration: 0
+  })
+  // 超过500kB的图片均会被压缩
+  let res = await imageConversion.compressAccurately(file, 500)
+  res = new File([res], file.name, { type: res.type, lastModified: Date.now() })
+  closeToast()
+  return res
+}
+
 const message = ref('')
 const picList = ref([])
 //TODO: 支持视频上传

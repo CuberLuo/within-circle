@@ -10,8 +10,8 @@
 
 <script setup>
 import { useThemeStore } from '@/stores/theme.js'
-const themeVarsDark = reactive({ switchNodeBackground: '#141414' })
-const themeVarsLight = reactive({ switchNodeBackground: '#ffffff' })
+const themeVarsDark = reactive({ switchNodeBackground: '#141414', tabbarItemTextColor: '#a9b2bb' })
+const themeVarsLight = reactive({ switchNodeBackground: '#ffffff', tabbarItemTextColor: '#a9b2bb' })
 const theme = ref('')
 theme.value = getItem('theme') || 'light'
 watch(

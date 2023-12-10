@@ -6,3 +6,10 @@ body {
   color: #f5f5f5;
   background-color: #141414;
 }
+/* .van-theme-light {
+  --van-tabbar-item-text-color: rgb(225, 28, 28);
+}
+
+.van-theme-dark {
+  --van-tabbar-item-text-color: rgb(83, 158, 83);
+} */
