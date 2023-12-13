@@ -40,10 +40,10 @@ import AddLocation from './AddLocation.vue'
 import VisibleCircle from './VisibleCircle.vue'
 import { uploadPost } from '@/api/post.js'
 import * as imageConversion from 'image-conversion'
-
+const maxKiloBytes = 150
 const beforeRead = async (file) => {
   console.log(file)
-  const maxSize = 500 * 1024
+  const maxSize = maxKiloBytes * 1024
   if (Array.isArray(file)) {
     let compressedFileArray = []
     //同时上传多张图片时,file为文件数组
@@ -73,8 +73,8 @@ const compressFile = async (file) => {
     loadingType: 'spinner',
     duration: 0
   })
-  // 超过500kB的图片均会被压缩
-  let res = await imageConversion.compressAccurately(file, 500)
+  // 超过maxKiloBytes kB的图片均会被压缩
+  let res = await imageConversion.compressAccurately(file, maxKiloBytes)
   res = new File([res], file.name, { type: res.type, lastModified: Date.now() })
   closeToast()
   return res

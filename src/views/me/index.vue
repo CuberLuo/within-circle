@@ -6,7 +6,7 @@
           <van-image
             round
             class="user-img"
-            src="https://within-circle.techvip.site/images/default_user.png"
+            src="https://within-circle.techvip.site/images/default_user.jpg"
           />
 
           <span class="user-info">

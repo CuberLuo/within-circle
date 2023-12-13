@@ -1,51 +1,75 @@
 <template>
-  <van-space direction="vertical" fill>
-    <van-cell class="user-post-cell" v-for="post in postsArr" :key="post.id">
-      <div class="user-cell-info">
-        <van-image round fit="cover" class="user-avatar" :src="post.userAvatar" />
-        <div class="post-source">
-          <div class="user-name">{{ post.username }}</div>
-          <div class="post-date">{{ post.postDate }}</div>
+  <van-pull-refresh v-model="loading" @refresh="onRefresh" success-text="刷新成功">
+    <van-space direction="vertical" fill>
+      <van-cell class="user-post-cell" v-for="post in postsArr" :key="post.id">
+        <div class="user-cell-info">
+          <van-image round fit="cover" class="user-avatar" :src="post.userAvatar" />
+          <div class="post-source">
+            <div class="user-name">{{ post.username }}</div>
+            <div class="post-date">{{ post.postDate }}</div>
+          </div>
+          <div class="cell-like">
+            <van-button round size="small" icon="good-job-o" class="like-btn">
+              {{ post.likeNum }}
+            </van-button>
+          </div>
         </div>
-        <div class="cell-like">
-          <van-button round size="small" icon="good-job-o" class="like-btn">
-            {{ post.likeNum }}
-          </van-button>
+        <div class="user-cell-content">
+          {{ post.postContent }}
         </div>
-      </div>
-      <div class="user-cell-content">
-        {{ post.postContent }}
-      </div>
-      <van-space :size="5" class="post-images">
-        <div class="img-wrapper" v-for="imgs in post.postImages" :key="imgs.id">
-          <van-image
-            class="post-image"
-            fit="cover"
-            :src="imgs.imgUrl"
-            @click="showImage(imgs.id, post.postImages)"
-          />
-        </div>
-      </van-space>
-      <van-space>
-        <van-tag plain type="primary">
-          <van-icon name="location" />
-          <span>{{ post.location.name }}</span>
-        </van-tag>
-        <!-- <van-tag plain type="warning">
+        <van-space :size="5" class="post-images">
+          <div class="img-wrapper" v-for="imgs in post.postImages" :key="imgs.id">
+            <van-image
+              class="post-image"
+              fit="cover"
+              :src="imgs.imgUrl"
+              @click="showImage(imgs.id, post.postImages)"
+            />
+          </div>
+        </van-space>
+        <van-space>
+          <van-tag plain type="primary">
+            <van-icon name="location" />
+            <span>{{ post.location.name }}</span>
+          </van-tag>
+          <!-- <van-tag plain type="warning">
           <van-icon name="lock" />
           <span>{{ post.visibleCircle }}</span>
         </van-tag> -->
-      </van-space>
-    </van-cell>
-  </van-space>
+        </van-space>
+      </van-cell>
+    </van-space>
+  </van-pull-refresh>
 </template>
 
 <script setup>
 import { getAllPosts } from '@/api/post.js'
-import { showImagePreview } from 'vant'
+import { showImagePreview, showToast } from 'vant'
+const loading = ref(false)
+const postsArr = ref([])
 onMounted(() => {
-  getAllPosts()
+  requestNewAllPosts()
 })
+const requestNewAllPosts = async () => {
+  try {
+    const res = await getAllPosts()
+    postsArr.value = res.data
+    return true
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+}
+const onRefresh = async () => {
+  setTimeout(() => {}, 1000)
+  const status = await requestNewAllPosts()
+  loading.value = false
+  // if (status) {
+  //   showToast('刷新成功')
+  // } else {
+  //   showToast('刷新失败')
+  // }
+}
 const showImage = (id, images) => {
   console.log(id)
   console.log(images)
@@ -55,47 +79,6 @@ const showImage = (id, images) => {
     startPosition: id
   })
 }
-
-const postsArr = [
-  {
-    id: '000',
-    userAvatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    username: '张三',
-    postDate: '23-5-9',
-    likeNum: 90,
-    postContent:
-      '最强大脑最强大脑最强大脑最强大脑最强大脑最强大脑最强大脑最强大脑最强大脑最强大脑最强大脑最强大脑最强大脑最强大脑',
-    postImages: [
-      { id: 0, imgUrl: 'https://within-circle.techvip.site/images/icon1.png' },
-      { id: 1, imgUrl: 'https://within-circle.techvip.site/images/icon2.png' }
-    ],
-    location: {
-      name: '浙江工业大学',
-      lat: '30',
-      lon: '120'
-    },
-    visibleCircle: '0'
-  },
-  {
-    id: '001',
-    userAvatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    username: '李四',
-    postDate: '23-5-9',
-    likeNum: 0,
-    postContent: '你好😍',
-    postImages: [
-      { id: 0, imgUrl: 'https://within-circle.techvip.site/images/icon3.png' },
-      { id: 1, imgUrl: 'https://within-circle.techvip.site/images/icon3.png' },
-      { id: 2, imgUrl: 'https://within-circle.techvip.site/images/icon3.png' }
-    ],
-    location: {
-      name: '浙江省人民政府',
-      lat: '30',
-      lon: '120'
-    },
-    visibleCircle: '2'
-  }
-]
 </script>
 
 <style scoped>

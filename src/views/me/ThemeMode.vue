@@ -22,11 +22,10 @@
 </template>
 
 <script setup>
-import { getItem } from '@/utils/storage'
 import { useThemeStore } from '@/stores/theme.js'
 
 const openDarkTheme = ref()
-const theme = getItem('theme') || 'light'
+const theme = useThemeStore().theme
 openDarkTheme.value = theme === 'dark' ? true : false
 const onUpdateSwitchValue = (newValue) => {
   openDarkTheme.value = newValue
