@@ -52,6 +52,36 @@ const router = createRouter({
           component: () => import('@/views/post/index.vue')
         },
         {
+          path: '/myLike',
+          name: 'myLike',
+          meta: { title: '我的点赞' },
+          component: () => import('@/views/myLike/index.vue')
+        },
+        {
+          path: '/myPost',
+          name: 'myPost',
+          meta: { title: '我的发布' },
+          component: () => import('@/views/myPost/index.vue')
+        },
+        {
+          path: '/myFollow',
+          name: 'myFollow',
+          meta: { title: '我的关注' },
+          component: () => import('@/views/myFollow/index.vue')
+        },
+        {
+          path: '/myPersonalInfo',
+          name: 'myPersonalInfo',
+          meta: { title: '个人资料' },
+          component: () => import('@/views/myPersonalInfo/index.vue')
+        },
+        {
+          path: '/about',
+          name: 'about',
+          meta: { title: '关于方圆几里' },
+          component: () => import('@/views/about/index.vue')
+        },
+        {
           path: '/:catchAll(.*)',
           meta: { title: '页面找不到啦~~' },
           component: () => import('@/views/404/index.vue')

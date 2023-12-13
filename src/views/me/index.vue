@@ -17,6 +17,7 @@
     </van-cell>
     <ThemeMode />
     <van-cell is-link title="我的发布" @click="goToMyPostPage()" />
+    <van-cell is-link title="我的关注" @click="goToMyFollowPage()" />
     <van-cell is-link title="我的点赞" @click="goToLikePage()" />
 
     <van-cell is-link title="个人资料" @click="goToPersonalInfoPage()" />
@@ -34,6 +35,7 @@ const registerDate = ref('')
 
 const goToLikePage = () => router.push('/myLike')
 const goToMyPostPage = () => router.push('/myPost')
+const goToMyFollowPage = () => router.push('/myFollow')
 const goToPersonalInfoPage = () => router.push('/myPersonalInfo')
 const goToAboutPage = () => router.push('/about')
 
