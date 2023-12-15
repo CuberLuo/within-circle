@@ -14,3 +14,11 @@ export const getAllPosts = () => {
     method: 'GET'
   })
 }
+
+export const likePost = (data) => {
+  return request({
+    url: '/likePost',
+    method: 'POST',
+    data
+  })
+}

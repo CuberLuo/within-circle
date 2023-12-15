@@ -13,8 +13,8 @@
               round
               size="small"
               icon="good-job-o"
-              class="like-btn"
-              @click="likeIt(post.id)"
+              :class="post.userLike ? 'like-btn' : ''"
+              @click="likeIt(post)"
             >
               {{ post.likeNum }}
             </van-button>
@@ -50,8 +50,8 @@
 </template>
 
 <script setup>
-import { getAllPosts } from '@/api/post.js'
-import { showImagePreview } from 'vant'
+import { getAllPosts, likePost } from '@/api/post.js'
+import { showImagePreview, showToast } from 'vant'
 
 const loading = ref(false)
 const postsArr = ref([])
@@ -82,8 +82,18 @@ const showImage = (id, images) => {
     startPosition: id
   })
 }
-const likeIt = (postId) => {
-  console.log(postId)
+const likeIt = async (post) => {
+  if (post.userLike) post.likeNum -= 1
+  else post.likeNum += 1
+  post.userLike = !post.userLike
+  try {
+    const res = await likePost({
+      postId: post.id
+    })
+    showToast(res.msg)
+  } catch (error) {
+    console.log(error)
+  }
 }
 </script>
 
@@ -114,5 +124,9 @@ const likeIt = (postId) => {
 .post-image {
   width: calc((100vw - var(--van-cell-horizontal-padding) * 2 - 15px) / 3);
   aspect-ratio: 1 / 1;
+}
+.like-btn {
+  color: orange;
+  border-color: orange;
 }
 </style>
