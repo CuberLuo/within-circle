@@ -9,7 +9,13 @@
             <div class="post-date">{{ post.postDate }}</div>
           </div>
           <div class="cell-like">
-            <van-button round size="small" icon="good-job-o" class="like-btn">
+            <van-button
+              round
+              size="small"
+              icon="good-job-o"
+              class="like-btn"
+              @click="likeIt(post.id)"
+            >
               {{ post.likeNum }}
             </van-button>
           </div>
@@ -23,6 +29,7 @@
               class="post-image"
               fit="cover"
               :src="imgs.imgUrl"
+              lazy-load
               @click="showImage(imgs.id, post.postImages)"
             />
           </div>
@@ -44,7 +51,8 @@
 
 <script setup>
 import { getAllPosts } from '@/api/post.js'
-import { showImagePreview, showToast } from 'vant'
+import { showImagePreview } from 'vant'
+
 const loading = ref(false)
 const postsArr = ref([])
 onMounted(() => {
@@ -64,11 +72,6 @@ const onRefresh = async () => {
   setTimeout(() => {}, 1000)
   const status = await requestNewAllPosts()
   loading.value = false
-  // if (status) {
-  //   showToast('刷新成功')
-  // } else {
-  //   showToast('刷新失败')
-  // }
 }
 const showImage = (id, images) => {
   console.log(id)
@@ -78,6 +81,9 @@ const showImage = (id, images) => {
     images: images.map((image) => image.imgUrl),
     startPosition: id
   })
+}
+const likeIt = (postId) => {
+  console.log(postId)
 }
 </script>
 
