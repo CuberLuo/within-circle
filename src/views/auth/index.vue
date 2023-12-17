@@ -2,6 +2,9 @@
   <header class="authHeader">
     <NavBar />
   </header>
+  <div class="app-title-wrapper">
+    <h1>方圆几里</h1>
+  </div>
   <div class="tab_div">
     <van-tabs v-model:active="active">
       <van-tab title="验证码登录"><SmsLogin /></van-tab>
@@ -36,5 +39,26 @@ const active = ref(0)
   align-items: stretch;
   justify-content: center;
   height: 100vh;
+}
+.app-title-wrapper {
+  position: absolute;
+  top: 10vh;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.app-title-wrapper h1 {
+  font-family: '阿里妈妈数黑体 Bold';
+  font-size: 40px;
+  background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@font-face {
+  font-family: '阿里妈妈数黑体 Bold';
+  font-weight: 900;
+  src:
+    url('../../assets/font/AlimamaShuHeiTi-Bold.woff2') format('woff2'),
+    url('../../assets/font/AlimamaShuHeiTi-Bold.woff2') format('woff');
+  font-display: swap;
 }
 </style>
