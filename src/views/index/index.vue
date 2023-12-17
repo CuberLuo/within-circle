@@ -46,37 +46,72 @@
         </van-space>
       </van-cell>
     </van-space>
+    <van-loading id="loading-spinner" type="spinner" v-show="!isGetAll" />
   </van-pull-refresh>
 </template>
 
 <script setup>
-import { getAllPosts, likePost } from '@/api/post.js'
-import { showImagePreview, showToast } from 'vant'
+import { getAllPosts, getPageSizePosts, likePost } from '@/api/post.js'
+import { showImagePreview } from 'vant'
 const route = useRoute()
 watch(route, (newRoute) => {
   if (newRoute.path == '/index' && newRoute.query.reloadPage == '1') {
-    requestNewAllPosts()
+    resetData()
+    requestPageSizePosts()
   }
 })
 
 const loading = ref(false)
 const postsArr = ref([])
+const page = ref(1)
+const pageSize = 5
+const reachBottom = ref(false)
+const isGetAll = ref(false)
+const resetData = () => {
+  postsArr.value = []
+  page.value = 1
+  reachBottom.value = false
+  isGetAll.value = false
+}
 onMounted(() => {
-  requestNewAllPosts()
+  requestPageSizePosts()
+  window.addEventListener('scroll', lazyLoading)
 })
-const requestNewAllPosts = async () => {
-  try {
-    const res = await getAllPosts()
-    postsArr.value = res.data
-    return true
-  } catch (error) {
-    console.log(error)
-    return false
+const lazyLoading = () => {
+  const scrollTop = document.documentElement.scrollTop || document.body.scrollTop //滚动条高度
+  const clientHeight = document.documentElement.clientHeight //屏幕可视区域高度
+  const scrollHeight = document.documentElement.scrollHeight //浏览器所有内容高度
+
+  //触底
+  if (scrollTop + clientHeight + 1 >= scrollHeight && !reachBottom.value) {
+    reachBottom.value = true
+    // showToast('触底啦!!!')
+    if (isGetAll.value === false) {
+      page.value++
+      //滚动到底的时候，当前页需要加1
+      requestPageSizePosts()
+    }
+  }
+  //离开底部
+  if (scrollTop + clientHeight + 1 < scrollHeight && reachBottom.value) {
+    reachBottom.value = false
   }
 }
+const requestPageSizePosts = async () => {
+  const res = await getPageSizePosts({
+    page: page.value,
+    pageSize: pageSize
+  })
+  console.log(res.data)
+  const record_cnt = res.data.length
+  if (record_cnt < pageSize) {
+    isGetAll.value = true
+  }
+  postsArr.value.push(...res.data)
+}
 const onRefresh = async () => {
-  setTimeout(() => {}, 1000)
-  const status = await requestNewAllPosts()
+  resetData()
+  await requestPageSizePosts()
   loading.value = false
 }
 const showImage = (id, images) => {
@@ -134,5 +169,10 @@ const likeIt = async (post) => {
 .like-btn {
   color: orange;
   border-color: orange;
+}
+#loading-spinner {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
 }
 </style>

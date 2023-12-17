@@ -15,6 +15,14 @@ export const getAllPosts = () => {
   })
 }
 
+export const getPageSizePosts = (param) => {
+  return request({
+    url: '/getPageSizePosts',
+    method: 'GET',
+    params: param
+  })
+}
+
 export const likePost = (data) => {
   return request({
     url: '/likePost',
