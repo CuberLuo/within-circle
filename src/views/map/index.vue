@@ -3,6 +3,9 @@
 </template>
 
 <script setup>
+defineOptions({
+  name: 'amap'
+})
 import AMapLoader from '@amap/amap-jsapi-loader'
 import amap from '@/components/data/amap.json'
 import { getUserInfo } from '@/api/userinfo'

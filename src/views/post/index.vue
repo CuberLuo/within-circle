@@ -40,7 +40,12 @@ defineOptions({
   name: 'post'
 })
 onBeforeRouteLeave(async (to, from) => {
-  if (to.path == '/index' && to.query.reloadPage == '1') return true
+  if (
+    (to.path == '/index' && to.query.reloadPage == '1') ||
+    (message.value == '' && picList.value.length == 0)
+  )
+    return true
+
   const res = await showConfirmDialog({
     title: '温馨提示',
     message: '您确认要离开当前页面吗？您的编辑发布前将不会保留!'
