@@ -5,13 +5,23 @@
 <script setup>
 import AMapLoader from '@amap/amap-jsapi-loader'
 import amap from '@/components/data/amap.json'
+import { getUserInfo } from '@/api/userinfo'
 let map = null
-onMounted(() => {
+const avatarUrl = ref('')
+onMounted(async () => {
   showLoadingToast({
     message: '地图加载中',
     forbidClick: true,
     duration: 0
   })
+  try {
+    const res = await getUserInfo()
+    const { data } = res
+    avatarUrl.value = data.avatarUrl
+  } catch (error) {
+    console.log(error)
+  }
+
   AMapLoader.load({
     key: amap.key,
     version: '2.0',
@@ -27,7 +37,13 @@ onMounted(() => {
       timeout: 10 * 1000,
       maximumAge: 100, //定位结果缓存100毫秒
       showCircle: false, //定位精度范围不显示
-      enableHighAccuracy: true //使用高精度定位
+      enableHighAccuracy: true, //使用高精度定位
+      markerOptions: {
+        content: `
+          <img src="${avatarUrl.value}" 
+          style="width:30px;height:30px;border-radius:50%;"/>
+          `
+      }
     })
     map.addControl(geolocation)
 
