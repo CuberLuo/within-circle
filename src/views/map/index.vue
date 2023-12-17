@@ -6,26 +6,24 @@
 import AMapLoader from '@amap/amap-jsapi-loader'
 import amap from '@/components/data/amap.json'
 import { getUserInfo } from '@/api/userinfo'
+import { getAllPosts } from '@/api/post.js'
 let map = null
+let points = []
 const avatarUrl = ref('')
+
 onMounted(async () => {
   showLoadingToast({
     message: '地图加载中',
     forbidClick: true,
     duration: 0
   })
-  try {
-    const res = await getUserInfo()
-    const { data } = res
-    avatarUrl.value = data.avatarUrl
-  } catch (error) {
-    console.log(error)
-  }
-
+  await getUserAvatar()
+  await getAllPostPoints()
+  console.log(points)
   AMapLoader.load({
     key: amap.key,
     version: '2.0',
-    plugins: ['AMap.Geolocation']
+    plugins: ['AMap.Geolocation', 'AMap.MarkerCluster']
   }).then((AMap) => {
     map = new AMap.Map('container', {
       resizeEnable: true,
@@ -56,8 +54,72 @@ onMounted(async () => {
         showFailToast('无法获取当前定位')
       }
     })
+
+    //以下是聚合点展示代码
+    var gridSize = 60
+    var count = points.length
+    var _renderClusterMarker = function (context) {
+      var factor = Math.pow(context.count / count, 1 / 18)
+      var div = document.createElement('div')
+      var Hue = 180 - factor * 180
+      var bgColor = 'hsla(' + Hue + ',100%,40%,0.7)'
+      var fontColor = 'hsla(' + Hue + ',100%,90%,1)'
+      var borderColor = 'hsla(' + Hue + ',100%,40%,1)'
+      var shadowColor = 'hsla(' + Hue + ',100%,90%,1)'
+      div.style.backgroundColor = bgColor
+      var size = Math.round(30 + Math.pow(context.count / count, 1 / 5) * 20)
+      div.style.width = div.style.height = size + 'px'
+      div.style.border = 'solid 1px ' + borderColor
+      div.style.borderRadius = size / 2 + 'px'
+      div.style.boxShadow = '0 0 5px ' + shadowColor
+      div.innerHTML = context.count
+      div.style.lineHeight = size + 'px'
+      div.style.color = fontColor
+      div.style.fontSize = '14px'
+      div.style.textAlign = 'center'
+      context.marker.setOffset(new AMap.Pixel(-size / 2, -size / 2))
+      context.marker.setContent(div)
+    }
+    var _renderMarker = function (context) {
+      var content =
+        '<div style="background-color: hsla(180, 100%, 50%, 0.3); height: 18px; width: 18px; border: 1px solid hsl(180, 100%, 40%); border-radius: 12px; box-shadow: hsl(180, 100%, 50%) 0px 0px 3px;"></div>'
+      var offset = new AMap.Pixel(-9, -9)
+      context.marker.setContent(content)
+      context.marker.setOffset(offset)
+    }
+    var cluster = new AMap.MarkerCluster(map, points, {
+      gridSize: gridSize, // 设置网格像素大小
+      renderClusterMarker: _renderClusterMarker, // 自定义聚合点样式
+      renderMarker: _renderMarker // 自定义非聚合点样式
+    })
   })
 })
+
+const getUserAvatar = async () => {
+  try {
+    const res = await getUserInfo()
+    const { data } = res
+    avatarUrl.value = data.avatarUrl
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const getAllPostPoints = async () => {
+  try {
+    const res = await getAllPosts()
+    const posts = res.data
+    for (const post of posts) {
+      const { lat, lon } = post.location
+      const point = {
+        lnglat: [lon, lat]
+      }
+      points.push(point)
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
 onUnmounted(() => {
   map?.destroy()
 })
