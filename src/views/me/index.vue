@@ -3,18 +3,19 @@
     <van-cell class="user-cell">
       <template #value>
         <div class="user-cv">
-          <van-image
-            round
-            class="user-img"
-            src="https://within-circle.techvip.site/images/default_user.jpg"
-          />
-
+          <van-image round class="user-img" :src="avatarUrl" @click="showAvatarPopup" />
           <span class="user-info">
             {{ username }}
           </span>
         </div>
       </template>
     </van-cell>
+    <UserAvatarPopup
+      :showPopup="showPopup"
+      :avatarUrl="avatarUrl"
+      @updateShowPopup="updateShowPopup"
+      @updateUserAvatar="updateUserAvatar"
+    />
     <ThemeMode />
     <van-cell is-link title="我的发布" @click="goToMyPostPage()" />
     <van-cell is-link title="我的关注" @click="goToMyFollowPage()" />
@@ -28,10 +29,23 @@
 
 <script setup>
 import ThemeMode from './ThemeMode.vue'
+import UserAvatarPopup from './UserAvatarPopup.vue'
 import { useUserTokenStore } from '@/stores/userToken.js'
 import { getUserInfo } from '@/api/userinfo'
 const username = ref('')
 const registerDate = ref('')
+const avatarUrl = ref('')
+const showPopup = ref(false)
+
+const showAvatarPopup = () => {
+  showPopup.value = true
+}
+const updateShowPopup = (val) => {
+  showPopup.value = val
+}
+const updateUserAvatar = (val) => {
+  avatarUrl.value = val
+}
 
 const goToLikePage = () => router.push('/myLike')
 const goToMyPostPage = () => router.push('/myPost')
@@ -46,6 +60,7 @@ onMounted(async () => {
     const { data } = res
     username.value = data.username
     registerDate.value = data.registerDate
+    avatarUrl.value = data.avatarUrl
   } catch (error) {
     console.log(error)
   }

@@ -11,16 +11,16 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import '@/router/permission'
-import VConsole from 'vconsole'
+// import VConsole from 'vconsole'
 import { Lazyload } from 'vant'
 
 const app = createApp(App)
 const pinia = createPinia()
-const vconsole = new VConsole({
+/* const vconsole = new VConsole({
   onReady() {
     console.log('vConsole is ready!')
   }
-})
+}) */
 app.use(pinia)
 app.use(router)
 app.use(Lazyload, {

@@ -36,6 +36,18 @@
 </template>
 
 <script setup>
+defineOptions({
+  name: 'post'
+})
+onBeforeRouteLeave(async (to, from) => {
+  if (to.path == '/index' && to.query.reloadPage == '1') return true
+  const res = await showConfirmDialog({
+    title: '温馨提示',
+    message: '您确认要离开当前页面吗？您的编辑发布前将不会保留!'
+  })
+  if (res == 'confirm') return true
+  else return false
+})
 import AddLocation from './AddLocation.vue'
 import VisibleCircle from './VisibleCircle.vue'
 import { uploadPost } from '@/api/post.js'
@@ -120,6 +132,10 @@ const postAll = async () => {
     const res = await uploadPost(formData)
     if (res.code == 10000) {
       showSuccessToast(res.msg)
+      router.push({
+        path: '/index',
+        query: { reloadPage: '1' }
+      })
     } else showFailToast(res.msg)
   } catch (err) {
     console.log(err)

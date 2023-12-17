@@ -7,8 +7,8 @@
     </van-cell>
     <van-action-sheet v-model:show="show" title="添加地点">
       <div class="content">
-        <div>
-          <span>当前地点:{{ cellValue }}</span>
+        <div id="currentLocation">
+          <span>当前地点：{{ cellValue }}</span>
         </div>
         <form action="/">
           <van-search
@@ -127,5 +127,8 @@ const onClickCell = (name, lng, lat) => {
 }
 :deep() .van-cell__value {
   flex: 2;
+}
+#currentLocation {
+  padding: 0 var(--van-padding-sm);
 }
 </style>

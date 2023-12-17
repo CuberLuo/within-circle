@@ -52,6 +52,12 @@
 <script setup>
 import { getAllPosts, likePost } from '@/api/post.js'
 import { showImagePreview, showToast } from 'vant'
+const route = useRoute()
+watch(route, (newRoute) => {
+  if (newRoute.path == '/index' && newRoute.query.reloadPage == '1') {
+    requestNewAllPosts()
+  }
+})
 
 const loading = ref(false)
 const postsArr = ref([])
