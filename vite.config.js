@@ -7,6 +7,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import postcsspxtoviewport from 'postcss-px-to-viewport-8-plugin'
 // import basicSsl from '@vitejs/plugin-basic-ssl'
 import mkcert from 'vite-plugin-mkcert'
+import viteCompression from 'vite-plugin-compression'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -42,6 +43,12 @@ export default defineConfig({
       eslintrc: {
         enabled: true
       }
+    }),
+    viteCompression({
+      deleteOriginFile: true, //删除源文件
+      algorithm: 'gzip', //压缩算法
+      ext: '.gz', //文件类型
+      threshold: 1024 // 对大于 1kb 的文件进行压缩
     })
   ],
   resolve: {
