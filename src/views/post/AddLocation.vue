@@ -38,6 +38,10 @@
 import AMapLoader from '@amap/amap-jsapi-loader'
 import amap from '@/components/data/amap.json'
 
+const show = ref(false)
+const cellValue = ref('')
+const searchValue = ref('')
+const poiList = ref([])
 let userCity = ''
 onMounted(() => {
   AMapLoader.load({
@@ -55,15 +59,39 @@ onMounted(() => {
         console.log('定位成功', result)
         const { lat, lng } = result.position
         //获取经纬度逆地理编码为详细地址
-        const geocoder = new AMap.Geocoder()
+        const geocoder = new AMap.Geocoder({
+          radius: 500, //以给定坐标为中心点方圆500米逆地理编码
+          extensions: 'all'
+        })
         const lnglat = [lng, lat]
         geocoder.getAddress(lnglat, function (status, result) {
           if (status === 'complete' && result.info === 'OK') {
             // result为对应的地理位置详细信息
             console.log('地理位置信息:', result)
-            cellValue.value = result.regeocode.formattedAddress
-            onClickCell(cellValue.value, lng, lat)
+
             userCity = result.regeocode.addressComponent.city
+            /* const userDistrict = result.regeocode.addressComponent.district
+            const userProvince = result.regeocode.addressComponent.province
+            const userStreet = result.regeocode.addressComponent.street
+            const userStreetNumber = result.regeocode.addressComponent.streetNumber
+            const userTownship = result.regeocode.addressComponent.township
+            const userBaseLocArray = [
+              userProvince,
+              userCity,
+              userDistrict,
+              userTownship,
+              userStreet,
+              userStreetNumber
+            ] //地理位置的前置信息(省,市,区,街道,道路,道路号)
+            let formattedAddress = result.regeocode.formattedAddress
+            userBaseLocArray.forEach((element) => {
+              //简化地理位置信息
+              formattedAddress = formattedAddress.replace(element, '')
+            }) */
+            const poiAddress = result.regeocode.pois[0].name
+            cellValue.value = poiAddress
+            onClickCell(cellValue.value, lng, lat)
+            poiList.value = result.regeocode.pois
             console.log(userCity)
           }
         })
@@ -74,11 +102,6 @@ onMounted(() => {
     })
   })
 })
-
-const show = ref(false)
-const cellValue = ref('')
-const searchValue = ref('')
-const poiList = ref([])
 
 const onSearch = (val) => {
   if (val == '') return
