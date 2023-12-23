@@ -7,7 +7,65 @@
     <title>方圆几里</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        body {
+          display: flex;
+          background-color: black;
+          align-items: center;
+          justify-content: center;
+        }
+        .loading-wrap {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          flex-wrap: wrap;
+        }
+        .container {
+          box-sizing: content-box;
+          height: 200px;
+          width: 200px;
+          border-radius: 50%;
+          border: 20px solid rgba(3, 233, 244, 0.825);
+          box-shadow:
+            0 0 10px #03e9f4 inset,
+            0 0 5px #03e9f4,
+            0 0 25px #03e9f4,
+            0 0 100px #03e9f4;
+
+          position: relative;
+          overflow: hidden;
+          border-bottom: 20px solid gray;
+          border-top: 20px solid gray;
+          border-right: 20px solid gray;
+          animation: run 1s infinite linear;
+        }
+        .container::after {
+          content: '';
+          position: absolute;
+          background-image: url('./public/app-icon.svg');
+          background-size: 200px 200px;
+          background-repeat: no-repeat;
+          height: 200px;
+          width: 200px;
+        }
+        @keyframes run {
+          to {
+            transform: rotate(1turn);
+          }
+        }
+      </style>
+      <div class="loading-wrap">
+        <div class="container"></div>
+      </div>
+    </div>
     <script type="text/javascript">
       window._AMapSecurityConfig = {
         serviceHost: 'https://api.within-circle.techvip.site/_AMapService'
