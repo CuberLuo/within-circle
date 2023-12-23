@@ -6,16 +6,26 @@
         <div class="user-name">{{ post.username }}</div>
         <div class="post-date">{{ post.postDate }}</div>
       </div>
-      <div class="cell-like">
-        <van-button
-          round
-          size="small"
-          icon="good-job-o"
-          :class="post.userLike ? 'like-btn' : ''"
-          @click="likeIt(post)"
-        >
-          {{ post.likeNum }}
-        </van-button>
+      <div class="cell-operate">
+        <div v-if="post.isMyPost" class="cell-delete">
+          <van-icon
+            name="delete-o"
+            color="#ee0a24"
+            class="delete-icon"
+            @click="deletePostCell(post.id)"
+          />
+        </div>
+        <div class="cell-like">
+          <van-button
+            round
+            size="small"
+            icon="good-job-o"
+            :class="post.userLike ? 'like-btn' : ''"
+            @click="likeIt(post)"
+          >
+            {{ post.likeNum }}
+          </van-button>
+        </div>
       </div>
     </div>
     <div class="user-cell-content">
@@ -46,13 +56,14 @@
 </template>
 
 <script setup>
-import { likePost } from '@/api/post.js'
+import { likePost, deletePost } from '@/api/post.js'
 import { showImagePreview } from 'vant'
 const props = defineProps({
   post: {
     type: Object
   }
 })
+const emits = defineEmits(['deletePostFromPostsArr'])
 const showImage = (id, images) => {
   console.log(id)
   console.log(images)
@@ -75,6 +86,25 @@ const likeIt = async (post) => {
     console.log(error)
   }
 }
+
+const deletePostCell = (id) => {
+  showConfirmDialog({
+    title: '温馨提示',
+    message: '您确认要删除该内容吗？'
+  })
+    .then(async () => {
+      try {
+        const res = await deletePost({
+          postId: id
+        })
+        emits('deletePostFromPostsArr', id)
+        showToast(res.msg)
+      } catch (error) {
+        console.log(error)
+      }
+    })
+    .catch((e) => {})
+}
 </script>
 
 <style scoped>
@@ -93,10 +123,26 @@ const likeIt = async (post) => {
 .post-source {
   margin-left: 8px;
 }
-.cell-like {
+.cell-operate {
+  /* flex设置为1表示宽度拉长填充父容器剩余的空间 */
   flex: 1;
-  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
+.cell-delete {
+  padding-right: 15px;
+  display: flex;
+  align-items: center;
+}
+.delete-icon {
+  font-size: 25px;
+}
+
+.cell-like {
+  /* flex: 1; */
+}
+
 .post-images {
   width: 100%;
 }

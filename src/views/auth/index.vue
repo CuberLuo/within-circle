@@ -47,18 +47,9 @@ const active = ref(0)
   transform: translateX(-50%);
 }
 .app-title-wrapper h1 {
-  font-family: '阿里妈妈数黑体 Bold';
   font-size: 40px;
   background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-}
-@font-face {
-  font-family: '阿里妈妈数黑体 Bold';
-  font-weight: 900;
-  src:
-    url('../../assets/font/AlimamaShuHeiTi-Bold.woff2') format('woff2'),
-    url('../../assets/font/AlimamaShuHeiTi-Bold.woff2') format('woff');
-  font-display: swap;
 }
 </style>

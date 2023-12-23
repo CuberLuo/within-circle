@@ -37,7 +37,8 @@ export default defineConfig({
             'showConfirmDialog',
             'showDialog'
           ],
-          '@/router': [['default', 'router']]
+          '@/router': [['default', 'router']],
+          '@/components/data/status_code.json': [['default', 'status_code']]
         }
       ],
       eslintrc: {
@@ -45,7 +46,7 @@ export default defineConfig({
       }
     }),
     viteCompression({
-      deleteOriginFile: true, //删除源文件
+      deleteOriginFile: false, //不删除源文件,否则生产环境会报错
       algorithm: 'gzip', //压缩算法
       ext: '.gz', //文件类型
       threshold: 1024 // 对大于 1kb 的文件进行压缩

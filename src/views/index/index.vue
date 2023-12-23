@@ -1,17 +1,32 @@
 <template>
-  <van-pull-refresh v-model="loading" @refresh="onRefresh" success-text="刷新成功">
-    <van-space direction="vertical" fill>
-      <div v-for="post in postsArr" :key="post.id">
-        <UserPostCell :post="post" />
-      </div>
-    </van-space>
-    <van-loading id="loading-spinner" type="spinner" v-show="!isGetAll" />
-  </van-pull-refresh>
+  <div>
+    <van-empty
+      v-if="postsArr.length == 0 && !loading"
+      :image="emptyImg"
+      image-size="100"
+      description="此处空空如也"
+    />
+    <van-pull-refresh
+      v-else
+      v-model="loading"
+      @refresh="onRefresh"
+      success-text="刷新成功"
+      class="pull-refresh"
+    >
+      <van-space direction="vertical" fill>
+        <div v-for="post in postsArr" :key="post.id">
+          <UserPostCell :post="post" @deletePostFromPostsArr="deletePostFromPostsArr" />
+        </div>
+      </van-space>
+      <van-loading id="loading-spinner" type="spinner" v-show="showLoading" />
+    </van-pull-refresh>
+  </div>
 </template>
 
 <script setup>
 import { getPageSizePosts } from '@/api/post.js'
 import UserPostCell from '@/components/UserPostCell.vue'
+const emptyImg = new URL('@/assets/images/empty-image.png', import.meta.url).href
 const route = useRoute()
 watch(route, (newRoute) => {
   if (newRoute.path == '/index' && newRoute.query.reloadPage == '1') {
@@ -21,6 +36,7 @@ watch(route, (newRoute) => {
 })
 
 const loading = ref(false)
+const showLoading = ref(false)
 const postsArr = ref([])
 const page = ref(1)
 const pageSize = 5
@@ -45,10 +61,13 @@ const lazyLoading = () => {
   if (scrollTop + clientHeight + 1 >= scrollHeight && !reachBottom.value) {
     reachBottom.value = true
     // showToast('触底啦!!!')
+    showLoading.value = true
     if (isGetAll.value === false) {
       page.value++
       //滚动到底的时候，当前页需要加1
       requestPageSizePosts()
+    } else {
+      showLoading.value = false
     }
   }
   //离开底部
@@ -73,6 +92,12 @@ const onRefresh = async () => {
   await requestPageSizePosts()
   loading.value = false
 }
+const deletePostFromPostsArr = (id) => {
+  console.log(id)
+  resetData()
+  requestPageSizePosts()
+  // postsArr.value = postsArr.value.filter((post) => post.id !== id)
+}
 </script>
 
 <style scoped>
@@ -80,5 +105,8 @@ const onRefresh = async () => {
   display: flex;
   justify-content: center;
   margin: 10px 0;
+}
+.pull-refresh {
+  min-height: calc(100vh - var(--van-nav-bar-height) - var(--van-tabbar-height));
 }
 </style>

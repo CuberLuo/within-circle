@@ -2,7 +2,7 @@
   <div class="app-main">
     <router-view v-slot="{ Component, route }">
       <transition name="fade-transform" mode="out-in">
-        <keep-alive exclude="post,amap">
+        <keep-alive exclude="post,amap,myPost,myLike">
           <component :is="Component" :key="route.path" />
         </keep-alive>
       </transition>

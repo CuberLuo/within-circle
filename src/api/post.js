@@ -30,3 +30,25 @@ export const likePost = (data) => {
     data
   })
 }
+
+export const getMyPosts = () => {
+  return request({
+    url: '/getMyPosts',
+    method: 'GET'
+  })
+}
+
+export const deletePost = (data) => {
+  return request({
+    url: '/deletePost',
+    method: 'POST',
+    data
+  })
+}
+
+export const getMyLikePosts = () => {
+  return request({
+    url: '/getMyLikePosts',
+    method: 'GET'
+  })
+}

@@ -52,7 +52,7 @@ const onSubmit = async (val) => {
   console.log(val)
   try {
     const res = await pwdRegister(val)
-    if (res.code == 10000) {
+    if (res.code == status_code.OK) {
       showSuccessToast(res.msg)
       useUserTokenStore().setToken(res.data.access_token)
       router.push('/')

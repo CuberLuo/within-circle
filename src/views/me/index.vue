@@ -17,8 +17,9 @@
       @updateUserAvatar="updateUserAvatar"
     />
     <ThemeMode />
-    <van-cell is-link title="我的发布" @click="goToMyPostPage()" />
+
     <van-cell is-link title="我的关注" @click="goToMyFollowPage()" />
+    <van-cell is-link title="我的发布" @click="goToMyPostPage()" />
     <van-cell is-link title="我的点赞" @click="goToLikePage()" />
 
     <van-cell is-link title="个人资料" @click="goToPersonalInfoPage()" />
@@ -57,10 +58,16 @@ onMounted(async () => {
   //组件挂载到DOM后立即执行
   try {
     const res = await getUserInfo()
-    const { data } = res
-    username.value = data.username
-    registerDate.value = data.registerDate
-    avatarUrl.value = data.avatarUrl
+    if (res.code == status_code.OK) {
+      const { data } = res
+      username.value = data.username
+      registerDate.value = data.registerDate
+      avatarUrl.value = data.avatarUrl
+    } else {
+      showFailToast(res.msg)
+      useUserTokenStore().removeToken() //移除Pinia和localStorage中的token
+      router.push('/auth')
+    }
   } catch (error) {
     console.log(error)
   }

@@ -135,7 +135,7 @@ const postAll = async () => {
   formData.append('visibleCircle', visibleCircle.value)
   try {
     const res = await uploadPost(formData)
-    if (res.code == 10000) {
+    if (res.code == status_code.OK) {
       showSuccessToast(res.msg)
       router.push({
         path: '/index',

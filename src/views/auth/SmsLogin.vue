@@ -67,7 +67,7 @@ const phoneNumValidator = (phoneNum) => isMobilePhone(phoneNum, 'zh-CN')
 const sendSms = async () => {
   try {
     const res = await sendSmsCode(phoneNum.value)
-    if (res.code == 10000) {
+    if (res.code == status_code.OK) {
       smsBtnDisabled.value = true
       showSuccessToast(res.msg)
       updateSmsBtnText(resendTime)
@@ -99,7 +99,7 @@ const onSubmit = async (val) => {
 
   try {
     const res = await checkSmsCode(val)
-    if (res.code == 10000) {
+    if (res.code == status_code.OK) {
       showSuccessToast(res.msg)
       useUserTokenStore().setToken(res.data.access_token)
       router.push('/')

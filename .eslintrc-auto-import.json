@@ -80,6 +80,7 @@
     "showDialog": true,
     "showLoadingToast": true,
     "closeToast": true,
-    "showToast": true
+    "showToast": true,
+    "status_code": true
   }
 }

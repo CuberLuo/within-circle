@@ -88,7 +88,7 @@ const confirmUpload = async () => {
   formData.append('pic', userAvatar.value.file)
   try {
     const res = await uploadUserAvatar(formData)
-    if (res.code == 10000) {
+    if (res.code == status_code.OK) {
       showSuccessToast(res.msg)
       closePopup()
       emits('updateUserAvatar', userAvatarUrl.value)
