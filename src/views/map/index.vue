@@ -1,5 +1,16 @@
 <template>
-  <div id="container"></div>
+  <div>
+    <div id="container"></div>
+    <van-popup
+      v-model:show="showPointPopup"
+      round
+      class="point-popup"
+      closeable
+      :close-on-click-overlay="false"
+    >
+      <UserPostCell :post="curPost" />
+    </van-popup>
+  </div>
 </template>
 
 <script setup>
@@ -10,10 +21,13 @@ import AMapLoader from '@amap/amap-jsapi-loader'
 import amap from '@/components/data/amap.json'
 import { getUserInfo } from '@/api/userinfo'
 import { getAllPosts } from '@/api/post.js'
+import UserPostCell from '@/components/UserPostCell.vue'
 let map = null
 let points = []
 const avatarUrl = ref('')
-
+const showPointPopup = ref(false)
+const pointPostContent = ref('')
+const curPost = ref()
 onMounted(async () => {
   showLoadingToast({
     message: '地图加载中',
@@ -84,11 +98,24 @@ onMounted(async () => {
       context.marker.setContent(div)
     }
     var _renderMarker = function (context) {
-      var content =
-        '<div style="background-color: hsla(180, 100%, 50%, 0.3); height: 18px; width: 18px; border: 1px solid hsl(180, 100%, 40%); border-radius: 12px; box-shadow: hsl(180, 100%, 50%) 0px 0px 3px;"></div>'
+      const { marker, data } = context
+      const { pointDetails } = data[0]
+      const posterAvatar = pointDetails.userAvatar
+      //在同一个点的头像,最近发布的显示在最上面
+      var content = `
+          <img src="${posterAvatar}" 
+          style="width:30px;height:30px;border-radius:50%;"/>
+          `
       var offset = new AMap.Pixel(-9, -9)
-      context.marker.setContent(content)
-      context.marker.setOffset(offset)
+      marker.setContent(content)
+      marker.setOffset(offset)
+
+      /* marker.on('click', () => {
+        console.log(pointDetails)
+        curPost.value = pointDetails
+        console.log('点击point')
+        showPointPopup.value = true
+      }) */
     }
     var cluster = new AMap.MarkerCluster(map, points, {
       gridSize: gridSize, // 设置网格像素大小
@@ -112,10 +139,12 @@ const getAllPostPoints = async () => {
   try {
     const res = await getAllPosts()
     const posts = res.data
-    for (const post of posts) {
+    for (const post of posts.reverse()) {
+      //根据发布时间先后依次渲染
       const { lat, lon } = post.location
       const point = {
-        lnglat: [lon, lat]
+        lnglat: [lon, lat],
+        pointDetails: post
       }
       points.push(point)
     }
@@ -138,5 +167,13 @@ onUnmounted(() => {
   width: 100%;
   /* 注意使用calc时减号左右要有空格 */
   height: calc(100vh - var(--van-nav-bar-height) - var(--van-tabbar-height));
+}
+
+.point-popup {
+  width: 100vw;
+  height: 40vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

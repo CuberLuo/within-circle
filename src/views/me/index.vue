@@ -18,12 +18,10 @@
     />
     <ThemeMode />
 
-    <van-cell is-link title="我的关注" @click="goToMyFollowPage()" />
     <van-cell is-link title="我的发布" @click="goToMyPostPage()" />
     <van-cell is-link title="我的点赞" @click="goToLikePage()" />
 
-    <van-cell is-link title="个人资料" @click="goToPersonalInfoPage()" />
-    <van-cell is-link title="关于方圆几里" @click="goToAboutPage()" />
+    <van-cell is-link title="手机号" :value="phoneNum" @click="bindPhone()" />
     <van-button plain block @click="exitLogin()" id="exitBtn">退出登录</van-button>
   </div>
 </template>
@@ -36,6 +34,7 @@ import { getUserInfo } from '@/api/userinfo'
 const username = ref('')
 const registerDate = ref('')
 const avatarUrl = ref('')
+const phoneNum = ref('')
 const showPopup = ref(false)
 
 const showAvatarPopup = () => {
@@ -50,9 +49,9 @@ const updateUserAvatar = (val) => {
 
 const goToLikePage = () => router.push('/myLike')
 const goToMyPostPage = () => router.push('/myPost')
-const goToMyFollowPage = () => router.push('/myFollow')
-const goToPersonalInfoPage = () => router.push('/myPersonalInfo')
-const goToAboutPage = () => router.push('/about')
+const bindPhone = () => {
+  showToast(phoneNum.value)
+}
 
 onMounted(async () => {
   //组件挂载到DOM后立即执行
@@ -63,6 +62,7 @@ onMounted(async () => {
       username.value = data.username
       registerDate.value = data.registerDate
       avatarUrl.value = data.avatarUrl
+      phoneNum.value = data.phoneNum == '' ? '未绑定' : data.phoneNum
     } else {
       showFailToast(res.msg)
       useUserTokenStore().removeToken() //移除Pinia和localStorage中的token
@@ -90,9 +90,9 @@ const exitLogin = () => {
 #exitBtn {
   margin-top: 6px;
 }
-:deep().van-cell__value {
+/* :deep().van-cell__value {
   text-align: left;
-}
+} */
 .user-cell {
   margin: 10px 0;
   height: 100px;

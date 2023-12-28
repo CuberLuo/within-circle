@@ -1,7 +1,14 @@
 <template>
+  <!-- <PosterPopup :showPopup="showPopup" :posterId="curPosterId" @updateShowPopup="updateShowPopup" /> -->
   <van-cell class="user-post-cell">
     <div class="user-cell-info">
-      <van-image round fit="cover" class="user-avatar" :src="post.userAvatar" />
+      <van-image
+        round
+        fit="cover"
+        class="user-avatar"
+        :src="post.userAvatar"
+        @click="showPosterDetails(post.userid)"
+      />
       <div class="post-source">
         <div class="user-name">{{ post.username }}</div>
         <div class="post-date">{{ post.postDate }}</div>
@@ -58,16 +65,16 @@
 <script setup>
 import { likePost, deletePost } from '@/api/post.js'
 import { showImagePreview } from 'vant'
+import PosterPopup from './PosterPopup.vue'
 const props = defineProps({
   post: {
     type: Object
   }
 })
+const curPosterId = ref()
+const showPopup = ref(false)
 const emits = defineEmits(['deletePostFromPostsArr'])
 const showImage = (id, images) => {
-  console.log(id)
-  console.log(images)
-  console.log(images.map((image) => image.imgUrl))
   showImagePreview({
     images: images.map((image) => image.imgUrl),
     startPosition: id
@@ -104,6 +111,13 @@ const deletePostCell = (id) => {
       }
     })
     .catch((e) => {})
+}
+const showPosterDetails = (posterId) => {
+  curPosterId.value = posterId
+  showPopup.value = true
+}
+const updateShowPopup = (val) => {
+  showPopup.value = val
 }
 </script>
 
