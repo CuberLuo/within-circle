@@ -30,3 +30,11 @@ export const pwdRegister = (data) => {
     data
   })
 }
+
+export const pwdChange = (data) => {
+  return request({
+    url: '/pwdChange',
+    method: 'POST',
+    data
+  })
+}

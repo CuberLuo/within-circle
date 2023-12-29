@@ -3,7 +3,7 @@
     <van-cell class="user-cell">
       <template #value>
         <div class="user-cv">
-          <van-image round class="user-img" :src="avatarUrl" @click="showAvatarPopup" />
+          <van-image round class="user-img" :src="avatarUrl" @click="showUserAvatarPopup" />
           <span class="user-info">
             {{ username }}
           </span>
@@ -11,9 +11,9 @@
       </template>
     </van-cell>
     <UserAvatarPopup
-      :showPopup="showPopup"
+      :showPopup="showAvatarPopup"
       :avatarUrl="avatarUrl"
-      @updateShowPopup="updateShowPopup"
+      @updateShowPopup="updateShowAvatarPopup"
       @updateUserAvatar="updateUserAvatar"
     />
     <ThemeMode />
@@ -22,6 +22,8 @@
     <van-cell is-link title="我的点赞" @click="goToLikePage()" />
 
     <van-cell is-link title="手机号" :value="phoneNum" @click="bindPhone()" />
+    <PwdPopup :showPopup="showPwdPopup" @updateShowPopup="updateShowPwdPopup" />
+    <van-cell is-link title="修改密码" @click="showUserPwdPopup()" />
     <van-button plain block @click="exitLogin()" id="exitBtn">退出登录</van-button>
   </div>
 </template>
@@ -29,28 +31,36 @@
 <script setup>
 import ThemeMode from './ThemeMode.vue'
 import UserAvatarPopup from './UserAvatarPopup.vue'
+import PwdPopup from './PwdPopup.vue'
 import { useUserTokenStore } from '@/stores/userToken.js'
 import { getUserInfo } from '@/api/userinfo'
 const username = ref('')
 const registerDate = ref('')
 const avatarUrl = ref('')
 const phoneNum = ref('')
-const showPopup = ref(false)
+const showAvatarPopup = ref(false)
+const showPwdPopup = ref(false)
 
-const showAvatarPopup = () => {
-  showPopup.value = true
+const showUserAvatarPopup = () => {
+  showAvatarPopup.value = true
 }
-const updateShowPopup = (val) => {
-  showPopup.value = val
+const updateShowAvatarPopup = (val) => {
+  showAvatarPopup.value = val
 }
 const updateUserAvatar = (val) => {
   avatarUrl.value = val
+}
+const showUserPwdPopup = () => {
+  showPwdPopup.value = true
+}
+const updateShowPwdPopup = (val) => {
+  showPwdPopup.value = val
 }
 
 const goToLikePage = () => router.push('/myLike')
 const goToMyPostPage = () => router.push('/myPost')
 const bindPhone = () => {
-  showToast(phoneNum.value)
+  if (phoneNum.value != '未绑定') showToast('手机号暂不支持解绑或换绑')
 }
 
 onMounted(async () => {
