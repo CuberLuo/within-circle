@@ -51,7 +51,7 @@
 
 <script setup>
 import isMobilePhone from 'validator/lib/isMobilePhone'
-import { sendSmsCode, checkSmsCode } from '@/api/user'
+import { sendSmsCode, smsCheck } from '@/api/user'
 import { useUserTokenStore } from '@/stores/userToken.js'
 
 const phoneNum = ref('')
@@ -66,7 +66,10 @@ let smsTimerId = null
 const phoneNumValidator = (phoneNum) => isMobilePhone(phoneNum, 'zh-CN')
 const sendSms = async () => {
   try {
-    const res = await sendSmsCode(phoneNum.value)
+    const res = await sendSmsCode({
+      phone: phoneNum.value,
+      smsFlag: 'login'
+    })
     if (res.code == status_code.OK) {
       smsBtnDisabled.value = true
       showSuccessToast(res.msg)
@@ -98,7 +101,8 @@ const onSubmit = async (val) => {
   submitLoading.value = true
 
   try {
-    const res = await checkSmsCode(val)
+    val.smsFlag = 'login'
+    const res = await smsCheck(val)
     if (res.code == status_code.OK) {
       showSuccessToast(res.msg)
       useUserTokenStore().setToken(res.data.access_token)
@@ -111,4 +115,9 @@ const onSubmit = async (val) => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+:deep().van-field__label {
+  display: flex;
+  align-items: center;
+}
+</style>

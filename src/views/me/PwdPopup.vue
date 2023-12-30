@@ -8,15 +8,23 @@
           label="原密码"
           type="password"
           placeholder="请输入原密码"
+          maxlength="15"
         />
       </van-cell-group>
       <van-cell-group inset>
-        <van-field v-model="newPwd" label="新密码" type="password" placeholder="请输入新密码" />
+        <van-field
+          v-model="newPwd"
+          label="新密码"
+          type="password"
+          placeholder="请输入新密码"
+          maxlength="15"
+        />
         <van-field
           v-model="confirmNewPwd"
           label="确认密码"
           type="password"
           placeholder="请再次输入密码"
+          maxlength="15"
         />
       </van-cell-group>
     </van-space>

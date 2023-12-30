@@ -1,17 +1,18 @@
 import request from '@/utils/request'
 
-export const sendSmsCode = (phone) => {
+export const sendSmsCode = (params) => {
   return request({
-    url: `/sms/${phone}`,
-    method: 'GET'
+    url: '/sms',
+    method: 'GET',
+    params
   })
 }
 
-export const checkSmsCode = (data) => {
+export const smsCheck = (params) => {
   return request({
-    url: '/checkSmsCode',
-    method: 'POST',
-    data
+    url: '/smsCheck',
+    method: 'GET',
+    params
   })
 }
 

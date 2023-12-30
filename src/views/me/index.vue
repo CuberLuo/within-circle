@@ -20,7 +20,11 @@
 
     <van-cell is-link title="我的发布" @click="goToMyPostPage()" />
     <van-cell is-link title="我的点赞" @click="goToLikePage()" />
-
+    <PhoneBindPopup
+      :showPopup="showPhoneBindPopup"
+      @updateShowPopup="updateShowPhoneBindPopup"
+      @updatePhoneInfo="updatePhoneInfo"
+    />
     <van-cell is-link title="手机号" :value="phoneNum" @click="bindPhone()" />
     <PwdPopup :showPopup="showPwdPopup" @updateShowPopup="updateShowPwdPopup" />
     <van-cell is-link title="修改密码" @click="showUserPwdPopup()" />
@@ -31,6 +35,7 @@
 <script setup>
 import ThemeMode from './ThemeMode.vue'
 import UserAvatarPopup from './UserAvatarPopup.vue'
+import PhoneBindPopup from './PhoneBindPopup.vue'
 import PwdPopup from './PwdPopup.vue'
 import { useUserTokenStore } from '@/stores/userToken.js'
 import { getUserInfo } from '@/api/userinfo'
@@ -40,6 +45,7 @@ const avatarUrl = ref('')
 const phoneNum = ref('')
 const showAvatarPopup = ref(false)
 const showPwdPopup = ref(false)
+const showPhoneBindPopup = ref(false)
 
 const showUserAvatarPopup = () => {
   showAvatarPopup.value = true
@@ -56,11 +62,21 @@ const showUserPwdPopup = () => {
 const updateShowPwdPopup = (val) => {
   showPwdPopup.value = val
 }
+const showUserPhoneBindPopup = () => {
+  showPhoneBindPopup.value = true
+}
+const updateShowPhoneBindPopup = (val) => {
+  showPhoneBindPopup.value = val
+}
+const updatePhoneInfo = (val) => {
+  phoneNum.value = val
+}
 
 const goToLikePage = () => router.push('/myLike')
 const goToMyPostPage = () => router.push('/myPost')
 const bindPhone = () => {
   if (phoneNum.value != '未绑定') showToast('手机号暂不支持解绑或换绑')
+  else showUserPhoneBindPopup()
 }
 
 onMounted(async () => {
