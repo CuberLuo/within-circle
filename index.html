@@ -17,45 +17,31 @@
         body {
           display: flex;
           background-color: black;
-          align-items: center;
           justify-content: center;
         }
         .loading-wrap {
           display: flex;
-          flex-direction: column;
           justify-content: center;
           align-items: center;
           height: 100vh;
-          flex-wrap: wrap;
         }
         .container {
           box-sizing: content-box;
-          height: 200px;
-          width: 200px;
+          height: 150px;
+          width: 150px;
           border-radius: 50%;
-          border: 20px solid rgba(3, 233, 244, 0.825);
+          border-left: 15px solid rgba(3, 233, 244, 0.825);
+          border-bottom: 15px solid gray;
+          border-top: 15px solid gray;
+          border-right: 15px solid gray;
           box-shadow:
             0 0 10px #03e9f4 inset,
             0 0 5px #03e9f4,
             0 0 25px #03e9f4,
             0 0 100px #03e9f4;
-
-          position: relative;
-          overflow: hidden;
-          border-bottom: 20px solid gray;
-          border-top: 20px solid gray;
-          border-right: 20px solid gray;
           animation: run 1s infinite linear;
         }
-        .container::after {
-          content: '';
-          position: absolute;
-          background-image: url('/app-icon.svg');
-          background-size: 200px 200px;
-          background-repeat: no-repeat;
-          height: 200px;
-          width: 200px;
-        }
+
         @keyframes run {
           to {
             transform: rotate(1turn);
