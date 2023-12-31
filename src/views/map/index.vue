@@ -22,6 +22,9 @@ import amap from '@/components/data/amap.json'
 import { getUserInfo } from '@/api/userinfo'
 import { getAllPosts } from '@/api/post.js'
 import UserPostCell from '@/components/UserPostCell.vue'
+import { useThemeStore } from '@/stores/theme.js'
+const theme = useThemeStore().theme
+const mapTheme = `amap://styles/${theme == 'dark' ? 'darkblue' : 'normal'}`
 let map = null
 let points = []
 const avatarUrl = ref('')
@@ -43,6 +46,7 @@ onMounted(async () => {
     plugins: ['AMap.Geolocation', 'AMap.MarkerCluster']
   }).then((AMap) => {
     map = new AMap.Map('container', {
+      mapStyle: mapTheme,
       resizeEnable: true,
       zoom: 18,
       center: [120.048268, 30.233088]
@@ -55,8 +59,8 @@ onMounted(async () => {
       enableHighAccuracy: true, //使用高精度定位
       markerOptions: {
         content: `
-          <img src="${avatarUrl.value}" 
-          style="width:30px;height:30px;border-radius:50%;"/>
+          <img src="${avatarUrl.value}"
+          style="width:30px;height:30px;border-radius:50%;border: 2px solid #0084fc"/>
           `
       }
     })
@@ -103,7 +107,7 @@ onMounted(async () => {
       const posterAvatar = pointDetails.userAvatar
       //在同一个点的头像,最近发布的显示在最上面
       var content = `
-          <img src="${posterAvatar}" 
+          <img src="${posterAvatar}"
           style="width:30px;height:30px;border-radius:50%;"/>
           `
       var offset = new AMap.Pixel(-9, -9)
