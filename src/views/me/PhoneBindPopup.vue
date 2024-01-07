@@ -3,7 +3,13 @@
     <h1>手机号绑定</h1>
     <van-space direction="vertical" fill>
       <van-cell-group inset>
-        <van-field v-model="phoneNum" label="手机号" placeholder="请输入手机号" maxlength="11" />
+        <van-field
+          v-model="phoneNum"
+          label="手机号"
+          type="tel"
+          placeholder="请输入手机号"
+          maxlength="11"
+        />
       </van-cell-group>
       <van-cell-group inset>
         <van-field

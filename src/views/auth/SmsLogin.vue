@@ -6,6 +6,7 @@
           v-model="phoneNum"
           name="phone"
           label="手机号(+86)"
+          type="tel"
           placeholder="请输入手机号"
           :rules="[
             { required: true, message: '手机号不能为空' },
@@ -18,6 +19,7 @@
           name="sms"
           clearable
           label="短信验证码"
+          type="number"
           placeholder="请输入短信验证码"
           :rules="[{ required: true, message: '验证码不能为空' }]"
           maxlength="5"
