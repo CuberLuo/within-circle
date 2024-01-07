@@ -29,7 +29,6 @@ let map = null
 let points = []
 const avatarUrl = ref('')
 const showPointPopup = ref(false)
-const pointPostContent = ref('')
 const curPost = ref()
 onMounted(async () => {
   showLoadingToast({
@@ -59,9 +58,10 @@ onMounted(async () => {
       enableHighAccuracy: true, //使用高精度定位
       markerOptions: {
         content: `
-          <img src="${avatarUrl.value}"
-          style="width:30px;height:30px;border-radius:50%;border: 2px solid #0084fc"/>
-          `
+        <img src="https://a.amap.com/jsapi_demos/static/resource/img/user.png" 
+        style="width:36px;height:36px"/>
+        `,
+        offset: new AMap.Pixel(-18, -36)
       }
     })
     map.addControl(geolocation)
