@@ -20,6 +20,8 @@
 
     <van-cell is-link title="我的发布" @click="goToMyPostPage()" />
     <van-cell is-link title="我的点赞" @click="goToLikePage()" />
+    <van-cell is-link title="我的关注" @click="goToMyFollowPage()" />
+    <van-cell is-link title="我的粉丝" @click="goToMyFansPage()" />
     <PhoneBindPopup
       :showPopup="showPhoneBindPopup"
       @updateShowPopup="updateShowPhoneBindPopup"
@@ -74,6 +76,8 @@ const updatePhoneInfo = (val) => {
 
 const goToLikePage = () => router.push('/myLike')
 const goToMyPostPage = () => router.push('/myPost')
+const goToMyFollowPage = () => router.push('/myFollow')
+const goToMyFansPage = () => router.push('/myFans')
 const bindPhone = () => {
   if (phoneNum.value != '未绑定') showToast('手机号暂不支持解绑或换绑')
   else showUserPhoneBindPopup()
@@ -112,29 +116,9 @@ const exitLogin = () => {
 }
 </script>
 
+<style src="@/assets/styles/userinfo.css" scoped />
 <style scoped>
 #exitBtn {
   margin-top: 6px;
-}
-/* :deep().van-cell__value {
-  text-align: left;
-} */
-.user-cell {
-  margin: 10px 0;
-  height: 100px;
-}
-.user-cv {
-  display: flex;
-  align-items: center;
-}
-
-.user-img {
-  width: 80px;
-  height: 80px;
-}
-.user-info {
-  font-size: 26px;
-  font-weight: 700;
-  margin-left: 15px;
 }
 </style>

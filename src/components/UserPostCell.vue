@@ -1,5 +1,5 @@
 <template>
-  <!-- <PosterPopup :showPopup="showPopup" :posterId="curPosterId" @updateShowPopup="updateShowPopup" /> -->
+  <PosterPopup :showPopup="showPopup" :posterId="curPosterId" @updateShowPopup="updateShowPopup" />
   <van-cell class="user-post-cell">
     <div class="user-cell-info">
       <van-image

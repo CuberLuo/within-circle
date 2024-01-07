@@ -64,6 +64,18 @@ const router = createRouter({
           component: () => import('@/views/myPost/index.vue')
         },
         {
+          path: '/myFollow',
+          name: 'myFollow',
+          meta: { title: '我的关注' },
+          component: () => import('@/views/myFollow/index.vue')
+        },
+        {
+          path: '/myFans',
+          name: 'myFans',
+          meta: { title: '我的粉丝' },
+          component: () => import('@/views/myFans/index.vue')
+        },
+        {
           path: '/:catchAll(.*)',
           meta: { title: '页面找不到啦~~' },
           component: () => import('@/views/404/index.vue')

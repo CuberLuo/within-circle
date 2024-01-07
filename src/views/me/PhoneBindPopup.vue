@@ -9,7 +9,7 @@
         <van-field
           v-model="smsCode"
           label="验证码"
-          type="password"
+          type="number"
           placeholder="请输入验证码"
           maxlength="5"
         >

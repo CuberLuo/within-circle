@@ -1,0 +1,26 @@
+.user-cell {
+  margin: 10px 0;
+  height: 100px;
+}
+.user-cv {
+  display: flex;
+  align-items: center;
+}
+
+.user-img {
+  width: 80px;
+  height: 80px;
+}
+.user-info {
+  font-size: 26px;
+  font-weight: 700;
+  margin-left: 15px;
+}
+
+.follow-wrapper {
+  flex: 1;
+}
+.follow-btn {
+  height: 8vw;
+  width: 20vw;
+}
