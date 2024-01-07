@@ -47,8 +47,6 @@ const opUserFollow = async (fans) => {
     if (res.code == status_code.OK) {
       fans.follow = !fans.follow
       showToast(res.msg)
-    } else {
-      showFailToast(res.msg)
     }
   } catch (error) {
     console.log(error)

@@ -93,10 +93,6 @@ onMounted(async () => {
       registerDate.value = data.registerDate
       avatarUrl.value = data.avatarUrl
       phoneNum.value = data.phoneNum == '' ? '未绑定' : data.phoneNum
-    } else {
-      showFailToast(res.msg)
-      useUserTokenStore().removeToken() //移除Pinia和localStorage中的token
-      router.push('/auth')
     }
   } catch (error) {
     console.log(error)

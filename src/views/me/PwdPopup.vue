@@ -43,7 +43,6 @@
 
 <script setup>
 import { pwdChange } from '@/api/user.js'
-import { showFailToast, showSuccessToast } from 'vant'
 const showPwdPopup = ref(false)
 const confirmLoading = ref(false)
 const props = defineProps({
@@ -82,8 +81,6 @@ const confirmChange = async () => {
         newPwd.value = ''
         confirmNewPwd.value = ''
         closePopup()
-      } else {
-        showFailToast(res.msg)
       }
     } catch (error) {
       console.log(error)

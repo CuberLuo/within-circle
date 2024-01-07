@@ -141,7 +141,7 @@ const postAll = async () => {
         path: '/index',
         query: { reloadPage: '1' }
       })
-    } else showFailToast(res.msg)
+    }
   } catch (err) {
     console.log(err)
     showFailToast('发布出错')

@@ -54,9 +54,10 @@ const onSubmit = async (val) => {
     const res = await pwdRegister(val)
     if (res.code == status_code.OK) {
       showSuccessToast(res.msg)
-      useUserTokenStore().setToken(res.data.access_token)
+      const { access_token, refresh_token } = res.data
+      useUserTokenStore().setToken(access_token, refresh_token)
       router.push('/')
-    } else showFailToast(res.msg)
+    }
   } catch (err) {
     console.log(err)
   }

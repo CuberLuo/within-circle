@@ -93,8 +93,6 @@ const sendSms = async () => {
         // 开始倒计时
         countDownStart.value = true
         countDown.value.start()
-      } else {
-        showFailToast(res.msg)
       }
     } catch (error) {
       console.log(error)
@@ -121,8 +119,6 @@ const confirmBind = async () => {
         showSuccessToast(res.msg)
         emits('updatePhoneInfo', res.data.phoneNum)
         closePopup()
-      } else {
-        showFailToast(res.msg)
       }
     } catch (error) {
       console.log(error)

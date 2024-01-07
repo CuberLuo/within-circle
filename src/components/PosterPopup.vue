@@ -30,9 +30,11 @@ watch(
     if (showPosterPopup.value) {
       try {
         const res = await getPosterUserInfo(props.posterId)
-        username.value = res.data.username
-        avatarUrl.value = res.data.avatarUrl
-        follow.value = res.data.follow
+        if (res.code == status_code.OK) {
+          username.value = res.data.username
+          avatarUrl.value = res.data.avatarUrl
+          follow.value = res.data.follow
+        }
       } catch (error) {
         console.log(error)
       }
@@ -54,8 +56,6 @@ const opUserFollow = async () => {
     if (res.code == status_code.OK) {
       follow.value = !follow.value
       showToast(res.msg)
-    } else {
-      showFailToast(res.msg)
     }
   } catch (error) {
     console.log(error)

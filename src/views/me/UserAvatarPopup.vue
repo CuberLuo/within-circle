@@ -92,7 +92,7 @@ const confirmUpload = async () => {
       showSuccessToast(res.msg)
       closePopup()
       emits('updateUserAvatar', userAvatarUrl.value)
-    } else showFailToast(res.msg)
+    }
   } catch (err) {
     console.log(err)
     showFailToast('上传出错')

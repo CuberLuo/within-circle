@@ -79,7 +79,7 @@ const sendSms = async () => {
       smsTimerId = setInterval(() => {
         updateSmsBtnText(--smsLeftTime.value)
       }, 1000)
-    } else showFailToast(res.msg)
+    }
   } catch (error) {
     console.log(error)
   }
@@ -107,9 +107,10 @@ const onSubmit = async (val) => {
     const res = await smsCheck(val)
     if (res.code == status_code.OK) {
       showSuccessToast(res.msg)
-      useUserTokenStore().setToken(res.data.access_token)
+      const { access_token, refresh_token } = res.data
+      useUserTokenStore().setToken(access_token, refresh_token)
       router.push('/')
-    } else showFailToast(res.msg)
+    }
   } catch (err) {
     console.log(err)
   }
