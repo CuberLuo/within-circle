@@ -41,6 +41,7 @@ defineOptions({
 })
 onBeforeRouteLeave(async (to, from) => {
   if (
+    to.path == '/auth' ||
     (to.path == '/index' && to.query.reloadPage == '1') ||
     (message.value == '' && picList.value.length == 0)
   )

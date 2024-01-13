@@ -75,6 +75,14 @@ onMounted(async () => {
         showFailToast('无法获取当前定位')
       }
     })
+    geolocation.watchPosition(function (status, result) {
+      //监控当前位置
+      if (status == 'complete') {
+        console.log('定位成功', result)
+      } else {
+        console.log('定位失败', result)
+      }
+    })
 
     //以下是聚合点展示代码
     var gridSize = 60

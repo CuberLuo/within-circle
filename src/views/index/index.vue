@@ -26,12 +26,44 @@
 <script setup>
 import { getPageSizePosts } from '@/api/post.js'
 import UserPostCell from '@/components/UserPostCell.vue'
+import AMapLoader from '@amap/amap-jsapi-loader'
+import amap from '@/components/data/amap.json'
+const lat = ref(-1)
+const lng = ref(-1)
+
+const getPostsByLocation = async () => {
+  const AMap = await AMapLoader.load({
+    key: amap.key,
+    version: '2.0',
+    plugins: ['AMap.Geolocation']
+  })
+  const geolocation = new AMap.Geolocation({
+    useNative: true,
+    timeout: 10 * 1000,
+    maximumAge: 100, //定位结果缓存100毫秒
+    enableHighAccuracy: true //使用高精度定位
+  })
+  geolocation.getCurrentPosition(function (status, result) {
+    if (status == 'complete') {
+      console.log('首页定位成功', result)
+      lat.value = result.position.lat
+      lng.value = result.position.lng
+      console.log(lat.value)
+      console.log(lng.value)
+      requestPageSizePosts()
+    } else {
+      console.log('首页定位失败', result)
+      showFailToast('无法获取当前定位')
+    }
+  })
+}
+
 const emptyImg = new URL('@/assets/images/empty-image.png', import.meta.url).href
 const route = useRoute()
 watch(route, (newRoute) => {
   if (newRoute.path == '/index' && newRoute.query.reloadPage == '1') {
     resetData()
-    requestPageSizePosts()
+    getPostsByLocation()
   }
 })
 
@@ -40,6 +72,7 @@ const showLoading = ref(false)
 const postsArr = ref([])
 const page = ref(1)
 const pageSize = 5
+const lastPostId = ref(-1)
 const reachBottom = ref(false)
 const isGetAll = ref(false)
 const resetData = () => {
@@ -48,8 +81,8 @@ const resetData = () => {
   reachBottom.value = false
   isGetAll.value = false
 }
-onMounted(() => {
-  requestPageSizePosts()
+onMounted(async () => {
+  getPostsByLocation()
   window.addEventListener('scroll', lazyLoading)
 })
 const lazyLoading = () => {
@@ -60,14 +93,12 @@ const lazyLoading = () => {
   //触底
   if (scrollTop + clientHeight + 1 >= scrollHeight && !reachBottom.value) {
     reachBottom.value = true
-    // showToast('触底啦!!!')
-    showLoading.value = true
+
     if (isGetAll.value === false) {
       page.value++
+      showLoading.value = true
       //滚动到底的时候，当前页需要加1
-      requestPageSizePosts()
-    } else {
-      showLoading.value = false
+      getPostsByLocation()
     }
   }
   //离开底部
@@ -83,19 +114,20 @@ const requestPageSizePosts = async () => {
   console.log(res.data)
   const record_cnt = res.data.length
   if (record_cnt < pageSize) {
+    showLoading.value = false
     isGetAll.value = true
   }
   postsArr.value.push(...res.data)
 }
 const onRefresh = async () => {
   resetData()
-  await requestPageSizePosts()
+  await getPostsByLocation()
   loading.value = false
 }
 const deletePostFromPostsArr = (id) => {
   console.log(id)
   resetData()
-  requestPageSizePosts()
+  getPostsByLocation()
   // postsArr.value = postsArr.value.filter((post) => post.id !== id)
 }
 </script>
