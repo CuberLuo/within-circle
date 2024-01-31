@@ -141,7 +141,7 @@ const getUserAvatar = async () => {
   try {
     const res = await getUserInfo()
     const { data } = res
-    avatarUrl.value = data.avatarUrl
+    avatarUrl.value = data.avatar_url
   } catch (error) {
     console.log(error)
   }

@@ -117,7 +117,7 @@ const confirmBind = async () => {
       console.log(res)
       if (res.code == status_code.OK) {
         showSuccessToast(res.msg)
-        emits('updatePhoneInfo', res.data.phoneNum)
+        emits('updatePhoneInfo', res.data.phone_num)
         closePopup()
       }
     } catch (error) {

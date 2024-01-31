@@ -129,11 +129,11 @@ const postAll = async () => {
   })
   let formData = new FormData()
   for (let i = 0; i < picList.value.length; i++) {
-    formData.append('picList', picList.value[i].file)
+    formData.append('pic_list', picList.value[i].file)
   }
   formData.append('message', message.value)
   formData.append('location', location.value)
-  formData.append('visibleCircle', visibleCircle.value)
+  formData.append('visible_circle', visibleCircle.value)
   try {
     const res = await uploadPost(formData)
     if (res.code == status_code.OK) {

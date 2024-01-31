@@ -70,7 +70,7 @@ const sendSms = async () => {
   try {
     const res = await sendSmsCode({
       phone: phoneNum.value,
-      smsFlag: 'login'
+      sms_flag: 'login'
     })
     if (res.code == status_code.OK) {
       smsBtnDisabled.value = true
@@ -103,7 +103,7 @@ const onSubmit = async (val) => {
   submitLoading.value = true
 
   try {
-    val.smsFlag = 'login'
+    val.sms_flag = 'login'
     const res = await smsCheck(val)
     if (res.code == status_code.OK) {
       showSuccessToast(res.msg)

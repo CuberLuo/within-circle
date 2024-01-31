@@ -9,7 +9,7 @@
     <van-cell v-for="follower in followerList" :key="follower.id" class="user-cell">
       <template #value>
         <div class="user-cv">
-          <van-image round class="user-img" :src="follower.avatarUrl" />
+          <van-image round class="user-img" :src="follower.avatar_url" />
           <span class="user-info"> {{ follower.username }} </span>
           <div class="follow-wrapper">
             <van-button
@@ -42,7 +42,7 @@ onMounted(async () => {
 const opUserFollow = async (follower) => {
   try {
     const res = await followUser({
-      userId: follower.id
+      user_id: follower.id
     })
     if (res.code == status_code.OK) {
       follower.follow = !follower.follow

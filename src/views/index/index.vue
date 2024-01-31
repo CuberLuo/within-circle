@@ -31,7 +31,7 @@ import amap from '@/components/data/amap.json'
 const lat = ref(-1)
 const lng = ref(-1)
 
-const getPostsByLocation = async () => {
+/* const getPostsByLocation = async () => {
   const AMap = await AMapLoader.load({
     key: amap.key,
     version: '2.0',
@@ -56,14 +56,14 @@ const getPostsByLocation = async () => {
       showFailToast('无法获取当前定位')
     }
   })
-}
+} */
 
 const emptyImg = new URL('@/assets/images/empty-image.png', import.meta.url).href
 const route = useRoute()
 watch(route, (newRoute) => {
   if (newRoute.path == '/index' && newRoute.query.reloadPage == '1') {
     resetData()
-    getPostsByLocation()
+    requestPageSizePosts()
   }
 })
 
@@ -82,7 +82,7 @@ const resetData = () => {
   isGetAll.value = false
 }
 onMounted(async () => {
-  getPostsByLocation()
+  requestPageSizePosts()
   window.addEventListener('scroll', lazyLoading)
 })
 const lazyLoading = () => {
@@ -98,7 +98,7 @@ const lazyLoading = () => {
       page.value++
       showLoading.value = true
       //滚动到底的时候，当前页需要加1
-      getPostsByLocation()
+      requestPageSizePosts()
     }
   }
   //离开底部
@@ -109,7 +109,7 @@ const lazyLoading = () => {
 const requestPageSizePosts = async () => {
   const res = await getPageSizePosts({
     page: page.value,
-    pageSize: pageSize
+    page_size: pageSize
   })
   console.log(res.data)
   const record_cnt = res.data.length
@@ -121,13 +121,13 @@ const requestPageSizePosts = async () => {
 }
 const onRefresh = async () => {
   resetData()
-  await getPostsByLocation()
+  await requestPageSizePosts()
   loading.value = false
 }
 const deletePostFromPostsArr = (id) => {
   console.log(id)
   resetData()
-  getPostsByLocation()
+  requestPageSizePosts()
   // postsArr.value = postsArr.value.filter((post) => post.id !== id)
 }
 </script>

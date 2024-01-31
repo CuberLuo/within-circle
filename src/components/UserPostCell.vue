@@ -6,15 +6,15 @@
         round
         fit="cover"
         class="user-avatar"
-        :src="post.userAvatar"
-        @click="showPosterDetails(post.userid)"
+        :src="post.user_avatar"
+        @click="showPosterDetails(post.user_id)"
       />
       <div class="post-source">
         <div class="user-name">{{ post.username }}</div>
-        <div class="post-date">{{ post.postDate }}</div>
+        <div class="post-date">{{ post.post_date }}</div>
       </div>
       <div class="cell-operate">
-        <div v-if="post.isMyPost" class="cell-delete">
+        <div v-if="post.is_my_post" class="cell-delete">
           <van-icon
             name="delete-o"
             color="#ee0a24"
@@ -27,25 +27,25 @@
             round
             size="small"
             icon="good-job-o"
-            :class="post.userLike ? 'like-btn' : ''"
+            :class="post.user_like ? 'like-btn' : ''"
             @click="likeIt(post)"
           >
-            {{ post.likeNum }}
+            {{ post.like_num }}
           </van-button>
         </div>
       </div>
     </div>
     <div class="user-cell-content">
-      {{ post.postContent }}
+      {{ post.post_content }}
     </div>
     <van-space :size="5" class="post-images">
-      <div class="img-wrapper" v-for="imgs in post.postImages" :key="imgs.id">
+      <div class="img-wrapper" v-for="imgs in post.post_images" :key="imgs.id">
         <van-image
           class="post-image"
           fit="cover"
-          :src="imgs.imgUrl"
+          :src="imgs.img_url"
           lazy-load
-          @click="showImage(imgs.id, post.postImages)"
+          @click="showImage(imgs.id, post.post_images)"
         />
       </div>
     </van-space>
@@ -56,7 +56,7 @@
       </van-tag>
       <!-- <van-tag plain type="warning">
           <van-icon name="lock" />
-          <span>{{ post.visibleCircle }}</span>
+          <span>{{ post.visible_circle }}</span>
         </van-tag> -->
     </van-space>
   </van-cell>
@@ -81,12 +81,12 @@ const showImage = (id, images) => {
   })
 }
 const likeIt = async (post) => {
-  if (post.userLike) post.likeNum -= 1
-  else post.likeNum += 1
-  post.userLike = !post.userLike
+  if (post.user_like) post.like_num -= 1
+  else post.like_num += 1
+  post.user_like = !post.user_like
   try {
     const res = await likePost({
-      postId: post.id
+      post_id: post.id
     })
     showToast(res.msg)
   } catch (error) {
@@ -102,7 +102,7 @@ const deletePostCell = (id) => {
     .then(async () => {
       try {
         const res = await deletePost({
-          postId: id
+          post_id: id
         })
         emits('deletePostFromPostsArr', id)
         showToast(res.msg)

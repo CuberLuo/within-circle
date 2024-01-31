@@ -32,7 +32,7 @@ watch(
         const res = await getPosterUserInfo(props.posterId)
         if (res.code == status_code.OK) {
           username.value = res.data.username
-          avatarUrl.value = res.data.avatarUrl
+          avatarUrl.value = res.data.avatar_url
           follow.value = res.data.follow
         }
       } catch (error) {
@@ -51,7 +51,7 @@ const follow = ref(false)
 const opUserFollow = async () => {
   try {
     const res = await followUser({
-      userId: props.posterId
+      user_id: props.posterId
     })
     if (res.code == status_code.OK) {
       follow.value = !follow.value

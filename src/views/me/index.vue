@@ -90,9 +90,9 @@ onMounted(async () => {
     if (res.code == status_code.OK) {
       const { data } = res
       username.value = data.username
-      registerDate.value = data.registerDate
-      avatarUrl.value = data.avatarUrl
-      phoneNum.value = data.phoneNum == '' ? '未绑定' : data.phoneNum
+      registerDate.value = data.register_date
+      avatarUrl.value = data.avatar_url
+      phoneNum.value = data.phone_num == '' ? '未绑定' : data.phone_num
     }
   } catch (error) {
     console.log(error)

@@ -72,8 +72,8 @@ const confirmChange = async () => {
   else {
     try {
       const res = await pwdChange({
-        originalPwd: originalPwd.value,
-        newPwd: newPwd.value
+        original_pwd: originalPwd.value,
+        new_pwd: newPwd.value
       })
       if (res.code == status_code.OK) {
         showSuccessToast(res.msg)

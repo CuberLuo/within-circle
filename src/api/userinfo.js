@@ -15,9 +15,9 @@ export const uploadUserAvatar = (data) => {
   })
 }
 
-export const getPosterUserInfo = (posterId) => {
+export const getPosterUserInfo = (poster_id) => {
   return request({
-    url: `/getPosterUserInfo/${posterId}`,
+    url: `/getPosterUserInfo/${poster_id}`,
     method: 'GET'
   })
 }

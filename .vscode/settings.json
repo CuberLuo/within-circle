@@ -7,8 +7,12 @@
     "Lazyload",
     "Pinia",
     "pois",
+    "postcsspxtoviewport",
     "rushstack",
+    "tabbar",
+    "unplugin",
     "userinfo",
+    "vant",
     "vconsole",
     "VITE"
   ],
