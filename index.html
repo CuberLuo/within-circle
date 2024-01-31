@@ -18,6 +18,8 @@
           display: flex;
           background-color: black;
           justify-content: center;
+          /* 隐藏滚动条 */
+          overflow: hidden;
         }
         .loading-wrap {
           display: flex;
@@ -28,7 +30,7 @@
         .container {
           box-sizing: content-box;
           height: 150px;
-          width: 150px;
+          aspect-ratio: 1 / 1;
           border-radius: 50%;
           border-left: 15px solid rgba(3, 233, 244, 0.825);
           border-bottom: 15px solid gray;
