@@ -69,6 +69,8 @@ export default defineConfig({
     }
   },
   server: {
+    // 自动打开浏览器
+    open: true,
     https: {
       cert: fs.readFileSync('./ssl/cert.crt'),
       key: fs.readFileSync('./ssl/cert.key')
