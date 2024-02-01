@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export const uploadPost = (data) => {
   return request({
-    url: '/uploadPost',
+    url: '/post',
     method: 'POST',
     data
   })
@@ -10,14 +10,14 @@ export const uploadPost = (data) => {
 
 export const getAllPosts = () => {
   return request({
-    url: '/getAllPosts',
+    url: '/posts',
     method: 'GET'
   })
 }
 
 export const getPageSizePosts = (param) => {
   return request({
-    url: '/getPageSizePosts',
+    url: '/page-size-posts',
     method: 'GET',
     params: param
   })
@@ -25,30 +25,30 @@ export const getPageSizePosts = (param) => {
 
 export const likePost = (data) => {
   return request({
-    url: '/likePost',
-    method: 'POST',
+    url: '/like-post',
+    method: 'PATCH',
     data
   })
 }
 
 export const getMyPosts = () => {
   return request({
-    url: '/getMyPosts',
+    url: '/my-posts',
     method: 'GET'
   })
 }
 
 export const deletePost = (data) => {
   return request({
-    url: '/deletePost',
-    method: 'POST',
+    url: '/post',
+    method: 'DELETE',
     data
   })
 }
 
 export const getMyLikePosts = () => {
   return request({
-    url: '/getMyLikePosts',
+    url: '/my-like-posts',
     method: 'GET'
   })
 }

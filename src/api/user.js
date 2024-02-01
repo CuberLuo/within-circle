@@ -10,7 +10,7 @@ export const sendSmsCode = (params) => {
 
 export const smsCheck = (params) => {
   return request({
-    url: '/smsCheck',
+    url: '/sms-check',
     method: 'GET',
     params
   })
@@ -34,15 +34,15 @@ export const pwdRegister = (data) => {
 
 export const pwdChange = (data) => {
   return request({
-    url: '/pwdChange',
-    method: 'POST',
+    url: '/pwd',
+    method: 'PUT',
     data
   })
 }
 
 export const followUser = (data) => {
   return request({
-    url: '/followUser',
+    url: '/follow-user',
     method: 'POST',
     data
   })
@@ -50,14 +50,14 @@ export const followUser = (data) => {
 
 export const getMyFollows = () => {
   return request({
-    url: '/getMyFollows',
+    url: '/my-follows',
     method: 'GET'
   })
 }
 
 export const getMyFans = () => {
   return request({
-    url: '/getMyFans',
+    url: '/my-fans',
     method: 'GET'
   })
 }

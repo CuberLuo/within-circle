@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export const tokenRefresh = () => {
   return request({
-    url: '/tokenRefresh',
+    url: '/token-refresh',
     method: 'GET',
     __isRefreshToken: true
   })

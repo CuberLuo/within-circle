@@ -2,22 +2,22 @@ import request from '@/utils/request'
 
 export const getUserInfo = () => {
   return request({
-    url: '/getUserInfo',
+    url: '/user-info',
     method: 'GET'
   })
 }
 
 export const uploadUserAvatar = (data) => {
   return request({
-    url: '/uploadUserAvatar',
-    method: 'POST',
+    url: '/avatar',
+    method: 'PUT',
     data
   })
 }
 
 export const getPosterUserInfo = (poster_id) => {
   return request({
-    url: `/getPosterUserInfo/${poster_id}`,
+    url: `/poster_user_info/${poster_id}`,
     method: 'GET'
   })
 }
