@@ -43,19 +43,8 @@
 
 <script setup>
 import { pwdChange } from '@/api/user.js'
-const showPwdPopup = ref(false)
+const showPwdPopup = defineModel()
 const confirmLoading = ref(false)
-const props = defineProps({
-  showPopup: {
-    type: Boolean
-  }
-})
-watch(
-  () => props.showPopup,
-  (newVal) => {
-    showPwdPopup.value = newVal
-  }
-)
 const emits = defineEmits(['updateShowPopup'])
 const closePopup = () => {
   emits('updateShowPopup', false)

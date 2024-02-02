@@ -56,23 +56,12 @@
 <script setup>
 import isMobilePhone from 'validator/lib/isMobilePhone'
 import { smsCheck, sendSmsCode } from '@/api/user.js'
-const showPhoneBindPopup = ref(false)
+const showPhoneBindPopup = defineModel()
 const smsBtnDisabled = ref(false)
 const confirmLoading = ref(false)
-const props = defineProps({
-  showPopup: {
-    type: Boolean
-  }
-})
-watch(
-  () => props.showPopup,
-  (newVal) => {
-    showPhoneBindPopup.value = newVal
-  }
-)
-const emits = defineEmits(['updateShowPopup', 'updatePhoneInfo'])
+const emits = defineEmits(['updatePhoneInfo'])
 const closePopup = () => {
-  emits('updateShowPopup', false)
+  showPhoneBindPopup.value = false
 }
 const countDown = ref(null)
 const time = ref(60 * 1000)

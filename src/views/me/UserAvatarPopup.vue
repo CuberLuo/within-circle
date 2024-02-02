@@ -19,36 +19,27 @@
 </template>
 
 <script setup>
-const showAvatarPopup = ref(false)
 const userAvatarUrl = ref('')
 const userAvatar = ref()
 const uploading = ref(false)
 const uploadDisable = ref(true)
 import { uploadUserAvatar } from '@/api/userinfo.js'
 import * as imageConversion from 'image-conversion'
+const showAvatarPopup = defineModel()
 const props = defineProps({
-  showPopup: {
-    type: Boolean
-  },
   avatarUrl: {
     type: String
   }
 })
-watch(
-  () => props.showPopup,
-  (newVal) => {
-    showAvatarPopup.value = newVal
-  }
-)
 watch(
   () => props.avatarUrl,
   (newVal) => {
     userAvatarUrl.value = newVal
   }
 )
-const emits = defineEmits(['updateShowPopup', 'updateUserAvatar'])
+const emits = defineEmits(['updateUserAvatar'])
 const closePopup = () => {
-  emits('updateShowPopup', false)
+  showAvatarPopup.value = false
 }
 
 const maxKiloBytes = 50

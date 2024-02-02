@@ -3,7 +3,7 @@
     <van-cell class="user-cell">
       <template #value>
         <div class="user-cv">
-          <van-image round class="user-img" :src="avatarUrl" @click="showUserAvatarPopup" />
+          <van-image round class="user-img" :src="avatarUrl" @click="showAvatarPopup=true" />
           <span class="user-info">
             {{ username }}
           </span>
@@ -11,9 +11,8 @@
       </template>
     </van-cell>
     <UserAvatarPopup
-      :showPopup="showAvatarPopup"
+      v-model="showAvatarPopup"
       :avatarUrl="avatarUrl"
-      @updateShowPopup="updateShowAvatarPopup"
       @updateUserAvatar="updateUserAvatar"
     />
     <ThemeMode />
@@ -23,13 +22,12 @@
     <van-cell is-link title="我的关注" @click="goToMyFollowPage()" />
     <van-cell is-link title="我的粉丝" @click="goToMyFansPage()" />
     <PhoneBindPopup
-      :showPopup="showPhoneBindPopup"
-      @updateShowPopup="updateShowPhoneBindPopup"
+      v-model="showPhoneBindPopup"
       @updatePhoneInfo="updatePhoneInfo"
     />
     <van-cell is-link title="手机号" :value="phoneNum" @click="bindPhone()" />
-    <PwdPopup :showPopup="showPwdPopup" @updateShowPopup="updateShowPwdPopup" />
-    <van-cell is-link title="修改密码" @click="showUserPwdPopup()" />
+    <PwdPopup v-model="showPwdPopup"/>
+    <van-cell is-link title="修改密码" @click="showPwdPopup = true" />
     <van-button plain block @click="exitLogin()" id="exitBtn">退出登录</van-button>
   </div>
 </template>
@@ -49,26 +47,8 @@ const showAvatarPopup = ref(false)
 const showPwdPopup = ref(false)
 const showPhoneBindPopup = ref(false)
 
-const showUserAvatarPopup = () => {
-  showAvatarPopup.value = true
-}
-const updateShowAvatarPopup = (val) => {
-  showAvatarPopup.value = val
-}
 const updateUserAvatar = (val) => {
   avatarUrl.value = val
-}
-const showUserPwdPopup = () => {
-  showPwdPopup.value = true
-}
-const updateShowPwdPopup = (val) => {
-  showPwdPopup.value = val
-}
-const showUserPhoneBindPopup = () => {
-  showPhoneBindPopup.value = true
-}
-const updateShowPhoneBindPopup = (val) => {
-  showPhoneBindPopup.value = val
 }
 const updatePhoneInfo = (val) => {
   phoneNum.value = val
@@ -80,7 +60,7 @@ const goToMyFollowPage = () => router.push('/myFollow')
 const goToMyFansPage = () => router.push('/myFans')
 const bindPhone = () => {
   if (phoneNum.value != '未绑定') showToast('手机号暂不支持解绑或换绑')
-  else showUserPhoneBindPopup()
+  else showPhoneBindPopup.value = true
 }
 
 onMounted(async () => {

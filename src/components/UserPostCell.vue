@@ -1,5 +1,5 @@
 <template>
-  <PosterPopup :showPopup="showPopup" :posterId="curPosterId" @updateShowPopup="updateShowPopup" />
+  <PosterPopup v-model="showPopup" :posterId="curPosterId" />
   <van-cell class="user-post-cell">
     <div class="user-cell-info">
       <van-image
@@ -115,9 +115,6 @@ const deletePostCell = (id) => {
 const showPosterDetails = (posterId) => {
   curPosterId.value = posterId
   showPopup.value = true
-}
-const updateShowPopup = (val) => {
-  showPopup.value = val
 }
 </script>
 

@@ -16,15 +16,12 @@ import { followUser } from '@/api/user.js'
 const props = defineProps({
   posterId: {
     type: Number
-  },
-  showPopup: {
-    type: Boolean
   }
 })
 
-const showPosterPopup = ref(false)
+const showPosterPopup = defineModel()
 watch(
-  () => props.showPopup,
+  () => showPosterPopup.value,
   async (newVal) => {
     showPosterPopup.value = newVal
     if (showPosterPopup.value) {
@@ -41,9 +38,8 @@ watch(
     }
   }
 )
-const emits = defineEmits(['updateShowPopup'])
 const closePopup = () => {
-  emits('updateShowPopup', false)
+  showPosterPopup.value = false
 }
 const avatarUrl = ref('')
 const username = ref('')

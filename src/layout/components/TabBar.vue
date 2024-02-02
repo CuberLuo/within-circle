@@ -9,10 +9,6 @@
 </template>
 
 <script setup>
-const route = useRoute()
-watch(route, (newRoute) => {
-  console.log(newRoute.path)
-})
 </script>
 
 <style scoped>
