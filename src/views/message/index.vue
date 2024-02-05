@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <EmptyError v-if="contact.length == 0" description="暂无任何消息" />
+  <div v-else>
     <div v-for="(item, index) in contact" :key="index">
       <van-swipe-cell :name="index" ref="swipeCell" class="swipeCell">
         <van-cell center class="contact-cell">
@@ -37,7 +38,7 @@
 </template>
 
 <script setup>
-const contact = ref([
+/* const contact = ref([
   {
     avatar_src:
       'https://img0.baidu.com/it/u=1080644147,2604676989&fm=253&fmt=auto&app=138&f=JPEG?w=341&h=341',
@@ -79,7 +80,8 @@ const contact = ref([
     latest_time: '2022-10-01',
     msg_num: 0
   }
-])
+]) */
+const contact = ref([])
 
 const swipeCell = ref()
 </script>

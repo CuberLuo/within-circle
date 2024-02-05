@@ -27,9 +27,7 @@ import { uploadUserAvatar } from '@/api/userinfo.js'
 import * as imageConversion from 'image-conversion'
 const showAvatarPopup = defineModel()
 const props = defineProps({
-  avatarUrl: {
-    type: String
-  }
+  avatarUrl: String
 })
 watch(
   () => props.avatarUrl,

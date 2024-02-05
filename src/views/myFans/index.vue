@@ -1,11 +1,6 @@
 <template>
-  <div>
-    <van-empty
-      v-if="fansList.length == 0"
-      :image="emptyImg"
-      image-size="100"
-      description="您暂时没有粉丝"
-    />
+  <EmptyError v-if="fansList.length == 0" description="您暂时没有粉丝" />
+  <div v-else>
     <van-cell v-for="fans in fansList" :key="fans.id" class="user-cell">
       <template #value>
         <div class="user-cv">
@@ -29,7 +24,6 @@ defineOptions({
   name: 'myFans'
 })
 import { getMyFans, followUser } from '@/api/user.js'
-const emptyImg = new URL('@/assets/images/empty-image.png', import.meta.url).href
 const fansList = ref([])
 onMounted(async () => {
   try {

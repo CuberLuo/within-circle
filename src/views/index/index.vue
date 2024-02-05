@@ -1,13 +1,7 @@
 <template>
-  <div>
-    <van-empty
-      v-if="postsArr.length == 0 && !loading"
-      :image="emptyImg"
-      image-size="100"
-      description="此处空空如也"
-    />
+  <EmptyError v-if="postsArr.length == 0 && !loading" description="此处空空如也" />
+  <div v-else>
     <van-pull-refresh
-      v-else
       v-model="loading"
       @refresh="onRefresh"
       success-text="刷新成功"
@@ -26,6 +20,7 @@
 <script setup>
 import { getPageSizePosts } from '@/api/post.js'
 import UserPostCell from '@/components/UserPostCell.vue'
+
 import AMapLoader from '@amap/amap-jsapi-loader'
 import amap from '@/components/data/amap.json'
 const lat = ref(-1)
@@ -58,7 +53,6 @@ const lng = ref(-1)
   })
 } */
 
-const emptyImg = new URL('@/assets/images/empty-image.png', import.meta.url).href
 const route = useRoute()
 watch(route, (newRoute) => {
   if (newRoute.path == '/index' && newRoute.query.reloadPage == '1') {

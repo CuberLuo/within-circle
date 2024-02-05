@@ -1,11 +1,6 @@
 <template>
-  <div>
-    <van-empty
-      v-if="followerList.length == 0"
-      :image="emptyImg"
-      image-size="100"
-      description="您暂未关注任何人"
-    />
+  <EmptyError v-if="followerList.length == 0" description="您暂未关注任何人" />
+  <div v-else>
     <van-cell v-for="follower in followerList" :key="follower.id" class="user-cell">
       <template #value>
         <div class="user-cv">
@@ -29,7 +24,6 @@ defineOptions({
   name: 'myFollow'
 })
 import { getMyFollows, followUser } from '@/api/user.js'
-const emptyImg = new URL('@/assets/images/empty-image.png', import.meta.url).href
 const followerList = ref([])
 onMounted(async () => {
   try {

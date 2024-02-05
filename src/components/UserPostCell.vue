@@ -67,9 +67,7 @@ import { likePost, deletePost } from '@/api/post.js'
 import { showImagePreview } from 'vant'
 import PosterPopup from './PosterPopup.vue'
 const props = defineProps({
-  post: {
-    type: Object
-  }
+  post: Object
 })
 const curPosterId = ref()
 const showPopup = ref(false)

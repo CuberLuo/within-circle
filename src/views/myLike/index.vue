@@ -1,11 +1,6 @@
 <template>
-  <div>
-    <van-empty
-      v-if="postsArr.length == 0"
-      :image="emptyImg"
-      image-size="100"
-      description="您暂未点赞任何内容"
-    />
+  <EmptyError v-if="postsArr.length == 0" description="您暂未点赞任何内容" />
+  <div v-else>
     <van-space direction="vertical" fill>
       <div v-for="post in postsArr" :key="post.id">
         <UserPostCell :post="post" @deletePostFromPostsArr="deletePostFromPostsArr" />
@@ -20,7 +15,6 @@ defineOptions({
 })
 import UserPostCell from '@/components/UserPostCell.vue'
 import { getMyLikePosts } from '@/api/post.js'
-const emptyImg = new URL('@/assets/images/empty-image.png', import.meta.url).href
 const postsArr = ref([])
 onMounted(async () => {
   try {

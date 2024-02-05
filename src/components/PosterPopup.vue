@@ -14,9 +14,7 @@
 import { getPosterUserInfo } from '@/api/userinfo.js'
 import { followUser } from '@/api/user.js'
 const props = defineProps({
-  posterId: {
-    type: Number
-  }
+  posterId: Number
 })
 
 const showPosterPopup = defineModel()

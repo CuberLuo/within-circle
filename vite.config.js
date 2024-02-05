@@ -39,7 +39,8 @@ export default defineConfig({
             'showDialog'
           ],
           '@/router': [['default', 'router']],
-          '@/components/data/status_code.json': [['default', 'status_code']]
+          '@/components/data/status_code.json': [['default', 'status_code']],
+          '@/components/EmptyError.vue': [['default', 'EmptyError']]
         }
       ],
       eslintrc: {

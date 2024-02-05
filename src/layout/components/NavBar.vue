@@ -16,10 +16,7 @@ watch(route, (newRoute) => {
 const leftText = ref('')
 
 const props = defineProps({
-  showArrow: {
-    type: Boolean,
-    default: false
-  }
+  showArrow: Boolean
 })
 if (props.showArrow) leftText.value = '返回'
 const onClickLeft = () => {
