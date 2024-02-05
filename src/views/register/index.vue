@@ -11,7 +11,7 @@
           label="用户名"
           placeholder="请输入用户名"
           :rules="[{ required: true, message: '用户名不能为空' }]"
-          maxlength="11"
+          maxlength="8"
         />
         <van-field
           v-model="password"

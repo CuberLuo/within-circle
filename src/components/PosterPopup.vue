@@ -5,7 +5,14 @@
       <span class="user-info">
         {{ username }}
       </span>
-      <van-button class="follow-btn" :text="follow ? '已关注' : '关注'" @click="opUserFollow" />
+      <div class="btn-wrapper" v-if="!myInfo">
+        <van-button
+          class="popup-follow-btn"
+          :text="follow ? '已关注' : '关注'"
+          @click="opUserFollow"
+        />
+        <van-button class="popup-chat-btn" @click="privateChat">私聊</van-button>
+      </div>
     </div>
   </van-popup>
 </template>
@@ -29,6 +36,7 @@ watch(
           username.value = res.data.username
           avatarUrl.value = res.data.avatar_url
           follow.value = res.data.follow
+          myInfo.value = res.data.my_info
         }
       } catch (error) {
         console.log(error)
@@ -42,6 +50,7 @@ const closePopup = () => {
 const avatarUrl = ref('')
 const username = ref('')
 const follow = ref(false)
+const myInfo = ref(false)
 const opUserFollow = async () => {
   try {
     const res = await followUser({
@@ -55,11 +64,22 @@ const opUserFollow = async () => {
     console.log(error)
   }
 }
+
+const privateChat = () => {
+  router.push({
+    path: '/chat',
+    query: {
+      user_id: props.posterId,
+      username: username.value,
+      type: 'private'
+    }
+  })
+}
 </script>
 
 <style scoped>
 .poster-popup {
-  width: 80vw;
+  width: 85vw;
   height: 20vh;
   display: flex;
   justify-content: center;
@@ -70,18 +90,26 @@ const opUserFollow = async () => {
   height: 80px;
 }
 .user-info {
-  font-size: 26px;
+  display: flex;
+  justify-content: center;
+  font-size: 24px;
   font-weight: 700;
 }
-.follow-btn {
+.popup-follow-btn,
+.popup-chat-btn {
   height: 8vw;
+  width: 20vw;
 }
 .right-wrapper {
   display: flex;
   flex-direction: column;
-  margin-left: 15px;
   height: 80px;
+  width: 200px;
   /* 子元素均匀分布 */
+  justify-content: space-evenly;
+}
+.btn-wrapper {
+  display: flex;
   justify-content: space-evenly;
 }
 </style>

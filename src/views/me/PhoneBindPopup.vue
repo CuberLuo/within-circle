@@ -125,7 +125,7 @@ const confirmBind = async () => {
   flex-direction: column;
   align-items: center;
 }
-:deep().van-cell {
+.van-cell {
   background: var(--van-background);
 }
 #confirm-btn {

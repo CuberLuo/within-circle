@@ -1,19 +1,21 @@
 <template>
-  <EmptyError v-if="postsArr.length == 0 && !loading" description="此处空空如也" />
-  <div v-else>
-    <van-pull-refresh
-      v-model="loading"
-      @refresh="onRefresh"
-      success-text="刷新成功"
-      class="pull-refresh"
-    >
-      <van-space direction="vertical" fill>
-        <div v-for="post in postsArr" :key="post.id">
-          <UserPostCell :post="post" @deletePostFromPostsArr="deletePostFromPostsArr" />
-        </div>
-      </van-space>
-      <van-loading id="loading-spinner" type="spinner" v-show="showLoading" />
-    </van-pull-refresh>
+  <div>
+    <EmptyError v-if="postsArr.length == 0 && !loading" description="此处空空如也" />
+    <div v-else>
+      <van-pull-refresh
+        v-model="loading"
+        @refresh="onRefresh"
+        success-text="刷新成功"
+        class="pull-refresh"
+      >
+        <van-space direction="vertical" fill>
+          <div v-for="post in postsArr" :key="post.id">
+            <UserPostCell :post="post" @deletePostFromPostsArr="deletePostFromPostsArr" />
+          </div>
+        </van-space>
+        <van-loading id="loading-spinner" type="spinner" v-show="showLoading" />
+      </van-pull-refresh>
+    </div>
   </div>
 </template>
 

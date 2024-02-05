@@ -75,12 +75,19 @@ const router = createRouter({
           meta: { title: '我的粉丝' },
           component: () => import('@/views/myFans/index.vue')
         },
+
         {
           path: '/:catchAll(.*)',
           meta: { title: '页面找不到啦~~' },
           component: () => import('@/views/404/index.vue')
         }
       ]
+    },
+    {
+      path: '/chat',
+      name: 'chat',
+      meta: { title: '聊天' },
+      component: () => import('@/views/chat/index.vue')
     }
   ]
 })
