@@ -74,7 +74,7 @@ const showPopup = ref(false)
 const emits = defineEmits(['deletePostFromPostsArr'])
 const showImage = (id, images) => {
   showImagePreview({
-    images: images.map((image) => image.imgUrl),
+    images: images.map((image) => image.img_url),
     startPosition: id
   })
 }
