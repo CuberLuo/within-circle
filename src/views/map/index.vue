@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="container"></div>
+    <div id="container" v-show="!mapLoading"></div>
     <van-popup
       v-model:show="showPointPopup"
       round
@@ -26,11 +26,13 @@ import { useThemeStore } from '@/stores/theme.js'
 const theme = useThemeStore().theme
 const mapTheme = `amap://styles/${theme == 'dark' ? 'darkblue' : 'normal'}`
 let map = null
+const mapLoading = ref(false)
 let points = []
 const avatarUrl = ref('')
 const showPointPopup = ref(false)
 const curPost = ref()
 onMounted(async () => {
+  mapLoading.value = true
   showLoadingToast({
     message: '地图加载中',
     forbidClick: true,
@@ -69,20 +71,25 @@ onMounted(async () => {
     geolocation.getCurrentPosition(function (status, result) {
       if (status == 'complete') {
         console.log('定位成功', result)
-        closeToast()
+        /* 等待地图加载完成并定位成功后延迟展示地图，防止地图暗黑模式下出现短暂白屏 */
+        setTimeout(() => {
+          mapLoading.value = false
+          closeToast()
+        }, 500)
       } else {
         console.log('定位失败', result)
         showFailToast('无法获取当前定位')
       }
     })
-    geolocation.watchPosition(function (status, result) {
+
+    /* geolocation.watchPosition(function (status, result) {
       //监控当前位置
       if (status == 'complete') {
         console.log('定位成功', result)
       } else {
         console.log('定位失败', result)
       }
-    })
+    }) */
 
     //以下是聚合点展示代码
     var gridSize = 60
@@ -112,7 +119,8 @@ onMounted(async () => {
     var _renderMarker = function (context) {
       const { marker, data } = context
       const { pointDetails } = data[0]
-      const posterAvatar = pointDetails.userAvatar
+      const posterAvatar = pointDetails.user_avatar
+      console.log(pointDetails)
       //在同一个点的头像,最近发布的显示在最上面
       var content = `
           <img src="${posterAvatar}"
@@ -122,12 +130,12 @@ onMounted(async () => {
       marker.setContent(content)
       marker.setOffset(offset)
 
-      /* marker.on('click', () => {
+      marker.on('click', () => {
         console.log(pointDetails)
         curPost.value = pointDetails
         console.log('点击point')
         showPointPopup.value = true
-      }) */
+      })
     }
     var cluster = new AMap.MarkerCluster(map, points, {
       gridSize: gridSize, // 设置网格像素大小
@@ -183,7 +191,9 @@ onUnmounted(() => {
 
 .point-popup {
   width: 100vw;
-  height: 40vh;
+  /* height: 40vh; */
+  height: fit-content;
+  padding: 30px 0;
   display: flex;
   justify-content: center;
   align-items: center;

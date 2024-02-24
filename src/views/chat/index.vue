@@ -40,12 +40,14 @@ const message = ref('')
   border-radius: 3vw;
 }
 :deep().van-field__control {
-  max-height: 100px;
+  max-height: 75px;
+  overflow: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .van-button {
-  min-height: 40px;
-  max-height: 100px;
+  height: 40px;
 }
 
 .message-input::after {

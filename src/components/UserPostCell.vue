@@ -156,8 +156,15 @@ const showPosterDetails = (posterId) => {
   width: 100%;
 }
 
+:deep().post-images .van-space-item {
+  width: calc(100% / 3);
+  aspect-ratio: 1 / 1;
+}
+.img-wrapper {
+  width: 100%;
+}
 .post-image {
-  width: calc((100vw - var(--van-cell-horizontal-padding) * 2 - 15px) / 3);
+  width: 100%;
   aspect-ratio: 1 / 1;
 }
 .like-btn {
