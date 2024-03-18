@@ -1,11 +1,11 @@
 <template>
   <div>
-    <van-nav-bar :title="route.query.username" :left-arrow="true" @click-left="onClickLeft" />
+    <van-nav-bar :title="route.query.chatUsername" :left-arrow="true" @click-left="onClickLeft" />
     <div>私聊</div>
     <div class="op-wrapper">
       <van-field
         class="message-input"
-        v-model="message"
+        v-model="userText"
         autosize
         rows="1"
         type="textarea"
@@ -17,11 +17,33 @@
 </template>
 
 <script setup>
+import { io } from 'socket.io-client'
+import { v4 } from 'uuid'
+import { getServerUrl } from '@/components/data/server'
+import { useUserInfoStore } from '@/stores/userInfo.js'
+
+const { userId, username, userAvatarUrl } = useUserInfoStore().user_info
+console.log('userAvatarUrl: ', userAvatarUrl)
+console.log('username: ', username)
+console.log('userId: ', userId)
+
 const route = useRoute()
 const onClickLeft = () => {
   history.go(-1)
 }
-const message = ref('')
+const userText = ref('')
+const chatList = ref([])
+
+const ServerUrl = getServerUrl()
+const uuidv4 = v4
+
+const socket = io(ServerUrl, {
+  query: {
+    username,
+    userId,
+    chatUserId: route.query.chatUserId
+  }
+})
 </script>
 
 <style scoped>

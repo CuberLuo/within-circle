@@ -40,6 +40,9 @@
 <script setup>
 import { pwdLogin } from '@/api/user'
 import { useUserTokenStore } from '@/stores/userToken.js'
+import { getUserInfo } from '@/api/userinfo'
+import { useUserInfoStore } from '@/stores/userInfo.js'
+
 const username = ref('')
 const password = ref('')
 const submitLoading = ref(false)
@@ -52,6 +55,7 @@ const onSubmit = async (val) => {
       showSuccessToast(res.msg)
       const { access_token, refresh_token } = res.data
       useUserTokenStore().setToken(access_token, refresh_token)
+      getUserSelfInfo()
       router.push('/')
     }
   } catch (err) {
@@ -59,6 +63,20 @@ const onSubmit = async (val) => {
   }
 
   submitLoading.value = false
+}
+
+const getUserSelfInfo = async () => {
+  try {
+    const res = await getUserInfo()
+    const { data } = res
+    useUserInfoStore().setUserInfo({
+      userId: data.user_id,
+      username: data.username,
+      userAvatarUrl: data.avatar_url
+    })
+  } catch (error) {
+    console.log(error)
+  }
 }
 </script>
 

@@ -3,7 +3,7 @@
     <van-image round class="user-img" :src="avatarUrl" />
     <div class="right-wrapper">
       <span class="user-info">
-        {{ username }}
+        {{ chatUsername }}
       </span>
       <div class="btn-wrapper" v-if="!myInfo">
         <van-button
@@ -33,7 +33,7 @@ watch(
       try {
         const res = await getPosterUserInfo(props.posterId)
         if (res.code == status_code.OK) {
-          username.value = res.data.username
+          chatUsername.value = res.data.username
           avatarUrl.value = res.data.avatar_url
           follow.value = res.data.follow
           myInfo.value = res.data.my_info
@@ -48,7 +48,7 @@ const closePopup = () => {
   showPosterPopup.value = false
 }
 const avatarUrl = ref('')
-const username = ref('')
+const chatUsername = ref('')
 const follow = ref(false)
 const myInfo = ref(false)
 const opUserFollow = async () => {
@@ -69,8 +69,8 @@ const privateChat = () => {
   router.push({
     path: '/chat',
     query: {
-      user_id: props.posterId,
-      username: username.value,
+      chatUserId: props.posterId,
+      chatUsername: chatUsername.value,
       type: 'private'
     }
   })

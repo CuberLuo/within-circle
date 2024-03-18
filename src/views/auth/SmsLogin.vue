@@ -55,6 +55,8 @@
 import isMobilePhone from 'validator/lib/isMobilePhone'
 import { sendSmsCode, smsCheck } from '@/api/user'
 import { useUserTokenStore } from '@/stores/userToken.js'
+import { getUserInfo } from '@/api/userinfo'
+import { useUserInfoStore } from '@/stores/userInfo.js'
 
 const phoneNum = ref('')
 const smsCode = ref('')
@@ -109,12 +111,27 @@ const onSubmit = async (val) => {
       showSuccessToast(res.msg)
       const { access_token, refresh_token } = res.data
       useUserTokenStore().setToken(access_token, refresh_token)
+      getUserSelfInfo()
       router.push('/')
     }
   } catch (err) {
     console.log(err)
   }
   submitLoading.value = false
+}
+
+const getUserSelfInfo = async () => {
+  try {
+    const res = await getUserInfo()
+    const { data } = res
+    useUserInfoStore().setUserInfo({
+      userId: data.user_id,
+      userName: data.username,
+      userAvatarUrl: data.avatar_url
+    })
+  } catch (error) {
+    console.log(error)
+  }
 }
 </script>
 
