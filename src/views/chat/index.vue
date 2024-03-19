@@ -21,6 +21,7 @@
     </div>
     <div class="op-wrapper">
       <van-field
+        ref="messageInput"
         class="message-input"
         v-model="userText"
         autosize
@@ -38,6 +39,7 @@ import { io } from 'socket.io-client'
 import { v4 } from 'uuid'
 import { getServerUrl } from '@/components/data/server'
 import { useUserInfoStore } from '@/stores/userInfo.js'
+import { useResizeObserver } from '@vueuse/core'
 
 const { userId, username, userAvatarUrl } = useUserInfoStore().user_info
 console.log('userAvatarUrl: ', userAvatarUrl)
@@ -53,7 +55,17 @@ const chatUsername = route.query.chatUsername
 const onClickLeft = () => {
   history.go(-1)
 }
+const messageInput = ref(null)
 const userText = ref('')
+const bottomHeight = ref('60px')
+
+// 监听元素的宽高动态变化
+useResizeObserver(messageInput, (entries) => {
+  const entry = entries[0]
+  const { width, height } = entry.contentRect
+  bottomHeight.value = `${height + 36}px`
+})
+
 const chatList = ref([
   {
     id: uuidv4(),
@@ -114,9 +126,10 @@ const sendMessage = () => {}
 }
 
 .chat-content {
-  height: calc(100vh - var(--van-nav-bar-height) - 60px);
-  border: 1px solid red;
+  /* 通过v-bind在css中使用js变量 */
+  height: calc(100vh - var(--van-nav-bar-height) - v-bind(bottomHeight));
   overflow-y: auto;
+  background-color: var(--van-color-chat-bg);
 }
 
 .chat-row {
@@ -146,14 +159,13 @@ const sendMessage = () => {}
   width: fit-content;
   padding: 5px;
   border-radius: 5px;
+  color: var(--van-text-color);
 }
 .chat-box {
-  background-color: #363534;
-  color: #ffffff;
+  background-color: var(--van-color-chat-to);
 }
 .me-box {
-  background-color: #3b9e72;
-  color: #000000;
+  background-color: var(--van-color-me-chat);
 }
 
 .op-wrapper {
