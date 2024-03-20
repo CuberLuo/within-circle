@@ -3,7 +3,7 @@
     <van-cell class="user-cell">
       <template #value>
         <div class="user-cv">
-          <van-image round class="user-img" :src="avatarUrl" @click="showAvatarPopup=true" />
+          <van-image round class="user-img" :src="avatarUrl" @click="showAvatarPopup = true" />
           <span class="user-info">
             {{ username }}
           </span>
@@ -21,12 +21,9 @@
     <van-cell is-link title="我的点赞" @click="goToLikePage()" />
     <van-cell is-link title="我的关注" @click="goToMyFollowPage()" />
     <van-cell is-link title="我的粉丝" @click="goToMyFansPage()" />
-    <PhoneBindPopup
-      v-model="showPhoneBindPopup"
-      @updatePhoneInfo="updatePhoneInfo"
-    />
+    <PhoneBindPopup v-model="showPhoneBindPopup" @updatePhoneInfo="updatePhoneInfo" />
     <van-cell is-link title="手机号" :value="phoneNum" @click="bindPhone()" />
-    <PwdPopup v-model="showPwdPopup"/>
+    <PwdPopup v-model="showPwdPopup" />
     <van-cell is-link title="修改密码" @click="showPwdPopup = true" />
     <van-button plain block @click="exitLogin()" id="exitBtn">退出登录</van-button>
   </div>
@@ -39,6 +36,8 @@ import PhoneBindPopup from './PhoneBindPopup.vue'
 import PwdPopup from './PwdPopup.vue'
 import { useUserTokenStore } from '@/stores/userToken.js'
 import { getUserInfo } from '@/api/userinfo'
+import { useUserInfoStore } from '@/stores/userInfo.js'
+
 const username = ref('')
 const registerDate = ref('')
 const avatarUrl = ref('')
@@ -86,6 +85,7 @@ const exitLogin = () => {
   })
     .then(() => {
       useUserTokenStore().removeToken() //移除Pinia和localStorage中的token
+      useUserInfoStore().removeUserInfo()
       router.push('/auth')
     })
     .catch((e) => {})
