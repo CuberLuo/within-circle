@@ -37,14 +37,12 @@
 <script setup>
 import { io } from 'socket.io-client'
 import { v4 } from 'uuid'
+import moment from 'moment'
 import { getServerUrl } from '@/components/data/server'
 import { useUserInfoStore } from '@/stores/userInfo.js'
 import { useResizeObserver } from '@vueuse/core'
 
 const { userId, username, userAvatarUrl } = useUserInfoStore().user_info
-console.log('userAvatarUrl: ', userAvatarUrl)
-console.log('username: ', username)
-console.log('userId: ', userId)
 
 const ServerUrl = getServerUrl()
 const uuidv4 = v4
@@ -53,6 +51,7 @@ const chatUserId = route.query.chatUserId
 const chatUsername = route.query.chatUsername
 
 const onClickLeft = () => {
+  socket.disconnect()
   history.go(-1)
 }
 const messageInput = ref(null)
@@ -66,48 +65,7 @@ useResizeObserver(messageInput, (entries) => {
   bottomHeight.value = `${height + 36}px`
 })
 
-const chatList = ref([
-  {
-    id: uuidv4(),
-    username,
-    userId,
-    avatar: userAvatarUrl,
-    text: '消息001',
-    chatDate: '2024-01-02 23:01:01'
-  },
-  {
-    id: uuidv4(),
-    username: chatUsername,
-    userId: chatUserId,
-    avatar: 'https://within-circle.techvip.site/images/default_user.jpg',
-    text: '消息002',
-    chatDate: '2024-01-02 23:01:02'
-  },
-  {
-    id: uuidv4(),
-    username,
-    userId,
-    avatar: userAvatarUrl,
-    text: 'This message is too long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long',
-    chatDate: '2024-01-02 23:01:03'
-  },
-  {
-    id: uuidv4(),
-    username: chatUsername,
-    userId: chatUserId,
-    avatar: 'https://within-circle.techvip.site/images/default_user.jpg',
-    text: 'This message is too long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long',
-    chatDate: '2024-01-02 23:01:04'
-  },
-  {
-    id: uuidv4(),
-    username,
-    userId,
-    avatar: userAvatarUrl,
-    text: 'This message is too long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long',
-    chatDate: '2024-01-02 23:01:05'
-  }
-])
+const chatList = ref([])
 
 const socket = io(ServerUrl, {
   query: {
@@ -117,7 +75,58 @@ const socket = io(ServerUrl, {
   }
 })
 
-const sendMessage = () => {}
+// 获取聊天记录
+socket.on('privateChatHistory', ({ chatUserId, msgHistory }) => {
+  console.log('获取聊天记录')
+  closeToast()
+  chatList.value = msgHistory
+  nextTick(() => {
+    scrollToBottom()
+  })
+})
+//服务端回复消息
+socket.on('privateChat', (data) => {
+  console.log('服务端回复消息', data)
+  chatList.value.push(data)
+  nextTick(() => {
+    scrollToBottom()
+  })
+})
+
+const sendMessage = () => {
+  if (userText.value == '') {
+    showFailToast('内容不能为空')
+    return
+  }
+  const chatObj = {
+    id: uuidv4(),
+    username,
+    userId,
+    avatar: userAvatarUrl,
+    text: userText.value,
+    chatDate: moment().format('YYYY-MM-DD HH:mm:ss')
+  }
+  chatList.value.push(chatObj)
+  socket.emit('privateChat', chatObj, (res) => {
+    if (res === void 0) return
+    console.log(res)
+  })
+  userText.value = '' //清空输入
+  // 页面dom元素更新后聊天内容滚动到底部
+  nextTick(() => {
+    scrollToBottom()
+  })
+}
+
+const scrollToBottom = () => {
+  const chatContent = document.querySelector('.chat-content')
+  chatContent.scrollTop = chatContent.scrollHeight
+}
+
+onMounted(() => {
+  showLoadingToast()
+  scrollToBottom()
+})
 </script>
 
 <style scoped>
