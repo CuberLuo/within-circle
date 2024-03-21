@@ -17,9 +17,8 @@ import '@/router/permission'
     console.log('vConsole is ready!')
   }
 }) */
-
+export const app = createApp(App)
 const setupApp = async () => {
-  const app = createApp(App)
   const pinia = createPinia()
 
   app.use(pinia)

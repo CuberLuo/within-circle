@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar :title="route.query.chatUsername" :left-arrow="true" @click-left="onClickLeft" />
+    <van-nav-bar :title="chatUsername" :left-arrow="true" @click-left="onClickLeft" />
     <div class="chat-content">
       <div
         class="chat-row"
@@ -35,23 +35,19 @@
 </template>
 
 <script setup>
-import { io } from 'socket.io-client'
 import { v4 } from 'uuid'
 import moment from 'moment'
-import { getServerUrl } from '@/components/data/server'
 import { useUserInfoStore } from '@/stores/userInfo.js'
 import { useResizeObserver } from '@vueuse/core'
 
 const { userId, username, userAvatarUrl } = useUserInfoStore().user_info
 
-const ServerUrl = getServerUrl()
 const uuidv4 = v4
 const route = useRoute()
 const chatUserId = route.query.chatUserId
 const chatUsername = route.query.chatUsername
 
 const onClickLeft = () => {
-  socket.disconnect()
   history.go(-1)
 }
 const messageInput = ref(null)
@@ -66,32 +62,7 @@ useResizeObserver(messageInput, (entries) => {
 })
 
 const chatList = ref([])
-
-const socket = io(ServerUrl, {
-  query: {
-    username,
-    userId,
-    chatUserId
-  }
-})
-
-// 获取聊天记录
-socket.on('privateChatHistory', ({ chatUserId, msgHistory }) => {
-  console.log('获取聊天记录')
-  closeToast()
-  chatList.value = msgHistory
-  nextTick(() => {
-    scrollToBottom()
-  })
-})
-//服务端回复消息
-socket.on('privateChat', (data) => {
-  console.log('服务端回复消息', data)
-  chatList.value.push(data)
-  nextTick(() => {
-    scrollToBottom()
-  })
-})
+const socket = inject('socket')
 
 const sendMessage = () => {
   if (userText.value == '') {
@@ -102,6 +73,7 @@ const sendMessage = () => {
     id: uuidv4(),
     username,
     userId,
+    chatUserId,
     avatar: userAvatarUrl,
     text: userText.value,
     chatDate: moment().format('YYYY-MM-DD HH:mm:ss')
@@ -124,7 +96,35 @@ const scrollToBottom = () => {
 }
 
 onMounted(() => {
-  showLoadingToast()
+  showLoadingToast({
+    duration: 0
+  })
+  try {
+    socket.emit('privateChatHistory', { userId, chatUserId })
+  } catch (e) {
+    router.push('/index')
+    setTimeout(() => {
+      window.location.reload()
+    }, 300)
+  }
+
+  // 获取聊天记录
+  socket.on('privateChatHistory', ({ chatUserId, msgHistory }) => {
+    console.log('获取聊天记录')
+    closeToast()
+    chatList.value = msgHistory
+    nextTick(() => {
+      scrollToBottom()
+    })
+  })
+  //服务端回复消息
+  socket.on('privateChat', (data) => {
+    console.log('服务端回复消息', data)
+    chatList.value.push(data)
+    nextTick(() => {
+      scrollToBottom()
+    })
+  })
   scrollToBottom()
 })
 </script>
@@ -166,15 +166,19 @@ onMounted(() => {
   white-space: pre-wrap;
   margin: 5px 0;
   width: fit-content;
-  padding: 5px;
+  padding: 10px;
   border-radius: 5px;
-  color: var(--van-text-color);
+  font-family: 'Microsoft YaHei';
+  font-size: 14px;
 }
 .chat-box {
   background-color: var(--van-color-chat-to);
+  color: var(--van-color-chat-to-text);
 }
 .me-box {
   background-color: var(--van-color-me-chat);
+
+  color: var(--van-color-me-chat-text);
 }
 
 .op-wrapper {
