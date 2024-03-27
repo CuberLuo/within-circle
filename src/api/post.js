@@ -52,3 +52,11 @@ export const getMyLikePosts = () => {
     method: 'GET'
   })
 }
+
+export const uploadFile = (data) => {
+  return request({
+    url: '/file-upload',
+    method: 'POST',
+    data
+  })
+}

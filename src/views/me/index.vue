@@ -38,6 +38,7 @@ import { useUserTokenStore } from '@/stores/userToken.js'
 import { getUserInfo } from '@/api/userinfo'
 import { useUserInfoStore } from '@/stores/userInfo.js'
 
+const socket = inject('socket')
 const username = ref('')
 const registerDate = ref('')
 const avatarUrl = ref('')
@@ -87,6 +88,7 @@ const exitLogin = () => {
       useUserTokenStore().removeToken() //移除Pinia和localStorage中的token
       useUserInfoStore().removeUserInfo()
       router.push('/auth')
+      socket.emit('logout')
     })
     .catch((e) => {})
 }

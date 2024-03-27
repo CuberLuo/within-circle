@@ -12,10 +12,18 @@
       >
         <van-image class="user-avatar" round :src="chat.avatar" />
 
-        <div class="chat-box-wrapper">
+        <div v-if="!chat.isImg" class="chat-box-wrapper">
           <div :class="{ 'chat-box': true, 'me-box': chat.username === username }">
             <span v-text="chat.text" />
           </div>
+        </div>
+        <div v-else class="chat-img-wrapper">
+          <van-image
+            class="chat-img"
+            fit="scale-down"
+            :src="chat.imgUrl"
+            @click="showImage(chat.imgUrl)"
+          />
         </div>
       </div>
     </div>
@@ -29,7 +37,10 @@
         type="textarea"
         placeholder="请输入信息"
       />
-      <van-button type="primary" @click="sendMessage">发送</van-button>
+      <van-uploader v-if="userText === ''" :before-read="beforeRead" :after-read="afterRead">
+        <van-icon class="add-icon" name="add-o" />
+      </van-uploader>
+      <van-button v-else type="primary" @click="sendMessage">发送</van-button>
     </div>
   </div>
 </template>
@@ -39,6 +50,9 @@ import { v4 } from 'uuid'
 import moment from 'moment'
 import { useUserInfoStore } from '@/stores/userInfo.js'
 import { useResizeObserver } from '@vueuse/core'
+import { showImagePreview } from 'vant'
+import * as imageConversion from 'image-conversion'
+import { uploadFile } from '@/api/post.js'
 
 const { userId, username, userAvatarUrl } = useUserInfoStore().user_info
 
@@ -53,6 +67,7 @@ const onClickLeft = () => {
 const messageInput = ref(null)
 const userText = ref('')
 const bottomHeight = ref('60px')
+const sendImgUrl = ref('')
 
 // 监听元素的宽高动态变化
 useResizeObserver(messageInput, (entries) => {
@@ -61,8 +76,85 @@ useResizeObserver(messageInput, (entries) => {
   bottomHeight.value = `${height + 36}px`
 })
 
-const chatList = ref([])
+const chatList = ref([
+  // {
+  //   id: uuidv4(),
+  //   username,
+  //   userId,
+  //   avatar: userAvatarUrl,
+  //   text: '',
+  //   isImg: true,
+  //   imgUrl:
+  //     'https://img2.baidu.com/it/u=4171515688,1322306990&fm=253&fmt=auto&app=120&f=JPEG?w=363&h=553',
+  //   chatDate: '2024-01-02 23:01:01'
+  // },
+  // {
+  //   id: uuidv4(),
+  //   username: chatUsername,
+  //   userId: chatUserId,
+  //   avatar: 'https://within-circle.techvip.site/images/default_user.jpg',
+  //   text: '消息002',
+  //   isImg: false,
+  //   imgUrl: '',
+  //   chatDate: '2024-01-02 23:01:02'
+  // },
+  // {
+  //   id: uuidv4(),
+  //   username,
+  //   userId,
+  //   avatar: userAvatarUrl,
+  //   text: 'This message is too long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long',
+  //   isImg: false,
+  //   imgUrl: '',
+  //   chatDate: '2024-01-02 23:01:03'
+  // },
+  // {
+  //   id: uuidv4(),
+  //   username,
+  //   userId,
+  //   avatar: userAvatarUrl,
+  //   text: '',
+  //   isImg: true,
+  //   // imgUrl:
+  //   //   'https://img2.baidu.com/it/u=887861607,3672266646&fm=253&fmt=auto&app=138&f=JPEG?w=960&h=480',
+  //   imgUrl: 'https://img1.baidu.com/it/u=3666271211,35548652&fm=253&fmt=auto?w=50&h=50',
+  //   chatDate: '2024-01-02 23:01:04'
+  // },
+  // {
+  //   id: uuidv4(),
+  //   username,
+  //   userId,
+  //   avatar: userAvatarUrl,
+  //   text: '',
+  //   isImg: true,
+  //   imgUrl:
+  //     'https://img2.baidu.com/it/u=887861607,3672266646&fm=253&fmt=auto&app=138&f=JPEG?w=960&h=480',
+  //   chatDate: '2024-01-02 23:01:05'
+  // },
+  // {
+  //   id: uuidv4(),
+  //   username: chatUsername,
+  //   userId: chatUserId,
+  //   avatar: 'https://within-circle.techvip.site/images/default_user.jpg',
+  //   text: 'This message is too long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long',
+  //   isImg: false,
+  //   imgUrl: '',
+  //   chatDate: '2024-01-02 23:01:06'
+  // }
+])
+
+const socketLogin = inject('socketLogin')
 const socket = inject('socket')
+
+socket.off('privateChat')
+//服务端回复消息
+socket.on('privateChat', (data) => {
+  console.log('服务端回复消息', data)
+  chatList.value.push(data)
+  nextTick(() => {
+    scrollToBottom()
+  })
+})
 
 const sendMessage = () => {
   if (userText.value == '') {
@@ -95,21 +187,88 @@ const scrollToBottom = () => {
   chatContent.scrollTop = chatContent.scrollHeight
 }
 
-onMounted(() => {
+const showImage = (url) => {
+  showImagePreview({
+    images: [url],
+    showIndex: false
+  })
+}
+
+const maxKiloBytes = 500
+const beforeRead = async (file) => {
+  const maxSize = maxKiloBytes * 1024
+  if (file.size > maxSize) {
+    const compressedFile = await compressFile(file)
+    return new Promise((resolve, reject) => resolve(compressedFile))
+  } else {
+    return new Promise((resolve, reject) => resolve(file))
+  }
+}
+
+const compressFile = async (file) => {
   showLoadingToast({
+    message: '图片压缩中',
+    forbidClick: true,
+    loadingType: 'spinner',
     duration: 0
   })
+  // 超过maxKiloBytes kB的图片均会被压缩
+  let res = await imageConversion.compressAccurately(file, maxKiloBytes)
+  res = new File([res], file.name, { type: res.type, lastModified: Date.now() })
+  closeToast()
+  return res
+}
+
+const afterRead = async (file) => {
+  sendImgUrl.value = file.objectUrl
+  console.log(sendImgUrl.value)
+  let formData = new FormData()
+  formData.append('pic', file.file)
+
+  let chatObj = {
+    id: uuidv4(),
+    username,
+    userId,
+    chatUserId,
+    avatar: userAvatarUrl,
+    isImg: true,
+    imgUrl: sendImgUrl.value,
+    chatDate: moment().format('YYYY-MM-DD HH:mm:ss')
+  }
+  chatList.value.push(chatObj)
+
+  let onlineImageUrl = ''
   try {
-    socket.emit('privateChatHistory', { userId, chatUserId })
-  } catch (e) {
-    router.push('/index')
-    setTimeout(() => {
-      window.location.reload()
-    }, 300)
+    const res = await uploadFile(formData)
+    onlineImageUrl = res.data.url
+    if (res.code == status_code.OK) {
+      // 通过socket发送图片链接到后端时需要将本地链接替换为云链接
+      chatObj.imgUrl = onlineImageUrl
+      socket.emit('privateChat', chatObj, (res) => {
+        if (res === void 0) return
+        console.log(res)
+      })
+    } else {
+      showFailToast('图片上传出错')
+      return
+    }
+  } catch (err) {
+    console.log(err)
+    showFailToast('图片上传出错')
+    return
   }
 
+  // 页面dom元素更新后聊天内容滚动到底部
+  nextTick(() => {
+    scrollToBottom()
+  })
+}
+
+const getPrivateChatHistory = () => {
+  socket.off('privateChatHistory')
+  socket.emit('privateChatHistory', { chatUserId })
   // 获取聊天记录
-  socket.on('privateChatHistory', ({ chatUserId, msgHistory }) => {
+  socket.on('privateChatHistory', ({ msgHistory }) => {
     console.log('获取聊天记录')
     closeToast()
     chatList.value = msgHistory
@@ -117,15 +276,25 @@ onMounted(() => {
       scrollToBottom()
     })
   })
-  //服务端回复消息
-  socket.on('privateChat', (data) => {
-    console.log('服务端回复消息', data)
-    chatList.value.push(data)
-    nextTick(() => {
-      scrollToBottom()
-    })
+}
+watch(
+  () => socketLogin.value,
+  (newVal) => {
+    if (newVal) {
+      console.log('newVal: ', newVal)
+      getPrivateChatHistory()
+    }
+  }
+)
+
+onMounted(() => {
+  showLoadingToast({
+    duration: 0
   })
-  scrollToBottom()
+  if (socketLogin.value) {
+    console.log('onMounted ', socketLogin.value)
+    getPrivateChatHistory()
+  }
 })
 </script>
 
@@ -144,6 +313,7 @@ onMounted(() => {
 .chat-row {
   display: flex;
   justify-content: flex-start;
+  margin: 5px 0;
 }
 
 .user-avatar {
@@ -155,6 +325,16 @@ onMounted(() => {
 .chat-box-wrapper {
   display: flex;
   align-items: center;
+}
+
+.chat-img {
+  margin: 5px 0;
+  min-width: 50px;
+  min-height: 50px;
+}
+:deep() .van-image__img {
+  max-width: 200px;
+  max-height: 150px;
 }
 
 .chat-box,
@@ -201,14 +381,16 @@ onMounted(() => {
 
 .van-button {
   height: 40px;
+  width: 20vw;
+  margin-left: 10px;
 }
 
 .message-input::after {
   display: none;
 }
 
-.van-button {
-  width: 20vw;
+.add-icon {
+  font-size: 30px;
   margin-left: 10px;
 }
 </style>

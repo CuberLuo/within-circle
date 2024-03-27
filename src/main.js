@@ -11,13 +11,14 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import '@/router/permission'
-// import VConsole from 'vconsole'
-/* const vconsole = new VConsole({
+import SocketIO from '@/utils/socket'
+/* import VConsole from 'vconsole'
+const vconsole = new VConsole({
   onReady() {
     console.log('vConsole is ready!')
   }
 }) */
-export const app = createApp(App)
+const app = createApp(App)
 const setupApp = async () => {
   const pinia = createPinia()
 
@@ -26,6 +27,17 @@ const setupApp = async () => {
     lazyComponent: true
   })
   app.use(router)
+
+  // 引入自定义的SocketIO插件
+  app.use(SocketIO, {
+    connection: import.meta.env.VITE_SOCKET_SERVER,
+    options: {
+      autoConnect: true, // 自动连接
+      transports: ['websocket'], // 指定为websocket连接
+      reconnect: true,
+      reconnectionAttempts: 5 // 重连次数
+    }
+  })
   await router.isReady()
 
   app.mount('#app')
