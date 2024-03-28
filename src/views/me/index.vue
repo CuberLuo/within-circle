@@ -82,13 +82,19 @@ onMounted(async () => {
 const exitLogin = () => {
   showConfirmDialog({
     title: '温馨提示',
-    message: '您确认要退出吗？'
+    message: '您确认要退出吗？(退出登录将清空所有聊天记录)'
   })
     .then(() => {
       useUserTokenStore().removeToken() //移除Pinia和localStorage中的token
       useUserInfoStore().removeUserInfo()
-      router.push('/auth')
-      socket.emit('logout')
+      removeItem('chatHistoty')
+      socket.emit('logout', (res) => {
+        console.log(res)
+        router.push('/auth')
+        setTimeout(() => {
+          window.location.reload()
+        }, 10)
+      })
     })
     .catch((e) => {})
 }

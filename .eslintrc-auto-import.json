@@ -81,6 +81,7 @@
     "watchEffect": true,
     "watchPostEffect": true,
     "watchSyncEffect": true,
-    "EmptyError": true
+    "EmptyError": true,
+    "showNotify": true
   }
 }

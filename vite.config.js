@@ -36,7 +36,8 @@ export default defineConfig({
             'showLoadingToast',
             'closeToast',
             'showConfirmDialog',
-            'showDialog'
+            'showDialog',
+            'showNotify'
           ],
           '@/router': [['default', 'router']],
           '@/components/data/status_code.json': [['default', 'status_code']],

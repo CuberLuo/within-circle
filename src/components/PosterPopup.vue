@@ -50,7 +50,7 @@ const closePopup = () => {
 const avatarUrl = ref('')
 const chatUsername = ref('')
 const follow = ref(false)
-const myInfo = ref(false)
+const myInfo = ref(true)
 const opUserFollow = async () => {
   try {
     const res = await followUser({

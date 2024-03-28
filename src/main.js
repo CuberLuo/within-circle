@@ -7,6 +7,7 @@ import 'vant/es/image-preview/style'
 import { Lazyload } from 'vant'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import Vue3TouchEvents from 'vue3-touch-events'
 
 import App from './App.vue'
 import router from './router'
@@ -38,6 +39,7 @@ const setupApp = async () => {
       reconnectionAttempts: 5 // 重连次数
     }
   })
+  app.use(Vue3TouchEvents)
   await router.isReady()
 
   app.mount('#app')

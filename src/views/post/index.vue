@@ -18,7 +18,7 @@
         </template>
       </van-cell>
       <AddLocation @updateLocation="updateLocation" />
-      <VisibleCircle @updateVisibleCircle="updateVisibleCircle" />
+      <!-- <VisibleCircle @updateVisibleCircle="updateVisibleCircle" /> -->
 
       <van-cell>
         <van-button
@@ -118,10 +118,10 @@ const postAll = async () => {
     showFailToast('地点不能为空')
     return
   }
-  if (visibleCircle.value == -1) {
-    showFailToast('可见范围不能为空')
-    return
-  }
+  // if (visibleCircle.value == -1) {
+  //   showFailToast('可见范围不能为空')
+  //   return
+  // }
   showLoadingToast({
     message: '发布中',
     forbidClick: true,

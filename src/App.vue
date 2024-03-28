@@ -11,6 +11,7 @@
 <script setup>
 import { useThemeStore } from '@/stores/theme.js'
 import { useUserInfoStore } from '@/stores/userInfo.js'
+import moment from 'moment'
 
 const themeVarsDark = reactive({
   switchNodeBackground: '#141414',
@@ -55,6 +56,21 @@ const websocketInit = (user_info) => {
     })
   }
 }
+socket.on('privateChat', (data) => {
+  console.log('服务端回复消息', data)
+  showNotify({
+    message: `${moment().format('HH:mm:ss')} 用户${data.username}给您发来一条新消息`,
+    type: 'primary'
+  })
+  updateLocalChatHistory(data.userId, data)
+})
+
+const updateLocalChatHistory = (chatUserId, chatObj) => {
+  // 更新本地聊天记录
+  let chatHistory = getItem('chatHistoty')
+  chatHistory[chatUserId].push(chatObj)
+  setItem('chatHistoty', chatHistory)
+}
 
 watch(
   () => useUserInfoStore().user_info,
@@ -64,6 +80,7 @@ watch(
 )
 
 onMounted(() => {
+  if (!getItem('chatHistoty')) setItem('chatHistoty', {})
   websocketInit(useUserInfoStore().user_info)
 })
 </script>

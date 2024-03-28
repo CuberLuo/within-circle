@@ -4,27 +4,42 @@
     <div class="chat-content">
       <div
         class="chat-row"
-        v-for="chat in chatList"
+        v-for="(chat, index) in chatList"
         :key="chat.id"
         :style="{
           'flex-direction': chat.username === username ? 'row-reverse' : 'row'
         }"
       >
         <van-image class="user-avatar" round :src="chat.avatar" />
-
-        <div v-if="!chat.isImg" class="chat-box-wrapper">
-          <div :class="{ 'chat-box': true, 'me-box': chat.username === username }">
-            <span v-text="chat.text" />
-          </div>
-        </div>
-        <div v-else class="chat-img-wrapper">
-          <van-image
-            class="chat-img"
-            fit="scale-down"
-            :src="chat.imgUrl"
-            @click="showImage(chat.imgUrl)"
-          />
-        </div>
+        <van-popover
+          v-model:show="chat.showPopover"
+          trigger="manual"
+          :actions="[{ text: '删除', value: chat.id, index: index }]"
+          actions-direction="horizontal"
+          placement="top"
+          theme="dark"
+          @select="onSelectAction"
+        >
+          <template #reference>
+            <div
+              v-if="!chat.isImg"
+              class="chat-box-wrapper"
+              v-touch:longtap="longtapHandler(chat, chat.id)"
+            >
+              <div :class="{ 'chat-box': true, 'me-box': chat.username === username }">
+                <span style="user-select: none" v-text="chat.text" />
+              </div>
+            </div>
+            <div v-else class="chat-img-wrapper" v-touch:longtap="longtapHandler(chat, chat.id)">
+              <van-image
+                class="chat-img"
+                fit="scale-down"
+                :src="chat.imgUrl"
+                @click="showImage(chat.imgUrl)"
+              />
+            </div>
+          </template>
+        </van-popover>
       </div>
     </div>
     <div class="op-wrapper">
@@ -60,7 +75,6 @@ const uuidv4 = v4
 const route = useRoute()
 const chatUserId = route.query.chatUserId
 const chatUsername = route.query.chatUsername
-
 const onClickLeft = () => {
   history.go(-1)
 }
@@ -69,6 +83,20 @@ const userText = ref('')
 const bottomHeight = ref('60px')
 const sendImgUrl = ref('')
 
+const longtapHandler = (chat, i) => {
+  return function (direction, mouseEvent) {
+    console.log(chat)
+    chat.showPopover = true
+  }
+}
+const onSelectAction = (action) => {
+  console.log(action)
+  chatList.value.splice(action.index, 1)
+  let chatHistory = getItem('chatHistoty')
+  chatHistory[chatUserId].splice(action.index, 1)
+  setItem('chatHistoty', chatHistory)
+}
+
 // 监听元素的宽高动态变化
 useResizeObserver(messageInput, (entries) => {
   const entry = entries[0]
@@ -76,81 +104,23 @@ useResizeObserver(messageInput, (entries) => {
   bottomHeight.value = `${height + 36}px`
 })
 
-const chatList = ref([
-  // {
-  //   id: uuidv4(),
-  //   username,
-  //   userId,
-  //   avatar: userAvatarUrl,
-  //   text: '',
-  //   isImg: true,
-  //   imgUrl:
-  //     'https://img2.baidu.com/it/u=4171515688,1322306990&fm=253&fmt=auto&app=120&f=JPEG?w=363&h=553',
-  //   chatDate: '2024-01-02 23:01:01'
-  // },
-  // {
-  //   id: uuidv4(),
-  //   username: chatUsername,
-  //   userId: chatUserId,
-  //   avatar: 'https://within-circle.techvip.site/images/default_user.jpg',
-  //   text: '消息002',
-  //   isImg: false,
-  //   imgUrl: '',
-  //   chatDate: '2024-01-02 23:01:02'
-  // },
-  // {
-  //   id: uuidv4(),
-  //   username,
-  //   userId,
-  //   avatar: userAvatarUrl,
-  //   text: 'This message is too long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long',
-  //   isImg: false,
-  //   imgUrl: '',
-  //   chatDate: '2024-01-02 23:01:03'
-  // },
-  // {
-  //   id: uuidv4(),
-  //   username,
-  //   userId,
-  //   avatar: userAvatarUrl,
-  //   text: '',
-  //   isImg: true,
-  //   // imgUrl:
-  //   //   'https://img2.baidu.com/it/u=887861607,3672266646&fm=253&fmt=auto&app=138&f=JPEG?w=960&h=480',
-  //   imgUrl: 'https://img1.baidu.com/it/u=3666271211,35548652&fm=253&fmt=auto?w=50&h=50',
-  //   chatDate: '2024-01-02 23:01:04'
-  // },
-  // {
-  //   id: uuidv4(),
-  //   username,
-  //   userId,
-  //   avatar: userAvatarUrl,
-  //   text: '',
-  //   isImg: true,
-  //   imgUrl:
-  //     'https://img2.baidu.com/it/u=887861607,3672266646&fm=253&fmt=auto&app=138&f=JPEG?w=960&h=480',
-  //   chatDate: '2024-01-02 23:01:05'
-  // },
-  // {
-  //   id: uuidv4(),
-  //   username: chatUsername,
-  //   userId: chatUserId,
-  //   avatar: 'https://within-circle.techvip.site/images/default_user.jpg',
-  //   text: 'This message is too long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long',
-  //   isImg: false,
-  //   imgUrl: '',
-  //   chatDate: '2024-01-02 23:01:06'
-  // }
-])
+const chatList = ref([])
 
-const socketLogin = inject('socketLogin')
 const socket = inject('socket')
 
 socket.off('privateChat')
 //服务端回复消息
 socket.on('privateChat', (data) => {
   console.log('服务端回复消息', data)
+  if (route.path != '/chat') {
+    showNotify({
+      message: `${moment().format('HH:mm:ss')} 用户${data.username}给您发来一条新消息`,
+      type: 'primary',
+      teleport: '#app'
+    })
+  }
   chatList.value.push(data)
+  updateLocalChatHistory(chatUserId, data)
   nextTick(() => {
     scrollToBottom()
   })
@@ -168,9 +138,11 @@ const sendMessage = () => {
     chatUserId,
     avatar: userAvatarUrl,
     text: userText.value,
+    showPopover: false,
     chatDate: moment().format('YYYY-MM-DD HH:mm:ss')
   }
   chatList.value.push(chatObj)
+  updateLocalChatHistory(chatUserId, chatObj)
   socket.emit('privateChat', chatObj, (res) => {
     if (res === void 0) return
     console.log(res)
@@ -180,6 +152,13 @@ const sendMessage = () => {
   nextTick(() => {
     scrollToBottom()
   })
+}
+
+const updateLocalChatHistory = (chatUserId, chatObj) => {
+  // 更新本地聊天记录
+  let chatHistory = getItem('chatHistoty')
+  chatHistory[chatUserId].push(chatObj)
+  setItem('chatHistoty', chatHistory)
 }
 
 const scrollToBottom = () => {
@@ -244,6 +223,7 @@ const afterRead = async (file) => {
     if (res.code == status_code.OK) {
       // 通过socket发送图片链接到后端时需要将本地链接替换为云链接
       chatObj.imgUrl = onlineImageUrl
+      updateLocalChatHistory(chatUserId, chatObj)
       socket.emit('privateChat', chatObj, (res) => {
         if (res === void 0) return
         console.log(res)
@@ -264,37 +244,19 @@ const afterRead = async (file) => {
   })
 }
 
-const getPrivateChatHistory = () => {
-  socket.off('privateChatHistory')
-  socket.emit('privateChatHistory', { chatUserId })
-  // 获取聊天记录
-  socket.on('privateChatHistory', ({ msgHistory }) => {
-    console.log('获取聊天记录')
-    closeToast()
-    chatList.value = msgHistory
-    nextTick(() => {
-      scrollToBottom()
-    })
-  })
-}
-watch(
-  () => socketLogin.value,
-  (newVal) => {
-    if (newVal) {
-      console.log('newVal: ', newVal)
-      getPrivateChatHistory()
-    }
-  }
-)
-
 onMounted(() => {
-  showLoadingToast({
-    duration: 0
-  })
-  if (socketLogin.value) {
-    console.log('onMounted ', socketLogin.value)
-    getPrivateChatHistory()
+  console.log('onMounted')
+  // 读取本地聊天记录
+  let chatHistory = getItem('chatHistoty')
+  const chatUserHistoryList = getItem('chatHistoty')[chatUserId]
+  if (!chatUserHistoryList) {
+    chatHistory[chatUserId] = []
+    setItem('chatHistoty', chatHistory)
   }
+  chatList.value = chatHistory[chatUserId]
+  nextTick(() => {
+    scrollToBottom()
+  })
 })
 </script>
 

@@ -2044,6 +2044,11 @@ vue-router@^4.2.5:
   dependencies:
     "@vue/devtools-api" "^6.5.0"
 
+vue3-touch-events@^4.1.8:
+  version "4.1.8"
+  resolved "https://registry.npmmirror.com/vue3-touch-events/-/vue3-touch-events-4.1.8.tgz#0cc7389a9fc2ecc6b34095b27d7174d5d3edc300"
+  integrity sha512-8Zs0mj5k/7R579JHsc5w1V2IqAkNlz2gJs18bRV4T5WyCMfd5sBf2ESJ2xR8z+n7ypgK8fQO5MmDOPal0Evf3Q==
+
 vue@^3.4.1:
   version "3.4.15"
   resolved "https://registry.npmmirror.com/vue/-/vue-3.4.15.tgz#91f979844ffca9239dff622ba4c79c5d5524b88c"
