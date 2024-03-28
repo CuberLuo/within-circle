@@ -12,6 +12,7 @@
 import { useThemeStore } from '@/stores/theme.js'
 import { useUserInfoStore } from '@/stores/userInfo.js'
 import moment from 'moment'
+import { useAddUserContact } from '@/mixins/userContact.js'
 
 const themeVarsDark = reactive({
   switchNodeBackground: '#141414',
@@ -60,8 +61,11 @@ socket.on('privateChat', (data) => {
   console.log('服务端回复消息', data)
   showNotify({
     message: `${moment().format('HH:mm:ss')} 用户${data.username}给您发来一条新消息`,
-    type: 'primary'
+    type: 'primary',
+    teleport: '#app'
   })
+  if (data.isImg) useAddUserContact(data.avatar, data.userId, data.username)
+  else useAddUserContact(data.avatar, data.userId, data.username, data.text)
   updateLocalChatHistory(data.userId, data)
 })
 
@@ -81,6 +85,7 @@ watch(
 
 onMounted(() => {
   if (!getItem('chatHistoty')) setItem('chatHistoty', {})
+  if (!getItem('contactList')) setItem('contactList', [])
   websocketInit(useUserInfoStore().user_info)
 })
 </script>

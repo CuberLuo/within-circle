@@ -71,6 +71,7 @@ const privateChat = () => {
     query: {
       chatUserId: props.posterId,
       chatUsername: chatUsername.value,
+      chatUserAvatar: avatarUrl.value,
       type: 'private'
     }
   })

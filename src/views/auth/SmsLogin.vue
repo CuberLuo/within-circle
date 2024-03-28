@@ -55,7 +55,7 @@
 import isMobilePhone from 'validator/lib/isMobilePhone'
 import { sendSmsCode, smsCheck } from '@/api/user'
 import { useUserTokenStore } from '@/stores/userToken.js'
-import { useUserInfo } from './userInfo'
+import { useUserInfo } from '@/mixins/userInfo.js'
 
 const phoneNum = ref('')
 const smsCode = ref('')

@@ -3,7 +3,7 @@
   <div v-else>
     <div v-for="(item, index) in contact" :key="index">
       <van-swipe-cell :name="index" ref="swipeCell" class="swipeCell">
-        <van-cell center class="contact-cell">
+        <van-cell center class="contact-cell" @click="goToChat(item)">
           <template #title>
             <div class="img-container" style="display: inline-block">
               <van-image round class="contact-img" :src="item.avatar_src" />
@@ -29,8 +29,13 @@
           </template>
         </van-cell>
         <template #right>
-          <van-button square type="primary" text="置顶" class="stick-button" />
-          <van-button square type="danger" text="删除" class="delete-button" />
+          <van-button
+            square
+            type="danger"
+            text="删除"
+            class="delete-button"
+            @click="deleteContactItem(index, item)"
+          />
         </template>
       </van-swipe-cell>
     </div>
@@ -38,52 +43,35 @@
 </template>
 
 <script setup>
-/* const contact = ref([
-  {
-    avatar_src:
-      'https://img0.baidu.com/it/u=1080644147,2604676989&fm=253&fmt=auto&app=138&f=JPEG?w=341&h=341',
-    title: '客服小助手',
-    detail: '官方客服',
-    latest_time: '',
-    msg_num: 1,
-    official_msg: true
-  },
-  {
-    avatar_src:
-      'https://img2.baidu.com/it/u=2360330494,1092108791&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500',
-    title: '张三',
-    detail: '??',
-    latest_time: '8:29',
-    msg_num: 4
-  },
-  {
-    avatar_src:
-      'https://img2.baidu.com/it/u=390829681,3002818272&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500',
-    title: '李四',
-    detail: '[图片]',
-    latest_time: '2022-11-10',
-    msg_num: 0
-  },
-  {
-    avatar_src:
-      'https://img2.baidu.com/it/u=3094149767,177600321&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500',
-    title: '王五',
-    detail: '你的简历很不错',
-    latest_time: '2022-11-09',
-    msg_num: 0
-  },
-  {
-    avatar_src:
-      'https://img2.baidu.com/it/u=864800148,863255913&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500',
-    title: '赵六',
-    detail: '明天见!',
-    latest_time: '2022-10-01',
-    msg_num: 0
-  }
-]) */
-const contact = ref([])
+defineOptions({
+  name: 'message'
+})
+const contact = ref(getItem('contactList') || [])
 
 const swipeCell = ref()
+
+const deleteContactItem = (index, item) => {
+  const contactList = getItem('contactList')
+  contactList.splice(index, 1)
+  contact.value.splice(index, 1)
+  setItem('contactList', contactList)
+  // 清空聊天记录
+  let chatHistory = getItem('chatHistoty')
+  chatHistory[item.userId] = []
+  setItem('chatHistoty', chatHistory)
+}
+
+const goToChat = (item) => {
+  router.push({
+    path: '/chat',
+    query: {
+      chatUserId: item.userId,
+      chatUsername: item.title,
+      chatUserAvatar: item.avatar_src,
+      type: 'private'
+    }
+  })
+}
 </script>
 
 <style scoped>
@@ -106,14 +94,20 @@ const swipeCell = ref()
   font-size: 14px;
 }
 
+.contact-detail {
+  width: 100px;
+  white-space: nowrap; /* 文本不换行 */
+  overflow: hidden; /* 隐藏溢出的内容 */
+  text-overflow: ellipsis; /* 显示省略号 */
+}
+
 .contact-detail,
 .contact-time {
   font-size: 12px;
   color: #999;
 }
 
-.delete-button,
-.stick-button {
+.delete-button {
   height: 100%;
 }
 .tag-block {
@@ -121,6 +115,8 @@ const swipeCell = ref()
 }
 :deep().van-cell__title,
 .van-cell__value {
-  flex: auto;
+  /* flex: auto; */
+  display: flex;
+  align-items: center;
 }
 </style>

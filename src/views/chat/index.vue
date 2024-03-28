@@ -68,6 +68,7 @@ import { useResizeObserver } from '@vueuse/core'
 import { showImagePreview } from 'vant'
 import * as imageConversion from 'image-conversion'
 import { uploadFile } from '@/api/post.js'
+import { useAddUserContact, useUpdateUserContact } from '@/mixins/userContact.js'
 
 const { userId, username, userAvatarUrl } = useUserInfoStore().user_info
 
@@ -75,6 +76,7 @@ const uuidv4 = v4
 const route = useRoute()
 const chatUserId = route.query.chatUserId
 const chatUsername = route.query.chatUsername
+const chatUserAvatar = route.query.chatUserAvatar
 const onClickLeft = () => {
   history.go(-1)
 }
@@ -85,16 +87,20 @@ const sendImgUrl = ref('')
 
 const longtapHandler = (chat, i) => {
   return function (direction, mouseEvent) {
-    console.log(chat)
     chat.showPopover = true
   }
 }
 const onSelectAction = (action) => {
-  console.log(action)
   chatList.value.splice(action.index, 1)
   let chatHistory = getItem('chatHistoty')
   chatHistory[chatUserId].splice(action.index, 1)
   setItem('chatHistoty', chatHistory)
+  // 删除某项聊天内容后需要更新联系人列表的聊天预览文字
+  if (chatList.value.length === 0)
+    useUpdateUserContact(chatUserAvatar, chatUserId, chatUsername, '')
+  const lastChat = chatList.value[chatList.value.length - 1]
+  if (lastChat.isImg) useUpdateUserContact(chatUserAvatar, chatUserId, chatUsername)
+  else useUpdateUserContact(chatUserAvatar, chatUserId, chatUsername, lastChat.text)
 }
 
 // 监听元素的宽高动态变化
@@ -120,6 +126,8 @@ socket.on('privateChat', (data) => {
     })
   }
   chatList.value.push(data)
+  if (data.isImg) useAddUserContact(data.avatar, data.userId, data.username)
+  else useAddUserContact(data.avatar, data.userId, data.username, data.text)
   updateLocalChatHistory(chatUserId, data)
   nextTick(() => {
     scrollToBottom()
@@ -142,6 +150,7 @@ const sendMessage = () => {
     chatDate: moment().format('YYYY-MM-DD HH:mm:ss')
   }
   chatList.value.push(chatObj)
+  useAddUserContact(chatUserAvatar, chatUserId, chatUsername, userText.value)
   updateLocalChatHistory(chatUserId, chatObj)
   socket.emit('privateChat', chatObj, (res) => {
     if (res === void 0) return
@@ -200,7 +209,6 @@ const compressFile = async (file) => {
 
 const afterRead = async (file) => {
   sendImgUrl.value = file.objectUrl
-  console.log(sendImgUrl.value)
   let formData = new FormData()
   formData.append('pic', file.file)
 
@@ -223,6 +231,7 @@ const afterRead = async (file) => {
     if (res.code == status_code.OK) {
       // 通过socket发送图片链接到后端时需要将本地链接替换为云链接
       chatObj.imgUrl = onlineImageUrl
+      useAddUserContact(chatUserAvatar, chatUserId, chatUsername)
       updateLocalChatHistory(chatUserId, chatObj)
       socket.emit('privateChat', chatObj, (res) => {
         if (res === void 0) return

@@ -40,7 +40,7 @@
 <script setup>
 import { pwdLogin } from '@/api/user'
 import { useUserTokenStore } from '@/stores/userToken.js'
-import { useUserInfo } from './userInfo'
+import { useUserInfo } from '@/mixins/userInfo.js'
 
 const username = ref('')
 const password = ref('')
