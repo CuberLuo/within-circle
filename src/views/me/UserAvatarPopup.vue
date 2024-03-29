@@ -19,12 +19,14 @@
 </template>
 
 <script setup>
+import { uploadUserAvatar } from '@/api/userinfo.js'
+import * as imageConversion from 'image-conversion'
+import { useUserInfo } from '@/mixins/userInfo.js'
+
 const userAvatarUrl = ref('')
 const userAvatar = ref()
 const uploading = ref(false)
 const uploadDisable = ref(true)
-import { uploadUserAvatar } from '@/api/userinfo.js'
-import * as imageConversion from 'image-conversion'
 const showAvatarPopup = defineModel()
 const props = defineProps({
   avatarUrl: String
@@ -80,6 +82,7 @@ const confirmUpload = async () => {
     if (res.code == status_code.OK) {
       showSuccessToast(res.msg)
       closePopup()
+      useUserInfo()
       emits('updateUserAvatar', userAvatarUrl.value)
     }
   } catch (err) {
