@@ -68,7 +68,12 @@ import { useResizeObserver } from '@vueuse/core'
 import { showImagePreview } from 'vant'
 import * as imageConversion from 'image-conversion'
 import { uploadFile } from '@/api/post.js'
-import { useAddUserContact, useUpdateUserContact } from '@/mixins/userContact.js'
+import {
+  useAddUserContact,
+  useUpdateUserContact,
+  useUpdateUnReadNum,
+  useClearUnReadNum
+} from '@/mixins/userContact.js'
 
 const { userId, username, userAvatarUrl } = useUserInfoStore().user_info
 
@@ -78,6 +83,7 @@ const chatUserId = route.query.chatUserId
 const chatUsername = route.query.chatUsername
 const chatUserAvatar = route.query.chatUserAvatar
 const onClickLeft = () => {
+  useClearUnReadNum(chatUserId)
   history.go(-1)
 }
 const messageInput = ref(null)
@@ -118,17 +124,22 @@ socket.off('privateChat')
 //服务端回复消息
 socket.on('privateChat', (data) => {
   console.log('服务端回复消息', data)
-  if (route.path != '/chat') {
+  // 联系人列表相关信息更新
+  if (data.isImg) useAddUserContact(data.avatar, data.userId, data.username)
+  else useAddUserContact(data.avatar, data.userId, data.username, data.text)
+  if (route.path != '/chat' || chatUserId != data.userId) {
     showNotify({
       message: `${moment().format('HH:mm:ss')} 用户${data.username}给您发来一条新消息`,
       type: 'primary',
       teleport: '#app'
     })
+    useUpdateUnReadNum(data.userId)
   }
-  chatList.value.push(data)
-  if (data.isImg) useAddUserContact(data.avatar, data.userId, data.username)
-  else useAddUserContact(data.avatar, data.userId, data.username, data.text)
-  updateLocalChatHistory(chatUserId, data)
+  if (chatUserId == data.userId) {
+    chatList.value.push(data)
+  }
+
+  updateLocalChatHistory(data.userId, data)
   nextTick(() => {
     scrollToBottom()
   })
@@ -257,7 +268,7 @@ onMounted(() => {
   console.log('onMounted')
   // 读取本地聊天记录
   let chatHistory = getItem('chatHistoty')
-  const chatUserHistoryList = getItem('chatHistoty')[chatUserId]
+  const chatUserHistoryList = chatHistory[chatUserId]
   if (!chatUserHistoryList) {
     chatHistory[chatUserId] = []
     setItem('chatHistoty', chatHistory)

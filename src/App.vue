@@ -12,7 +12,8 @@
 import { useThemeStore } from '@/stores/theme.js'
 import { useUserInfoStore } from '@/stores/userInfo.js'
 import moment from 'moment'
-import { useAddUserContact } from '@/mixins/userContact.js'
+import { useAddUserContact, useUpdateUnReadNum } from '@/mixins/userContact.js'
+import { useContactListStore } from '@/stores/contactList'
 
 const themeVarsDark = reactive({
   switchNodeBackground: '#141414',
@@ -57,21 +58,28 @@ const websocketInit = (user_info) => {
     })
   }
 }
+socket.off('privateChat')
 socket.on('privateChat', (data) => {
   console.log('服务端回复消息', data)
+  if (data.isImg) useAddUserContact(data.avatar, data.userId, data.username)
+  else useAddUserContact(data.avatar, data.userId, data.username, data.text)
   showNotify({
     message: `${moment().format('HH:mm:ss')} 用户${data.username}给您发来一条新消息`,
     type: 'primary',
     teleport: '#app'
   })
-  if (data.isImg) useAddUserContact(data.avatar, data.userId, data.username)
-  else useAddUserContact(data.avatar, data.userId, data.username, data.text)
+  useUpdateUnReadNum(data.userId)
   updateLocalChatHistory(data.userId, data)
 })
 
 const updateLocalChatHistory = (chatUserId, chatObj) => {
   // 更新本地聊天记录
   let chatHistory = getItem('chatHistoty')
+  const chatUserHistoryList = chatHistory[chatUserId]
+  if (!chatUserHistoryList) {
+    chatHistory[chatUserId] = []
+  }
+
   chatHistory[chatUserId].push(chatObj)
   setItem('chatHistoty', chatHistory)
 }
@@ -85,7 +93,7 @@ watch(
 
 onMounted(() => {
   if (!getItem('chatHistoty')) setItem('chatHistoty', {})
-  if (!getItem('contactList')) setItem('contactList', [])
+  if (!getItem('contactList')) useContactListStore().setContactList([])
   websocketInit(useUserInfoStore().user_info)
 })
 </script>

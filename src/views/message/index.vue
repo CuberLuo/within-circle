@@ -2,7 +2,12 @@
   <EmptyError v-if="contact.length == 0" description="暂无任何消息" />
   <div v-else>
     <div v-for="(item, index) in contact" :key="index">
-      <van-swipe-cell :name="index" ref="swipeCell" class="swipeCell">
+      <van-swipe-cell
+        :name="index"
+        ref="swipeCell"
+        class="swipeCell"
+        :before-close="beforeCellClose"
+      >
         <van-cell center class="contact-cell" @click="goToChat(item)">
           <template #title>
             <div class="img-container" style="display: inline-block">
@@ -46,19 +51,48 @@
 defineOptions({
   name: 'message'
 })
-const contact = ref(getItem('contactList') || [])
+import { useContactListStore } from '@/stores/contactList'
+import { useClearUnReadNum } from '@/mixins/userContact.js'
+const contactListStore = useContactListStore()
+const contact = ref([])
 
 const swipeCell = ref()
+let currentIndex = 0
+let currentItem = {}
 
 const deleteContactItem = (index, item) => {
-  const contactList = getItem('contactList')
-  contactList.splice(index, 1)
-  contact.value.splice(index, 1)
-  setItem('contactList', contactList)
-  // 清空聊天记录
-  let chatHistory = getItem('chatHistoty')
-  chatHistory[item.userId] = []
-  setItem('chatHistoty', chatHistory)
+  currentIndex = index
+  currentItem = item
+}
+
+const beforeCellClose = ({ position }) => {
+  switch (position) {
+    case 'left':
+    case 'cell':
+    case 'outside':
+      return true
+    case 'right':
+      return new Promise((resolve) => {
+        showConfirmDialog({
+          message: '删除后，将清空该聊天的消息记录',
+          confirmButtonColor: '#ee0a24'
+        })
+          .then(() => {
+            useClearUnReadNum(currentItem.userId)
+            const contactList = contactListStore.contactList
+            contactList.splice(currentIndex, 1)
+            contactListStore.setContactList(contactList)
+            // 清空聊天记录
+            let chatHistory = getItem('chatHistoty')
+            chatHistory[currentItem.userId] = []
+            setItem('chatHistoty', chatHistory)
+            resolve(true)
+          })
+          .catch((e) => {
+            resolve(false)
+          })
+      })
+  }
 }
 
 const goToChat = (item) => {
@@ -72,6 +106,15 @@ const goToChat = (item) => {
     }
   })
 }
+watch(
+  () => contactListStore.contactList,
+  (newVal) => {
+    contact.value = newVal
+  }
+)
+onMounted(() => {
+  contact.value = contactListStore.contactList
+})
 </script>
 
 <style scoped>

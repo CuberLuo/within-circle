@@ -37,6 +37,7 @@ import PwdPopup from './PwdPopup.vue'
 import { useUserTokenStore } from '@/stores/userToken.js'
 import { getUserInfo } from '@/api/userinfo'
 import { useUserInfoStore } from '@/stores/userInfo.js'
+import { useContactListStore } from '@/stores/contactList'
 
 const socket = inject('socket')
 const username = ref('')
@@ -88,6 +89,8 @@ const exitLogin = () => {
       useUserTokenStore().removeToken() //移除Pinia和localStorage中的token
       useUserInfoStore().removeUserInfo()
       removeItem('chatHistoty')
+      useContactListStore().removeContactList()
+      useContactListStore().removeUnreadNum()
       socket.emit('logout', (res) => {
         console.log(res)
         router.push('/auth')
