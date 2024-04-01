@@ -43,8 +43,6 @@ watch(
   }
 )
 
-const socketLogin = ref(false)
-provide('socketLogin', socketLogin)
 const socket = inject('socket')
 
 const websocketInit = (user_info) => {
@@ -52,9 +50,17 @@ const websocketInit = (user_info) => {
   if (Object.keys(user_info).length !== 0) {
     console.log('socket执行login')
     socket.emit('login', user_info, (res) => {
-      if (res === void 0) socketLogin.value = false
-      else socketLogin.value = true
       console.log(res)
+      // 获取云端暂存的消息记录更新至本地
+      const cloudChatObj = res.data
+      for (const key in cloudChatObj) {
+        cloudChatObj[key].forEach((element) => {
+          if (element.isImg) useAddUserContact(element.avatar, element.userId, element.username)
+          else useAddUserContact(element.avatar, element.userId, element.username, element.text)
+          useUpdateUnReadNum(key)
+          updateLocalChatHistory(key, element)
+        })
+      }
     })
   }
 }
