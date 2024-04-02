@@ -66,7 +66,7 @@ import moment from 'moment'
 import { useUserInfoStore } from '@/stores/userInfo.js'
 import { useResizeObserver } from '@vueuse/core'
 import { showImagePreview } from 'vant'
-import * as imageConversion from 'image-conversion'
+import { useBeforeReadFile } from '@/mixins/fileCompress.js'
 import { uploadFile } from '@/api/post.js'
 import {
   useAddUserContact,
@@ -193,29 +193,8 @@ const showImage = (url) => {
   })
 }
 
-const maxKiloBytes = 500
-const beforeRead = async (file) => {
-  const maxSize = maxKiloBytes * 1024
-  if (file.size > maxSize) {
-    const compressedFile = await compressFile(file)
-    return new Promise((resolve, reject) => resolve(compressedFile))
-  } else {
-    return new Promise((resolve, reject) => resolve(file))
-  }
-}
-
-const compressFile = async (file) => {
-  showLoadingToast({
-    message: '图片压缩中',
-    forbidClick: true,
-    loadingType: 'spinner',
-    duration: 0
-  })
-  // 超过maxKiloBytes kB的图片均会被压缩
-  let res = await imageConversion.compressAccurately(file, maxKiloBytes)
-  res = new File([res], file.name, { type: res.type, lastModified: Date.now() })
-  closeToast()
-  return res
+const beforeRead = (file) => {
+  return useBeforeReadFile(file, 500)
 }
 
 const afterRead = async (file) => {

@@ -22,8 +22,8 @@
 
 <script setup>
 const show = ref(false)
-const sliderValue = ref(20)
-const distanceValue = ref('2里') //默认方圆2里可见
+const sliderValue = ref(100)
+const distanceValue = ref('无限制') //默认无限制
 const cellValue = ref('')
 watch(sliderValue, (newVal) => {
   if (newVal == 100) distanceValue.value = '无限制'
@@ -35,6 +35,9 @@ const onCloseSheet = () => {
   cellValue.value = distanceValue.value
   emits('updateVisibleCircle', sliderValue.value / 10)
 }
+onMounted(() => {
+  onCloseSheet()
+})
 </script>
 
 <style scoped>
