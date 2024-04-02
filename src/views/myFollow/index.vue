@@ -4,7 +4,12 @@
     <van-cell v-for="follower in followerList" :key="follower.id" class="user-cell">
       <template #value>
         <div class="user-cv">
-          <van-image round class="user-img" :src="follower.avatar_url" />
+          <van-image
+            round
+            class="user-img"
+            :src="follower.avatar_url"
+            @click="privateChat(follower)"
+          />
           <span class="user-info"> {{ follower.username }} </span>
           <div class="follow-wrapper">
             <van-button
@@ -45,6 +50,18 @@ const opUserFollow = async (follower) => {
   } catch (error) {
     console.log(error)
   }
+}
+
+const privateChat = (user) => {
+  router.push({
+    path: '/chat',
+    query: {
+      chatUserId: user.id,
+      chatUsername: user.username,
+      chatUserAvatar: user.avatar_url,
+      type: 'private'
+    }
+  })
 }
 </script>
 

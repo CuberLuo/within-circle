@@ -10,6 +10,7 @@
         </div>
       </template>
     </van-cell>
+    <UserData :userDataObj="userDataObj" />
     <UserAvatarPopup
       v-model="showAvatarPopup"
       :avatarUrl="avatarUrl"
@@ -19,8 +20,6 @@
 
     <van-cell is-link title="我的发布" @click="goToMyPostPage()" />
     <van-cell is-link title="我的点赞" @click="goToLikePage()" />
-    <van-cell is-link title="我的关注" @click="goToMyFollowPage()" />
-    <van-cell is-link title="我的粉丝" @click="goToMyFansPage()" />
     <PhoneBindPopup v-model="showPhoneBindPopup" @updatePhoneInfo="updatePhoneInfo" />
     <van-cell is-link title="手机号" :value="phoneNum" @click="bindPhone()" />
     <PwdPopup v-model="showPwdPopup" />
@@ -34,6 +33,7 @@ import ThemeMode from './ThemeMode.vue'
 import UserAvatarPopup from './UserAvatarPopup.vue'
 import PhoneBindPopup from './PhoneBindPopup.vue'
 import PwdPopup from './PwdPopup.vue'
+import UserData from './UserData.vue'
 import { useUserTokenStore } from '@/stores/userToken.js'
 import { getUserInfo } from '@/api/userinfo'
 import { useUserInfoStore } from '@/stores/userInfo.js'
@@ -47,6 +47,7 @@ const phoneNum = ref('')
 const showAvatarPopup = ref(false)
 const showPwdPopup = ref(false)
 const showPhoneBindPopup = ref(false)
+const userDataObj = ref({})
 
 const updateUserAvatar = (val) => {
   avatarUrl.value = val
@@ -57,8 +58,7 @@ const updatePhoneInfo = (val) => {
 
 const goToLikePage = () => router.push('/myLike')
 const goToMyPostPage = () => router.push('/myPost')
-const goToMyFollowPage = () => router.push('/myFollow')
-const goToMyFansPage = () => router.push('/myFans')
+
 const bindPhone = () => {
   if (phoneNum.value != '未绑定') showToast('手机号暂不支持解绑或换绑')
   else showPhoneBindPopup.value = true
@@ -74,6 +74,10 @@ onMounted(async () => {
       registerDate.value = data.register_date
       avatarUrl.value = data.avatar_url
       phoneNum.value = data.phone_num == '' ? '未绑定' : data.phone_num
+      userDataObj.value = {
+        fans_num: data.fans_num,
+        follower_num: data.follower_num
+      }
     }
   } catch (error) {
     console.log(error)
@@ -107,5 +111,8 @@ const exitLogin = () => {
 <style scoped>
 #exitBtn {
   margin-top: 6px;
+}
+.user-cell {
+  margin-bottom: 0 !important;
 }
 </style>
