@@ -45,15 +45,29 @@
     <div class="op-wrapper">
       <van-field
         ref="messageInput"
+        id="messageInput"
         class="message-input"
         v-model="userText"
         autosize
         rows="1"
         type="textarea"
         placeholder="请输入信息"
+        @blur="onMessageInputBlur"
       />
+      <van-popover
+        trigger="manual"
+        v-model:show="showEmojiPopover"
+        placement="top-end"
+        theme="dark"
+      >
+        <Emoji @clickedEmoji="clickedEmoji" />
+        <template #reference>
+          <van-icon class="op-icon" name="smile-o" @click="showEmojiPopover = !showEmojiPopover" />
+        </template>
+      </van-popover>
+
       <van-uploader v-if="userText === ''" :before-read="beforeRead" :after-read="afterRead">
-        <van-icon class="add-icon" name="add-o" />
+        <van-icon class="op-icon" name="add-o" />
       </van-uploader>
       <van-button v-else type="primary" @click="sendMessage">发送</van-button>
     </div>
@@ -75,6 +89,7 @@ import {
   useClearUnReadNum,
   useUpdateLocalChatHistory
 } from '@/mixins/userContact.js'
+import Emoji from './Emoji.vue'
 
 const { userId, username, userAvatarUrl } = useUserInfoStore().user_info
 
@@ -91,6 +106,40 @@ const messageInput = ref(null)
 const userText = ref('')
 const bottomHeight = ref('60px')
 const sendImgUrl = ref('')
+const showEmojiPopover = ref(false)
+
+let blurIndex = null
+const clickedEmoji = (val) => {
+  if (blurIndex == userText.value.length || blurIndex == null) userText.value += val
+  else userText.value = userText.value.slice(0, blurIndex) + val + userText.value.slice(blurIndex)
+
+  nextTick(() => {
+    const messageInputDom = document.getElementById('messageInput')
+    // emoji占两个字符所以光标位置要加2
+    messageInputDom.setSelectionRange(blurIndex + 2, blurIndex + 2)
+    /* 通过ref绑定设置光标位置写法太复杂 */
+    // messageInput.value.$el.children[0].children[0].children[0].setSelectionRange(
+    //   blurIndex + 1,
+    //   blurIndex + 1
+    // )
+  })
+
+  showEmojiPopover.value = false
+}
+
+const onMessageInputBlur = (event) => {
+  blurIndex = event.srcElement.selectionStart //光标所在的位置
+  console.log('blurIndex: ', blurIndex)
+
+  // 因点击表情导致输入框失焦需要重新聚焦
+  // 延迟设置为0，放在事件队列的末尾以等待当前执行栈中的其他任务完成
+  // setTimeout(() => {
+  //   if (showEmojiPopover.value) {
+  //     event.target.focus()
+  //   }
+  // }, 0)
+  event.target.focus()
+}
 
 const longtapHandler = (chat, i) => {
   return function (direction, mouseEvent) {
@@ -344,7 +393,7 @@ onMounted(() => {
   display: none;
 }
 
-.add-icon {
+.op-icon {
   font-size: 30px;
   margin-left: 10px;
 }
