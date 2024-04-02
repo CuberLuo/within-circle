@@ -24,13 +24,12 @@ import { getPageSizePosts } from '@/api/post.js'
 import UserPostCell from '@/components/UserPostCell.vue'
 
 import AMapLoader from '@amap/amap-jsapi-loader'
-import amap from '@/components/data/amap.json'
 const lat = ref(-1)
 const lng = ref(-1)
 
 /* const getPostsByLocation = async () => {
   const AMap = await AMapLoader.load({
-    key: amap.key,
+    key: import.meta.env.VITE_AMAP_KEY,
     version: '2.0',
     plugins: ['AMap.Geolocation']
   })

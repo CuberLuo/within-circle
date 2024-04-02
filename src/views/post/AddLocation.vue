@@ -36,7 +36,6 @@
 
 <script setup>
 import AMapLoader from '@amap/amap-jsapi-loader'
-import amap from '@/components/data/amap.json'
 
 const show = ref(false)
 const cellValue = ref('')
@@ -45,7 +44,7 @@ const poiList = ref([])
 let userCity = ''
 onMounted(() => {
   AMapLoader.load({
-    key: amap.key,
+    key: import.meta.env.VITE_AMAP_KEY,
     version: '2.0',
     plugins: ['AMap.Geolocation', 'AMap.Geocoder']
   }).then((AMap) => {
@@ -112,7 +111,7 @@ const onSearch = (val) => {
     duration: 0
   })
   AMapLoader.load({
-    key: amap.key,
+    key: import.meta.env.VITE_AMAP_KEY,
     version: '2.0',
     plugins: ['AMap.PlaceSearch']
   }).then((AMap) => {

@@ -18,7 +18,6 @@ defineOptions({
   name: 'amap'
 })
 import AMapLoader from '@amap/amap-jsapi-loader'
-import amap from '@/components/data/amap.json'
 import { getUserInfo } from '@/api/userinfo'
 import { getAllPosts } from '@/api/post.js'
 import UserPostCell from '@/components/UserPostCell.vue'
@@ -42,7 +41,7 @@ onMounted(async () => {
   await getAllPostPoints()
   console.log(points)
   AMapLoader.load({
-    key: amap.key,
+    key: import.meta.env.VITE_AMAP_KEY,
     version: '2.0',
     plugins: ['AMap.Geolocation', 'AMap.MarkerCluster']
   }).then((AMap) => {
