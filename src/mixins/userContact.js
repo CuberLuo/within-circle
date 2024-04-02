@@ -79,3 +79,15 @@ export const useClearUnReadNum = (userId) => {
   useContactListStore().setContactList(contactList)
   useContactListStore().setUnreadNum(totalUnreadNum)
 }
+
+export const useUpdateLocalChatHistory = (chatUserId, chatObj) => {
+  // 更新本地聊天记录
+  let chatHistory = getItem('chatHistoty')
+  const chatUserHistoryList = chatHistory[chatUserId]
+  if (!chatUserHistoryList) {
+    chatHistory[chatUserId] = []
+  }
+
+  chatHistory[chatUserId].push(chatObj)
+  setItem('chatHistoty', chatHistory)
+}

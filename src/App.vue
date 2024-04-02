@@ -12,7 +12,11 @@
 import { useThemeStore } from '@/stores/theme.js'
 import { useUserInfoStore } from '@/stores/userInfo.js'
 import moment from 'moment'
-import { useAddUserContact, useUpdateUnReadNum } from '@/mixins/userContact.js'
+import {
+  useAddUserContact,
+  useUpdateUnReadNum,
+  useUpdateLocalChatHistory
+} from '@/mixins/userContact.js'
 import { useContactListStore } from '@/stores/contactList'
 
 const themeVarsDark = reactive({
@@ -58,7 +62,7 @@ const websocketInit = (user_info) => {
           if (element.isImg) useAddUserContact(element.avatar, element.userId, element.username)
           else useAddUserContact(element.avatar, element.userId, element.username, element.text)
           useUpdateUnReadNum(key)
-          updateLocalChatHistory(key, element)
+          useUpdateLocalChatHistory(key, element)
         })
       }
     })
@@ -75,20 +79,8 @@ socket.on('privateChat', (data) => {
     teleport: '#app'
   })
   useUpdateUnReadNum(data.userId)
-  updateLocalChatHistory(data.userId, data)
+  useUpdateLocalChatHistory(data.userId, data)
 })
-
-const updateLocalChatHistory = (chatUserId, chatObj) => {
-  // 更新本地聊天记录
-  let chatHistory = getItem('chatHistoty')
-  const chatUserHistoryList = chatHistory[chatUserId]
-  if (!chatUserHistoryList) {
-    chatHistory[chatUserId] = []
-  }
-
-  chatHistory[chatUserId].push(chatObj)
-  setItem('chatHistoty', chatHistory)
-}
 
 watch(
   () => useUserInfoStore().user_info,

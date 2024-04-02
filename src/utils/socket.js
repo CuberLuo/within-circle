@@ -1,5 +1,10 @@
 import io from 'socket.io-client'
 import { useUserInfoStore } from '@/stores/userInfo.js'
+import {
+  useAddUserContact,
+  useUpdateUnReadNum,
+  useUpdateLocalChatHistory
+} from '@/mixins/userContact.js'
 export default {
   install: (app, { connection, options }) => {
     const socket = io(connection, options)
@@ -18,7 +23,7 @@ export default {
             if (element.isImg) useAddUserContact(element.avatar, element.userId, element.username)
             else useAddUserContact(element.avatar, element.userId, element.username, element.text)
             useUpdateUnReadNum(key)
-            updateLocalChatHistory(key, element)
+            useUpdateLocalChatHistory(key, element)
           })
         }
       })

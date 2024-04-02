@@ -72,7 +72,8 @@ import {
   useAddUserContact,
   useUpdateUserContact,
   useUpdateUnReadNum,
-  useClearUnReadNum
+  useClearUnReadNum,
+  useUpdateLocalChatHistory
 } from '@/mixins/userContact.js'
 
 const { userId, username, userAvatarUrl } = useUserInfoStore().user_info
@@ -139,7 +140,7 @@ socket.on('privateChat', (data) => {
     chatList.value.push(data)
   }
 
-  updateLocalChatHistory(data.userId, data)
+  useUpdateLocalChatHistory(data.userId, data)
   nextTick(() => {
     scrollToBottom()
   })
@@ -162,7 +163,7 @@ const sendMessage = () => {
   }
   chatList.value.push(chatObj)
   useAddUserContact(chatUserAvatar, chatUserId, chatUsername, userText.value)
-  updateLocalChatHistory(chatUserId, chatObj)
+  useUpdateLocalChatHistory(chatUserId, chatObj)
   socket.emit('privateChat', chatObj, (res) => {
     if (res === void 0) return
     console.log(res)
@@ -172,13 +173,6 @@ const sendMessage = () => {
   nextTick(() => {
     scrollToBottom()
   })
-}
-
-const updateLocalChatHistory = (chatUserId, chatObj) => {
-  // 更新本地聊天记录
-  let chatHistory = getItem('chatHistoty')
-  chatHistory[chatUserId].push(chatObj)
-  setItem('chatHistoty', chatHistory)
 }
 
 const scrollToBottom = () => {
@@ -222,7 +216,7 @@ const afterRead = async (file) => {
       // 通过socket发送图片链接到后端时需要将本地链接替换为云链接
       chatObj.imgUrl = onlineImageUrl
       useAddUserContact(chatUserAvatar, chatUserId, chatUsername)
-      updateLocalChatHistory(chatUserId, chatObj)
+      useUpdateLocalChatHistory(chatUserId, chatObj)
       socket.emit('privateChat', chatObj, (res) => {
         if (res === void 0) return
         console.log(res)
