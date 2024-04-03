@@ -14,6 +14,8 @@ export default {
     })
     socket.io.on('reconnect', () => {
       const user_info = useUserInfoStore().user_info
+      // 重连后已退出登录不需要执行login
+      if (Object.keys(user_info).length === 0) return
       socket.emit('login', user_info, (res) => {
         console.log(res)
         // 获取云端暂存的消息记录更新至本地
