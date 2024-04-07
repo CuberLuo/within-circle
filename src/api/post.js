@@ -23,6 +23,14 @@ export const getPageSizePosts = (param) => {
   })
 }
 
+export const getTopKRecommendPosts = (param) => {
+  return request({
+    url: '/topk-recommend-posts',
+    method: 'GET',
+    params: param
+  })
+}
+
 export const likePost = (data) => {
   return request({
     url: '/like-post',
