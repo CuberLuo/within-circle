@@ -24,37 +24,6 @@
 import { getPageSizePosts } from '@/api/post.js'
 import UserPostCell from '@/components/UserPostCell.vue'
 
-import AMapLoader from '@amap/amap-jsapi-loader'
-const lat = ref(-1)
-const lng = ref(-1)
-
-/* const getPostsByLocation = async () => {
-  const AMap = await AMapLoader.load({
-    key: import.meta.env.VITE_AMAP_KEY,
-    version: '2.0',
-    plugins: ['AMap.Geolocation']
-  })
-  const geolocation = new AMap.Geolocation({
-    useNative: true,
-    timeout: 10 * 1000,
-    maximumAge: 100, //定位结果缓存100毫秒
-    enableHighAccuracy: true //使用高精度定位
-  })
-  geolocation.getCurrentPosition(function (status, result) {
-    if (status == 'complete') {
-      console.log('首页定位成功', result)
-      lat.value = result.position.lat
-      lng.value = result.position.lng
-      console.log(lat.value)
-      console.log(lng.value)
-      requestPageSizePosts()
-    } else {
-      console.log('首页定位失败', result)
-      showFailToast('无法获取当前定位')
-    }
-  })
-} */
-
 const route = useRoute()
 watch(route, (newRoute) => {
   if (newRoute.path == '/index' && newRoute.query.reloadPage == '1') {
