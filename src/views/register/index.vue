@@ -44,6 +44,8 @@
 import NavBar from '@/layout/components/NavBar.vue'
 import { pwdRegister } from '@/api/user'
 import { useUserTokenStore } from '@/stores/userToken.js'
+import { useUserInfo } from '@/mixins/userInfo.js'
+
 const username = ref('')
 const password = ref('')
 const submitLoading = ref(false)
@@ -56,6 +58,8 @@ const onSubmit = async (val) => {
       showSuccessToast(res.msg)
       const { access_token, refresh_token } = res.data
       useUserTokenStore().setToken(access_token, refresh_token)
+
+      useUserInfo()
       router.push('/')
     }
   } catch (err) {
