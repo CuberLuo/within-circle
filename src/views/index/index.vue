@@ -12,6 +12,7 @@
           <div v-for="post in postsArr" :key="post.id">
             <UserPostCell :post="post" @deletePostFromPostsArr="deletePostFromPostsArr" />
           </div>
+          <van-back-top />
         </van-space>
         <van-loading id="loading-spinner" type="spinner" v-show="showLoading" />
       </van-pull-refresh>
@@ -135,4 +136,7 @@ const deletePostFromPostsArr = (id) => {
 .pull-refresh {
   min-height: calc(100vh - var(--van-nav-bar-height) - var(--van-tabbar-height));
 }
+/* :deep().van-back-top {
+  font-size: 200px;
+} */
 </style>
