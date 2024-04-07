@@ -1,5 +1,11 @@
 <template>
-  <van-popup v-model:show="showPosterPopup" round class="poster-popup" @close="closePopup">
+  <van-popup
+    v-model:show="showPosterPopup"
+    round
+    class="poster-popup"
+    @close="closePopup"
+    teleport="#app"
+  >
     <van-image round class="user-img" :src="avatarUrl" />
     <div class="right-wrapper">
       <span class="user-info">
