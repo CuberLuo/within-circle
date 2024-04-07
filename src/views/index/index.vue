@@ -67,7 +67,6 @@ const showLoading = ref(false)
 const postsArr = ref([])
 const page = ref(1)
 const pageSize = 5
-const lastPostId = ref(-1)
 const reachBottom = ref(false)
 const isGetAll = ref(false)
 const resetData = () => {
