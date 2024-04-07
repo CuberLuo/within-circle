@@ -49,6 +49,10 @@ onMounted(async () => {
   requestPageSizePosts()
   window.addEventListener('scroll', lazyLoading)
 })
+onBeforeUnmount(() => {
+  // 组件销毁前取消滚动监听
+  window.removeEventListener('scroll', lazyLoading)
+})
 const lazyLoading = () => {
   const scrollTop = document.documentElement.scrollTop || document.body.scrollTop //滚动条高度
   const clientHeight = document.documentElement.clientHeight //屏幕可视区域高度

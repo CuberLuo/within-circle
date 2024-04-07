@@ -1,10 +1,10 @@
 <template>
-  <van-tabs v-model:active="active">
+  <van-tabs v-model:active="active" sticky swipeable>
     <van-tab title="所有发布">
-      <ContentAll />
+      <ContentAll v-if="active === 0" :key="active" />
     </van-tab>
     <van-tab title="猜你喜欢">
-      <Recommend />
+      <Recommend v-if="active === 1" :key="active" />
     </van-tab>
   </van-tabs>
 </template>
