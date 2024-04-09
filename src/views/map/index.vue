@@ -59,7 +59,7 @@ onMounted(async () => {
       enableHighAccuracy: true, //使用高精度定位
       markerOptions: {
         content: `
-        <img src="https://a.amap.com/jsapi_demos/static/resource/img/user.png" 
+        <img src="${new URL('@/assets/images/userPositionMarker.png', import.meta.url).href}" 
         style="width:36px;height:36px"/>
         `,
         offset: new AMap.Pixel(-18, -36)
