@@ -34,10 +34,8 @@ import UserAvatarPopup from './UserAvatarPopup.vue'
 import PhoneBindPopup from './PhoneBindPopup.vue'
 import PwdPopup from './PwdPopup.vue'
 import UserData from './UserData.vue'
-import { useUserTokenStore } from '@/stores/userToken.js'
 import { getUserInfo } from '@/api/userinfo'
-import { useUserInfoStore } from '@/stores/userInfo.js'
-import { useContactListStore } from '@/stores/contactList'
+import { useLogout } from '@/mixins/userInfo.js'
 
 const socket = inject('socket')
 const username = ref('')
@@ -90,11 +88,7 @@ const exitLogin = () => {
     message: '您确认要退出吗？(退出登录将清空所有聊天记录)'
   })
     .then(() => {
-      useUserTokenStore().removeToken() //移除Pinia和localStorage中的token
-      useUserInfoStore().removeUserInfo()
-      removeItem('chatHistoty')
-      useContactListStore().removeContactList()
-      useContactListStore().removeUnreadNum()
+      useLogout()
       socket.emit('logout', (res) => {
         console.log(res)
         router.push('/auth')

@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { useUserTokenStore } from '@/stores/userToken.js'
-import { useUserInfoStore } from '@/stores/userInfo.js'
-import { useContactListStore } from '@/stores/contactList'
+import { useLogout } from '@/mixins/userInfo'
 import { tokenRefresh, isRefreshRequest } from '@/api/refreshToken'
 // axios封装
 const service = axios.create({
@@ -35,16 +34,9 @@ service.interceptors.response.use(
     if (code == status_code.UNAUTHORIZED && !isRefreshRequest(response.config)) {
       const res = await tokenRefresh()
       if (res.code == status_code.UNAUTHORIZED) {
-        showFailToast('长时间未登录方圆几里，请重新登录')
-        useUserTokenStore().removeToken() //清除Pinia和localStorage中无效的token
-        useUserInfoStore().removeUserInfo()
-        removeItem('chatHistoty')
-        useContactListStore().removeContactList()
-        useContactListStore().removeUnreadNum()
+        showFailToast('请登录')
+        useLogout()
         router.push('/auth')
-        setTimeout(() => {
-          window.location.reload()
-        }, 10)
       } else {
         const { access_token, refresh_token } = res.data
         useUserTokenStore().setToken(access_token, refresh_token)

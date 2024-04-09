@@ -1,5 +1,7 @@
 import { getUserInfo } from '@/api/userinfo'
 import { useUserInfoStore } from '@/stores/userInfo.js'
+import { useContactListStore } from '@/stores/contactList'
+import { useUserTokenStore } from '@/stores/userToken.js'
 
 export const useUserInfo = async () => {
   try {
@@ -13,4 +15,12 @@ export const useUserInfo = async () => {
   } catch (error) {
     console.log(error)
   }
+}
+
+export const useLogout = () => {
+  useUserTokenStore().removeToken() //清除Pinia和localStorage中无效的token
+  useUserInfoStore().removeUserInfo()
+  removeItem('chatHistoty')
+  useContactListStore().removeContactList()
+  useContactListStore().removeUnreadNum()
 }

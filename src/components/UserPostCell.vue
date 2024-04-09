@@ -90,7 +90,7 @@ const likeIt = async (post) => {
     const res = await likePost({
       post_id: post.id
     })
-    showToast(res.msg)
+    if (res.code == status_code.OK) showToast(res.msg)
   } catch (error) {
     console.log(error)
   }
