@@ -342,6 +342,16 @@
   resolved "https://registry.npmmirror.com/@socket.io/component-emitter/-/component-emitter-3.1.0.tgz#96116f2a912e0c02817345b3c10751069920d553"
   integrity sha512-+9jVqKhRSpsc591z5vX+X5Yyw+he/HCB4iQ/RYxw35CEPaY1gnsNE43nf9n9AaYjAQrTiI/mOwKUKdUs9vf7Xg==
 
+"@types/dom-webcodecs@^0.1.11":
+  version "0.1.11"
+  resolved "https://registry.npmmirror.com/@types/dom-webcodecs/-/dom-webcodecs-0.1.11.tgz#2e36e5cc71789551f107e2fe15d956845fa19567"
+  integrity sha512-yPEZ3z7EohrmOxbk/QTAa0yonMFkNkjnVXqbGb7D4rMr+F1dGQ8ZUFxXkyLLJuiICPejZ0AZE9Rrk9wUCczx4A==
+
+"@types/emscripten@^1.39.10":
+  version "1.39.10"
+  resolved "https://registry.npmmirror.com/@types/emscripten/-/emscripten-1.39.10.tgz#da6e58a6171b46a41d3694f812d845d515c77e18"
+  integrity sha512-TB/6hBkYQJxsZHSqyeuO1Jt0AB/bW6G7rHt9g7lML7SOF6lbgcHvw/Lr+69iqN0qxgXLhWKScAon73JNnptuDw==
+
 "@types/estree@^1.0.0":
   version "1.0.5"
   resolved "https://registry.npmmirror.com/@types/estree/-/estree-1.0.5.tgz#a6ce3e556e00fd9895dd872dd172ad0d4bd687f4"
@@ -541,6 +551,14 @@ anymatch@~3.1.2:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
+arale-qrcode@^3.0.5:
+  version "3.0.5"
+  resolved "https://registry.npmmirror.com/arale-qrcode/-/arale-qrcode-3.0.5.tgz#0bb6870a9155d6284892f6e3c269688f3f5df153"
+  integrity sha512-vxEHaM7e4XbLXeILQ6txelPxHPJHLUZFe8syUflVw3FvohDczY+1MxTzjMsMYy69lVqmAv2qfKKCw59dJlTHoA==
+  dependencies:
+    spm-extend "~1.0.0"
+    spm-jquery "1.7.2"
+
 argparse@^2.0.1:
   version "2.0.1"
   resolved "https://registry.npmmirror.com/argparse/-/argparse-2.0.1.tgz#246f50f3ca78a3240f6c997e8a9bd1eac49e4b38"
@@ -573,6 +591,14 @@ balanced-match@^1.0.0:
   version "1.0.2"
   resolved "https://registry.npmmirror.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
+
+barcode-detector@2.2.2:
+  version "2.2.2"
+  resolved "https://registry.npmmirror.com/barcode-detector/-/barcode-detector-2.2.2.tgz#1a9c2cfd71a81bdebed29adfcafcf637d5014712"
+  integrity sha512-JcSekql+EV93evfzF9zBr+Y6aRfkR+QFvgyzbwQ0dbymZXoAI9+WgT7H1E429f+3RKNncHz2CW98VQtaaKpmfQ==
+  dependencies:
+    "@types/dom-webcodecs" "^0.1.11"
+    zxing-wasm "1.1.3"
 
 before-after-hook@^2.2.0:
   version "2.2.3"
@@ -1736,6 +1762,11 @@ scule@^1.0.0:
   resolved "https://registry.npmmirror.com/scule/-/scule-1.0.0.tgz#895e6f4ba887e78d8b9b4111e23ae84fef82376d"
   integrity sha512-4AsO/FrViE/iDNEPaAQlb77tf0csuq27EsVpy6ett584EcRTp6pTDLoGWVxCD77y5iU5FauOvhsI4o1APwPoSQ==
 
+sdp@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.npmmirror.com/sdp/-/sdp-3.2.0.tgz#8961420552b36663b4d13ddba6f478d1461896a5"
+  integrity sha512-d7wDPgDV3DDiqulJjKiV2865wKsJ34YI+NDREbm+FySq6WuKOikwyNQcm+doLAZ1O6ltdO0SeKle2xMpN3Brgw==
+
 semver@^7.3.6, semver@^7.5.4:
   version "7.5.4"
   resolved "https://registry.npmmirror.com/semver/-/semver-7.5.4.tgz#483986ec4ed38e1c6c48c34894a9182dbff68a6e"
@@ -1782,6 +1813,16 @@ source-map-js@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmmirror.com/source-map-js/-/source-map-js-1.0.2.tgz#adbc361d9c62df380125e7f161f71c826f1e490c"
   integrity sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==
+
+spm-extend@~1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmmirror.com/spm-extend/-/spm-extend-1.0.0.tgz#ef161164547387b26492a11a4820d9ddf63977c3"
+  integrity sha512-IILSI1IVFXPId0TiR//P0U1oxgYf0840HQ6Z8IBh2fMe7GJvCP2j+AfupWOlrjK66+jc+Byo5FYFyzuhWnQFng==
+
+spm-jquery@1.7.2:
+  version "1.7.2"
+  resolved "https://registry.npmmirror.com/spm-jquery/-/spm-jquery-1.7.2.tgz#04d180a4449236f625baecb4fb1f1809ef571ce2"
+  integrity sha512-y5JGXPpEvTjrcWZudteyRm09skYZAq6SpKVskqcUW8B35HXUcRTUJMpwo8AtORmjA3lcG2rVDBTln0om9IGWuw==
 
 strip-ansi@^6.0.1:
   version "6.0.1"
@@ -2037,6 +2078,14 @@ vue-eslint-parser@^9.4.2:
     lodash "^4.17.21"
     semver "^7.3.6"
 
+vue-qrcode-reader@^5.5.3:
+  version "5.5.3"
+  resolved "https://registry.npmmirror.com/vue-qrcode-reader/-/vue-qrcode-reader-5.5.3.tgz#c8eb97ebbffaa91c4e10a8444273e31bf9decfe7"
+  integrity sha512-ZR+3axFuW1rxrBZXhkmH+4x6c7JqYLkrYuBmwKLve2eEVZb3LiuYJdW7HZaWqvuuOo1uMjqFe3MqyFOf4/BGyA==
+  dependencies:
+    barcode-detector "2.2.2"
+    webrtc-adapter "8.2.3"
+
 vue-router@^4.2.5:
   version "4.2.5"
   resolved "https://registry.npmmirror.com/vue-router/-/vue-router-4.2.5.tgz#b9e3e08f1bd9ea363fdd173032620bc50cf0e98a"
@@ -2069,6 +2118,13 @@ webpack-virtual-modules@^0.5.0:
   version "0.5.0"
   resolved "https://registry.npmmirror.com/webpack-virtual-modules/-/webpack-virtual-modules-0.5.0.tgz#362f14738a56dae107937ab98ea7062e8bdd3b6c"
   integrity sha512-kyDivFZ7ZM0BVOUteVbDFhlRt7Ah/CSPwJdi8hBpkK7QLumUqdLtVfm/PX/hkcnrvr0i77fO5+TjZ94Pe+C9iw==
+
+webrtc-adapter@8.2.3:
+  version "8.2.3"
+  resolved "https://registry.npmmirror.com/webrtc-adapter/-/webrtc-adapter-8.2.3.tgz#85e5e52ea68e808be8d6db85e338aa5c95e80022"
+  integrity sha512-gnmRz++suzmvxtp3ehQts6s2JtAGPuDPjA1F3a9ckNpG1kYdYuHWYpazoAnL9FS5/B21tKlhkorbdCXat0+4xQ==
+  dependencies:
+    sdp "^3.2.0"
 
 which@^2.0.1:
   version "2.0.2"
@@ -2106,3 +2162,10 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.npmmirror.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+zxing-wasm@1.1.3:
+  version "1.1.3"
+  resolved "https://registry.npmmirror.com/zxing-wasm/-/zxing-wasm-1.1.3.tgz#256a7ad65ec60c1604fbe04bac776f4858598ae5"
+  integrity sha512-MYm9k/5YVs4ZOTIFwlRjfFKD0crhefgbnt1+6TEpmKUDFp3E2uwqGSKwQOd2hOIsta/7Usq4hnpNRYTLoljnfA==
+  dependencies:
+    "@types/emscripten" "^1.39.10"

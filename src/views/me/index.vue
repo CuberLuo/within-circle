@@ -7,6 +7,12 @@
           <span class="user-info">
             {{ username }}
           </span>
+          <div class="qrcode-zone">
+            <van-space :size="18">
+              <van-icon class="qrcode-icon" name="qr" @click="goToMyQRCode" />
+              <van-icon class="qrcode-icon" name="scan" @click="goToScanQRCode" />
+            </van-space>
+          </div>
         </div>
       </template>
     </van-cell>
@@ -56,6 +62,8 @@ const updatePhoneInfo = (val) => {
 
 const goToLikePage = () => router.push('/myLike')
 const goToMyPostPage = () => router.push('/myPost')
+const goToMyQRCode = () => router.push('/myQRCode')
+const goToScanQRCode = () => router.push('/scanQRCode')
 
 const bindPhone = () => {
   if (phoneNum.value != '未绑定') showToast('手机号暂不支持解绑或换绑')
@@ -108,5 +116,14 @@ const exitLogin = () => {
 }
 .user-cell {
   margin-bottom: 0 !important;
+}
+
+.qrcode-zone {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+}
+.qrcode-icon {
+  font-size: 24px;
 }
 </style>

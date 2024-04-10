@@ -75,7 +75,18 @@ const router = createRouter({
           meta: { title: '我的粉丝' },
           component: () => import('@/views/myFans/index.vue')
         },
-
+        {
+          path: '/scanQRCode',
+          name: 'scanQRCode',
+          meta: { title: '扫码' },
+          component: () => import('@/views/scanQRCode/index.vue')
+        },
+        {
+          path: '/myQRCode',
+          name: 'myQRCode',
+          meta: { title: '我的二维码' },
+          component: () => import('@/views/myQRCode/index.vue')
+        },
         {
           path: '/:catchAll(.*)',
           meta: { title: '页面找不到啦~~' },
