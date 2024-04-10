@@ -25,4 +25,8 @@ const goToMyFansPage = () => router.push('/myFans')
 .cell-group {
   margin-bottom: 10px;
 }
+.info-number,
+.info-text {
+  font-size: 16px;
+}
 </style>
