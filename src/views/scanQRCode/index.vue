@@ -2,6 +2,7 @@
   <div class="qrcode-scan-wrapper">
     <qrcode-stream
       v-if="selectedDevice !== null"
+      :paused="paused"
       :constraints="{ deviceId: selectedDevice.deviceId }"
       :track="trackFunctionSelected.value"
       @camera-on="onReady"
@@ -19,6 +20,7 @@ import { QrcodeStream } from 'vue-qrcode-reader'
 
 const selectedDevice = ref(null)
 const devices = ref([])
+const paused = ref(false)
 
 const trackFunctionSelected = ref({ text: 'outline', value: paintOutline })
 
@@ -39,12 +41,33 @@ function paintOutline(detectedCodes, ctx) {
   }
 }
 
-const onDetect = (detectedCodes) => {
+const onDetect = async (detectedCodes) => {
+  paused.value = true
   console.log(detectedCodes)
   // 检测到的二维码值数组
   const resultList = detectedCodes.map((code) => code.rawValue)
   // 默认取第一个二维码值
-  showToast(resultList[0])
+  const qrcodeValue = resultList[0]
+  try {
+    const qrCodeObj = JSON.parse(qrcodeValue)
+    if (qrCodeObj.app == import.meta.env.VITE_APP_NAME) {
+      console.log(qrCodeObj.userId)
+      router.push({
+        path: '/me',
+        query: {
+          scanUserId: qrCodeObj.userId
+        }
+      })
+    } else {
+      throw new Error('非方圆几里二维码')
+    }
+  } catch (e) {
+    console.log(e)
+    showDialog({ message: '无效二维码' }).then(() => {
+      // 点击‘确定’后即可继续扫码
+      paused.value = false
+    })
+  }
 }
 const onError = (err) => {
   console.log(err)

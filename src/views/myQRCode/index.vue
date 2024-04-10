@@ -16,7 +16,10 @@ var color = '#3476da'
 const qrBgColor = useThemeStore().theme === 'dark' ? '#1e1e1e' : '#f7f8fa'
 var codeFigure = new AraleQRCode({
   size: 240,
-  text: `{userId:${useUserInfoStore().user_info.userId}}`,
+  text: JSON.stringify({
+    app: import.meta.env.VITE_APP_NAME,
+    userId: useUserInfoStore().user_info.userId
+  }),
   image: useUserInfoStore().user_info.userAvatarUrl,
   render: 'canvas',
   background: qrBgColor,

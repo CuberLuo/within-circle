@@ -22,6 +22,7 @@
       :avatarUrl="avatarUrl"
       @updateUserAvatar="updateUserAvatar"
     />
+    <PosterPopup v-model="showPosterPopup" :posterId="curPosterId" />
     <ThemeMode />
 
     <van-cell is-link title="我的发布" @click="goToMyPostPage()" />
@@ -52,6 +53,17 @@ const showAvatarPopup = ref(false)
 const showPwdPopup = ref(false)
 const showPhoneBindPopup = ref(false)
 const userDataObj = ref({})
+const showPosterPopup = ref(false)
+const curPosterId = ref()
+const route = useRoute()
+
+onActivated(() => {
+  const scanUserId = route.query.scanUserId
+  if (scanUserId) {
+    curPosterId.value = parseInt(scanUserId)
+    showPosterPopup.value = true
+  }
+})
 
 const updateUserAvatar = (val) => {
   avatarUrl.value = val
