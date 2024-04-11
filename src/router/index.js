@@ -17,6 +17,11 @@ const router = createRouter({
       component: () => import('@/views/register/index.vue')
     },
     {
+      path: '/error',
+      meta: { title: '请求错误' },
+      component: () => import('@/views/error/index.vue')
+    },
+    {
       path: '/',
       redirect: '/index',
       component: () => import('@/layout/index.vue'),
