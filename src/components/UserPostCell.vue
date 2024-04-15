@@ -58,10 +58,6 @@
         <van-icon name="label" />
         <span>{{ post.content_tag }}</span>
       </van-tag>
-      <!-- <van-tag plain type="warning">
-          <van-icon name="lock" />
-          <span>{{ post.visible_circle }}</span>
-        </van-tag> -->
     </van-space>
   </van-cell>
 </template>

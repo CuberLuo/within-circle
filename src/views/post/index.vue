@@ -18,7 +18,6 @@
         </template>
       </van-cell>
       <AddLocation @updateLocation="updateLocation" />
-      <!-- <VisibleCircle @updateVisibleCircle="updateVisibleCircle" /> -->
       <TagSelector @updateTagSelector="updateTagSelector" />
 
       <van-cell>
@@ -56,7 +55,6 @@ onBeforeRouteLeave(async (to, from) => {
   else return false
 })
 import AddLocation from './AddLocation.vue'
-import VisibleCircle from './VisibleCircle.vue'
 import TagSelector from './TagSelector.vue'
 import { uploadPost } from '@/api/post.js'
 import { useBeforeReadMultiFile } from '@/mixins/fileCompress.js'
@@ -69,14 +67,10 @@ const message = ref('')
 const picList = ref([])
 //TODO: 支持视频上传
 const location = ref([])
-const visibleCircle = ref(-1)
 const contentTag = ref('')
 
 const updateLocation = (val) => {
   location.value = val
-}
-const updateVisibleCircle = (val) => {
-  visibleCircle.value = val
 }
 const updateTagSelector = (val) => {
   contentTag.value = val
@@ -90,10 +84,6 @@ const postAll = async () => {
     showFailToast('地点不能为空')
     return
   }
-  // if (visibleCircle.value == -1) {
-  //   showFailToast('可见范围不能为空')
-  //   return
-  // }
   showLoadingToast({
     message: '发布中',
     forbidClick: true,
@@ -105,7 +95,6 @@ const postAll = async () => {
   }
   formData.append('message', message.value)
   formData.append('location', location.value)
-  formData.append('visible_circle', visibleCircle.value)
   formData.append('content_tag', contentTag.value)
   try {
     const res = await uploadPost(formData)
