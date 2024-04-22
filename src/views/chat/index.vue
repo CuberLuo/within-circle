@@ -62,7 +62,12 @@
       >
         <Emoji @clickedEmoji="clickedEmoji" />
         <template #reference>
-          <van-icon class="op-icon" name="smile-o" @click="showEmojiPopover = !showEmojiPopover" />
+          <van-icon
+            class="op-icon"
+            name="smile-o"
+            @click="showEmojiPopover = !showEmojiPopover"
+            @mousedown.prevent
+          />
         </template>
       </van-popover>
 
@@ -130,15 +135,8 @@ const clickedEmoji = (val) => {
 const onMessageInputBlur = (event) => {
   blurIndex = event.srcElement.selectionStart //光标所在的位置
   console.log('blurIndex: ', blurIndex)
-
-  // 因点击表情导致输入框失焦需要重新聚焦
-  // 延迟设置为0，放在事件队列的末尾以等待当前执行栈中的其他任务完成
-  // setTimeout(() => {
-  //   if (showEmojiPopover.value) {
-  //     event.target.focus()
-  //   }
-  // }, 0)
-  event.target.focus()
+  // TODO: 输入框失去焦点逻辑不完善
+  // event.target.focus()
 }
 
 const longtapHandler = (chat, i) => {
