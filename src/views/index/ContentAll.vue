@@ -100,15 +100,4 @@ const deletePostFromPostsArr = (id) => {
 }
 </script>
 
-<style scoped>
-#loading-spinner {
-  display: flex;
-  justify-content: center;
-  margin: 10px 0;
-}
-.pull-refresh {
-  min-height: calc(
-    100vh - var(--van-nav-bar-height) - var(--van-tabbar-height) - var(--van-tabs-line-height)
-  );
-}
-</style>
+<style src="@/assets/styles/content.css" scoped />

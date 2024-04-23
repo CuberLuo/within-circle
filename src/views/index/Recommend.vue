@@ -2,7 +2,12 @@
   <div>
     <EmptyError v-if="postsArr.length == 0 && !loading" description="暂无推荐内容" />
     <div v-else>
-      <van-pull-refresh v-model="loading" @refresh="onRefresh" success-text="刷新成功">
+      <van-pull-refresh
+        v-model="loading"
+        @refresh="onRefresh"
+        success-text="刷新成功"
+        class="pull-refresh"
+      >
         <van-space direction="vertical" fill>
           <div v-for="post in postsArr" :key="post.id">
             <UserPostCell :post="post" @deletePostFromPostsArr="deletePostFromPostsArr" />
@@ -77,4 +82,4 @@ onMounted(() => {
 })
 </script>
 
-<style scoped></style>
+<style src="@/assets/styles/content.css" scoped />

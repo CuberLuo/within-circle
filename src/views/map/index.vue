@@ -1,13 +1,7 @@
 <template>
   <div>
     <div id="container" v-show="!mapLoading"></div>
-    <van-popup
-      v-model:show="showPointPopup"
-      round
-      class="point-popup"
-      closeable
-      :close-on-click-overlay="false"
-    >
+    <van-popup v-model:show="showPointPopup" round class="point-popup" closeable>
       <UserPostCell :post="curPost" />
     </van-popup>
   </div>
@@ -19,7 +13,7 @@ defineOptions({
 })
 import AMapLoader from '@amap/amap-jsapi-loader'
 import { getUserInfo } from '@/api/userinfo'
-import { getAllPosts } from '@/api/post.js'
+import { getAllPostsLocation, getPostById } from '@/api/post.js'
 import UserPostCell from '@/components/UserPostCell.vue'
 import { useThemeStore } from '@/stores/theme.js'
 const theme = useThemeStore().theme
@@ -119,7 +113,6 @@ onMounted(async () => {
       const { marker, data } = context
       const { pointDetails } = data[0]
       const posterAvatar = pointDetails.user_avatar
-      console.log(pointDetails)
       //在同一个点的头像,最近发布的显示在最上面
       var content = `
           <img src="${posterAvatar}"
@@ -129,12 +122,7 @@ onMounted(async () => {
       marker.setContent(content)
       marker.setOffset(offset)
 
-      marker.on('click', () => {
-        console.log(pointDetails)
-        curPost.value = pointDetails
-        console.log('点击point')
-        showPointPopup.value = true
-      })
+      marker.on('click', () => getPostDetailById(pointDetails.id))
     }
     var cluster = new AMap.MarkerCluster(map, points, {
       gridSize: gridSize, // 设置网格像素大小
@@ -143,6 +131,44 @@ onMounted(async () => {
     })
   })
 })
+
+let flag = false
+
+// const throttle = (callback, interval = 1500) => {
+//   let flag = false
+//   return function () {
+//     if (flag) {
+//       console.log('请求过于频繁，请稍后再试')
+//       return
+//     }
+//     flag = true
+//     setTimeout(() => {
+//       callback.apply(this, arguments)
+//       flag = false
+//     }, interval)
+//   }
+// }
+
+const getPostDetailById = async (post_id) => {
+  // 利用函数节流的思想间接解决点击marker事件触发两次的问题
+  if (flag) {
+    console.log('请求过于频繁，请稍后再试')
+    return
+  }
+  flag = true
+  setTimeout(() => {
+    flag = false
+  }, 500)
+
+  try {
+    const res = await getPostById({ post_id })
+    console.log(res)
+    curPost.value = res.data[0]
+    showPointPopup.value = true
+  } catch (e) {
+    console.log(e)
+  }
+}
 
 const getUserAvatar = async () => {
   try {
@@ -156,9 +182,9 @@ const getUserAvatar = async () => {
 
 const getAllPostPoints = async () => {
   try {
-    const res = await getAllPosts()
+    const res = await getAllPostsLocation()
     const posts = res.data
-    for (const post of posts.reverse()) {
+    for (const post of posts) {
       //根据发布时间先后依次渲染
       const { lat, lon } = post.location
       const point = {

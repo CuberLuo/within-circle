@@ -8,10 +8,18 @@ export const uploadPost = (data) => {
   })
 }
 
-export const getAllPosts = () => {
+export const getAllPostsLocation = () => {
   return request({
-    url: '/posts',
+    url: '/posts-location',
     method: 'GET'
+  })
+}
+
+export const getPostById = (param) => {
+  return request({
+    url: '/post',
+    method: 'GET',
+    params: param
   })
 }
 

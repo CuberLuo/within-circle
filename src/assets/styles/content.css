@@ -1,0 +1,10 @@
+#loading-spinner {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+}
+.pull-refresh {
+  min-height: calc(
+    100vh - var(--van-nav-bar-height) - var(--van-tabbar-height) - var(--van-tabs-line-height)
+  );
+}
