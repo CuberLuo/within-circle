@@ -31,7 +31,7 @@ const setupApp = async () => {
 
   // 引入自定义的SocketIO插件
   app.use(SocketIO, {
-    connection: import.meta.env.VITE_SOCKET_SERVER,
+    connection: import.meta.env.VITE_APP_API_BASE_URL,
     options: {
       autoConnect: true, // 自动连接
       transports: ['websocket'], // 指定为websocket连接
