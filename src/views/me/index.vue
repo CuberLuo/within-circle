@@ -63,6 +63,7 @@ onActivated(() => {
     curPosterId.value = parseInt(scanUserId)
     showPosterPopup.value = true
   }
+  getCurrentUserInfo()
 })
 
 const updateUserAvatar = (val) => {
@@ -82,8 +83,7 @@ const bindPhone = () => {
   else showPhoneBindPopup.value = true
 }
 
-onMounted(async () => {
-  //组件挂载到DOM后立即执行
+const getCurrentUserInfo = async () => {
   try {
     const res = await getUserInfo()
     if (res.code == status_code.OK) {
@@ -100,7 +100,7 @@ onMounted(async () => {
   } catch (error) {
     console.log(error)
   }
-})
+}
 
 const exitLogin = () => {
   showConfirmDialog({
