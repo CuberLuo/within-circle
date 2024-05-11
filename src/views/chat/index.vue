@@ -52,6 +52,7 @@
         rows="1"
         type="textarea"
         placeholder="请输入信息"
+        @focus="onMessageInputFocus"
         @blur="onMessageInputBlur"
       />
       <van-popover
@@ -104,6 +105,7 @@ const chatUserId = route.query.chatUserId
 const chatUsername = route.query.chatUsername
 const chatUserAvatar = route.query.chatUserAvatar
 const onClickLeft = () => {
+  window.removeEventListener('resize', keyBoardCheck)
   useClearUnReadNum(chatUserId)
   history.go(-1)
 }
@@ -117,6 +119,9 @@ let blurIndex = null
 const clickedEmoji = (val) => {
   if (blurIndex == userText.value.length || blurIndex == null) userText.value += val
   else userText.value = userText.value.slice(0, blurIndex) + val + userText.value.slice(blurIndex)
+  const messageInputDom = document.getElementById('messageInput')
+  // 点击表情输入框不失去焦点
+  messageInputDom.focus()
 
   nextTick(() => {
     const messageInputDom = document.getElementById('messageInput')
@@ -132,10 +137,14 @@ const clickedEmoji = (val) => {
   showEmojiPopover.value = false
 }
 
+const onMessageInputFocus = (event) => {
+  nextTick(() => {
+    scrollToBottom()
+  })
+}
 const onMessageInputBlur = (event) => {
   blurIndex = event.srcElement.selectionStart //光标所在的位置
   console.log('blurIndex: ', blurIndex)
-  // TODO: 输入框失去焦点逻辑不完善
   // event.target.focus()
 }
 
@@ -219,6 +228,9 @@ const sendMessage = () => {
   // 页面dom元素更新后聊天内容滚动到底部
   nextTick(() => {
     scrollToBottom()
+    const messageInputDom = document.getElementById('messageInput')
+    // 点击发送后输入框不失去焦点
+    messageInputDom.focus()
   })
 }
 
@@ -284,6 +296,10 @@ const afterRead = async (file) => {
   })
 }
 
+const keyBoardCheck = () => {
+  // 窗口大小改变意味着键盘弹出或收起
+  scrollToBottom()
+}
 onMounted(() => {
   console.log('onMounted')
   // 读取本地聊天记录
@@ -297,6 +313,8 @@ onMounted(() => {
   nextTick(() => {
     scrollToBottom()
   })
+
+  window.addEventListener('resize', keyBoardCheck)
 })
 </script>
 
