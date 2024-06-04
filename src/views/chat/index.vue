@@ -36,6 +36,7 @@
                 fit="scale-down"
                 :src="chat.imgUrl"
                 @click="showImage(chat.imgUrl)"
+                @load="scrollToBottom"
               />
             </div>
           </template>
@@ -273,10 +274,12 @@ const afterRead = async (file) => {
     onlineImageUrl = res.data.url
     if (res.code == status_code.OK) {
       // 通过socket发送图片链接到后端时需要将本地链接替换为云链接
-      chatObj.imgUrl = onlineImageUrl
+      // 不直接更改chatObj的图片链接防止出现图片闪烁
+      const chatObjCopy = { ...chatObj }
+      chatObjCopy.imgUrl = onlineImageUrl
       useAddUserContact(chatUserAvatar, chatUserId, chatUsername)
-      useUpdateLocalChatHistory(chatUserId, chatObj)
-      socket.emit('privateChat', chatObj, (res) => {
+      useUpdateLocalChatHistory(chatUserId, chatObjCopy)
+      socket.emit('privateChat', chatObjCopy, (res) => {
         if (res === void 0) return
         console.log(res)
       })
