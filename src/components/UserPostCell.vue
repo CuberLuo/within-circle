@@ -171,4 +171,7 @@ const showPosterDetails = (posterId) => {
   color: orange;
   border-color: orange;
 }
+.van-tag {
+  max-width: 200px;
+}
 </style>

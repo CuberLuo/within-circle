@@ -82,7 +82,7 @@ export const useClearUnReadNum = (userId) => {
 
 export const useUpdateLocalChatHistory = (chatUserId, chatObj) => {
   // 更新本地聊天记录
-  let chatHistory = getItem('chatHistoty')
+  let chatHistory = getItem('chatHistoty') || {}
   const chatUserHistoryList = chatHistory[chatUserId]
   if (!chatUserHistoryList) {
     chatHistory[chatUserId] = []

@@ -17,7 +17,7 @@
           :text="follow ? '已关注' : '关注'"
           @click="opUserFollow"
         />
-        <van-button class="popup-chat-btn" @click="privateChat">私聊</van-button>
+        <van-button v-if="follow" class="popup-chat-btn" @click="privateChat">私聊</van-button>
       </div>
     </div>
   </van-popup>

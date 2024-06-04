@@ -180,7 +180,7 @@ const socket = inject('socket')
 socket.off('privateChat')
 //服务端回复消息
 socket.on('privateChat', (data) => {
-  console.log('服务端回复消息', data)
+  console.log('chat 服务端回复消息', data)
   // 联系人列表相关信息更新
   if (data.isImg) useAddUserContact(data.avatar, data.userId, data.username)
   else useAddUserContact(data.avatar, data.userId, data.username, data.text)
@@ -303,7 +303,7 @@ const keyBoardCheck = () => {
 onMounted(() => {
   console.log('onMounted')
   // 读取本地聊天记录
-  let chatHistory = getItem('chatHistoty')
+  let chatHistory = getItem('chatHistoty') || {}
   const chatUserHistoryList = chatHistory[chatUserId]
   if (!chatUserHistoryList) {
     chatHistory[chatUserId] = []

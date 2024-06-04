@@ -70,7 +70,7 @@ const websocketInit = (user_info) => {
 }
 socket.off('privateChat')
 socket.on('privateChat', (data) => {
-  console.log('服务端回复消息', data)
+  console.log('App 服务端回复消息', data)
   if (data.isImg) useAddUserContact(data.avatar, data.userId, data.username)
   else useAddUserContact(data.avatar, data.userId, data.username, data.text)
   showNotify({
