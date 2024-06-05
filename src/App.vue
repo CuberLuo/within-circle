@@ -59,8 +59,16 @@ const websocketInit = (user_info) => {
       const cloudChatObj = res.data
       for (const key in cloudChatObj) {
         cloudChatObj[key].forEach((element) => {
-          if (element.isImg) useAddUserContact(element.avatar, element.userId, element.username)
-          else useAddUserContact(element.avatar, element.userId, element.username, element.text)
+          if (element.isImg)
+            useAddUserContact(element.avatar, element.userId, element.username, element.chatDate)
+          else
+            useAddUserContact(
+              element.avatar,
+              element.userId,
+              element.username,
+              element.chatDate,
+              element.text
+            )
           useUpdateUnReadNum(key)
           useUpdateLocalChatHistory(key, element)
         })
@@ -71,8 +79,8 @@ const websocketInit = (user_info) => {
 socket.off('privateChat')
 socket.on('privateChat', (data) => {
   console.log('App 服务端回复消息', data)
-  if (data.isImg) useAddUserContact(data.avatar, data.userId, data.username)
-  else useAddUserContact(data.avatar, data.userId, data.username, data.text)
+  if (data.isImg) useAddUserContact(data.avatar, data.userId, data.username, data.chatDate)
+  else useAddUserContact(data.avatar, data.userId, data.username, data.chatDate, data.text)
   showNotify({
     message: `${moment().format('HH:mm:ss')} 用户${data.username}给您发来一条新消息`,
     type: 'primary',

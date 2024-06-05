@@ -1,11 +1,12 @@
 import { useContactListStore } from '@/stores/contactList'
 
-export const useAddUserContact = (avatar, userId, username, detail = '[图片]') => {
+export const useAddUserContact = (avatar, userId, username, chatDate, detail = '[图片]') => {
   const contactItem = {
     avatar_src: avatar,
     title: username,
     userId,
-    detail
+    detail,
+    latest_time: chatDate
   }
   let existContactItem = false
   const contactList = useContactListStore().contactList
@@ -32,12 +33,13 @@ export const useAddUserContact = (avatar, userId, username, detail = '[图片]')
   useContactListStore().setContactList(contactList)
 }
 
-export const useUpdateUserContact = (avatar, userId, username, detail = '[图片]') => {
+export const useUpdateUserContact = (avatar, userId, username, chatDate, detail = '[图片]') => {
   const contactItem = {
     avatar_src: avatar,
     title: username,
     userId,
-    detail
+    detail,
+    latest_time: chatDate
   }
   const contactList = useContactListStore().contactList
   contactList.forEach((item, index) => {

@@ -25,7 +25,7 @@
             </div>
           </template>
           <template #value>
-            <div class="contact-time">{{ item.latest_time }}</div>
+            <div class="contact-time">{{ formatChatDateDisplay(item.latest_time) }}</div>
             <div v-if="item.msg_num !== 0">
               <van-badge :content="item.msg_num" style="margin-right: 12px">
                 <div></div>
@@ -53,12 +53,34 @@ defineOptions({
 })
 import { useContactListStore } from '@/stores/contactList'
 import { useClearUnReadNum } from '@/mixins/userContact.js'
+import moment from 'moment'
 const contactListStore = useContactListStore()
 const contact = ref([])
 
 const swipeCell = ref()
 let currentIndex = 0
 let currentItem = {}
+
+const formatChatDateDisplay = (chatDate) => {
+  if (chatDate == void 0) return ''
+  const dateTime = moment(chatDate)
+  const now = moment()
+
+  // 今天
+  if (dateTime.isSame(now, 'day')) {
+    return dateTime.format('HH:mm')
+  }
+  // 昨天
+  if (dateTime.isSame(now.clone().subtract(1, 'days'), 'day')) {
+    return '昨天'
+  }
+  // 非今年
+  if (dateTime.year() < now.year()) {
+    return dateTime.format('YYYY年M月D日')
+  }
+  // 默认显示月和日
+  return dateTime.format('M月D日')
+}
 
 const deleteContactItem = (index, item) => {
   currentIndex = index

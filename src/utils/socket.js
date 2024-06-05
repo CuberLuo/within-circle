@@ -22,8 +22,16 @@ export default {
         const cloudChatObj = res.data
         for (const key in cloudChatObj) {
           cloudChatObj[key].forEach((element) => {
-            if (element.isImg) useAddUserContact(element.avatar, element.userId, element.username)
-            else useAddUserContact(element.avatar, element.userId, element.username, element.text)
+            if (element.isImg)
+              useAddUserContact(element.avatar, element.userId, element.username, element.chatDate)
+            else
+              useAddUserContact(
+                element.avatar,
+                element.userId,
+                element.username,
+                element.chatDate,
+                element.text
+              )
             useUpdateUnReadNum(key)
             useUpdateLocalChatHistory(key, element)
           })

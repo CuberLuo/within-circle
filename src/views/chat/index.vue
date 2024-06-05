@@ -161,10 +161,12 @@ const onSelectAction = (action) => {
   setItem('chatHistoty', chatHistory)
   // 删除某项聊天内容后需要更新联系人列表的聊天预览文字
   if (chatList.value.length === 0)
-    useUpdateUserContact(chatUserAvatar, chatUserId, chatUsername, '')
+    useUpdateUserContact(chatUserAvatar, chatUserId, chatUsername, '', '')
   const lastChat = chatList.value[chatList.value.length - 1]
-  if (lastChat.isImg) useUpdateUserContact(chatUserAvatar, chatUserId, chatUsername)
-  else useUpdateUserContact(chatUserAvatar, chatUserId, chatUsername, lastChat.text)
+  if (lastChat.isImg)
+    useUpdateUserContact(chatUserAvatar, chatUserId, chatUsername, lastChat.chatDate)
+  else
+    useUpdateUserContact(chatUserAvatar, chatUserId, chatUsername, lastChat.chatDate, lastChat.text)
 }
 
 // 监听元素的宽高动态变化
@@ -183,8 +185,8 @@ socket.off('privateChat')
 socket.on('privateChat', (data) => {
   console.log('chat 服务端回复消息', data)
   // 联系人列表相关信息更新
-  if (data.isImg) useAddUserContact(data.avatar, data.userId, data.username)
-  else useAddUserContact(data.avatar, data.userId, data.username, data.text)
+  if (data.isImg) useAddUserContact(data.avatar, data.userId, data.username, data.chatDate)
+  else useAddUserContact(data.avatar, data.userId, data.username, data.chatDate, data.text)
   if (route.path != '/chat' || chatUserId != data.userId) {
     showNotify({
       message: `${moment().format('HH:mm:ss')} 用户${data.username}给您发来一条新消息`,
@@ -219,7 +221,13 @@ const sendMessage = () => {
     chatDate: moment().format('YYYY-MM-DD HH:mm:ss')
   }
   chatList.value.push(chatObj)
-  useAddUserContact(chatUserAvatar, chatUserId, chatUsername, userText.value)
+  useAddUserContact(
+    chatUserAvatar,
+    chatUserId,
+    chatUsername,
+    moment().format('YYYY-MM-DD HH:mm:ss'),
+    userText.value
+  )
   useUpdateLocalChatHistory(chatUserId, chatObj)
   socket.emit('privateChat', chatObj, (res) => {
     if (res === void 0) return
@@ -277,7 +285,12 @@ const afterRead = async (file) => {
       // 不直接更改chatObj的图片链接防止出现图片闪烁
       const chatObjCopy = { ...chatObj }
       chatObjCopy.imgUrl = onlineImageUrl
-      useAddUserContact(chatUserAvatar, chatUserId, chatUsername)
+      useAddUserContact(
+        chatUserAvatar,
+        chatUserId,
+        chatUsername,
+        moment().format('YYYY-MM-DD HH:mm:ss')
+      )
       useUpdateLocalChatHistory(chatUserId, chatObjCopy)
       socket.emit('privateChat', chatObjCopy, (res) => {
         if (res === void 0) return
