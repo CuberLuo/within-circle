@@ -12,7 +12,6 @@ defineOptions({
   name: 'amap'
 })
 import AMapLoader from '@amap/amap-jsapi-loader'
-import { getUserInfo } from '@/api/userinfo'
 import { getAllPostsLocation, getPostById } from '@/api/post.js'
 import UserPostCell from '@/components/UserPostCell.vue'
 import { useThemeStore } from '@/stores/theme.js'
@@ -21,7 +20,6 @@ const mapTheme = `amap://styles/${theme == 'dark' ? 'darkblue' : 'normal'}`
 let map = null
 const mapLoading = ref(false)
 let points = []
-const avatarUrl = ref('')
 const showPointPopup = ref(false)
 const curPost = ref()
 onMounted(async () => {
@@ -31,7 +29,6 @@ onMounted(async () => {
     forbidClick: true,
     duration: 0
   })
-  await getUserAvatar()
   await getAllPostPoints()
   console.log(points)
   AMapLoader.load({
@@ -167,16 +164,6 @@ const getPostDetailById = async (post_id) => {
     showPointPopup.value = true
   } catch (e) {
     console.log(e)
-  }
-}
-
-const getUserAvatar = async () => {
-  try {
-    const res = await getUserInfo()
-    const { data } = res
-    avatarUrl.value = data.avatar_url
-  } catch (error) {
-    console.log(error)
   }
 }
 

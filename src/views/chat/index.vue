@@ -72,9 +72,9 @@
           />
         </template>
       </van-popover>
-
       <van-uploader v-if="userText === ''" :before-read="beforeRead" :after-read="afterRead">
-        <van-icon class="op-icon" name="add-o" />
+        <!-- @mousedown.prevent防止点击元素后输入框失去焦点 -->
+        <van-icon class="op-icon" name="add-o" @mousedown.prevent />
       </van-uploader>
       <van-button v-else type="primary" @click="sendMessage">发送</van-button>
     </div>
@@ -117,6 +117,11 @@ const sendImgUrl = ref('')
 const showEmojiPopover = ref(false)
 
 let blurIndex = null
+const preventInputBulr = () => {
+  const messageInputDom = document.getElementById('messageInput')
+  // 点击表情输入框不失去焦点
+  messageInputDom.focus()
+}
 const clickedEmoji = (val) => {
   if (blurIndex == userText.value.length || blurIndex == null) userText.value += val
   else userText.value = userText.value.slice(0, blurIndex) + val + userText.value.slice(blurIndex)
